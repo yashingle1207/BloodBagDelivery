@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>contact</title>
+
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="static/style.css">
+
+</head>
+<body>
+    
+<div class="container">
+
+<header>
+
+    <a href="/" class="logo">Transfusio<span>Track</span></a>
+
+
+    <div id="menu" class="fas fa-bars"></div>
+
+    <nav class="navbar">
+
+        <a href="/">Home</a>
+        <a href="/HospDashboard">Hosp Dashboard</a>
+        <a href="/BBDashboard">BB Dashboard</a>
+        <a href="/SearchBlood">Search Blood</a>
+        <a href="/BBNewReq">BB req</a>
+        <a href="/Blood order">Hosp BO</a>
+          <a href="/map">Track order</a>
+
+
+    </nav>
+</header>
+
+<h1 class="heading">Blood Component Requisition Form</h1>
+
+<!-- contact section  -->
+
+<section class="contact">
+
+
+<form action="your_action_url" onsubmit="return validateForm()">
+
+    <h2>Requisition Type</h2>
+
+    <div class="inputBox">
+        <select name="reaction" id="reqtype">
+            <option value="regular">Regular</option>
+            <option value="urgent" >Urgent</option>
+            <option value="plan">Planned</option>
+        </select>
+    </div>
+
+
+    <!-- add required to the fields to make them mandatory to fill out   -->
+
+    <h2>General Information</h2>
+
+    <div class="inputBox1">
+        <input type="text" placeholder="First Name" required>
+        <input type="text" placeholder="Middle Name" required>
+        <input type="text" placeholder="Last Name" required>
+        <input type="number" placeholder="Age" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+
+    </div>
+
+     <h2>Patient Details</h2>
+
+      <div class="inputBox1">
+        <input type="text" placeholder="Reg.No" >
+        <input type="text" placeholder="Ward">
+        <input type="text" placeholder="Bed No.">
+        <input type="text" placeholder="Gender">
+          <input type="text" placeholder="Blood Group (if known)">
+          <input type="number" placeholder="HB% in gm% (if known) " oninput="this.value = this.value.replace(/[^0-9]/g, '')" >
+    </div>
+
+    <h3>Need of Transfusion</h3>
+    <input type="text" placeholder="Diagnosis" class="box" required>
+    <input type="text" placeholder="Indication for Transfusion" class="box" required>
+
+     <div class="checkbox-group">
+        <label for="checkbox1">Bleed</label>
+        <input type="checkbox" id="checkbox1" name="checkbox1">
+
+        <label for="checkbox2">Trauma</label>
+        <input type="checkbox" id="checkbox2" name="checkbox2">
+
+        <label for="checkbox3">Dialysis</label>
+        <input type="checkbox" id="checkbox3" name="checkbox3">
+
+         <label for="checkbox4">Exchange transfusion</label>
+        <input type="checkbox" id="checkbox4" name="checkbox4">
+
+         <label for="checkbox5">H/O Pregnancy/ Abortion</label>
+        <input type="checkbox" id="checkbox5" name="checkbox5">
+
+         <label for="checkbox6">Anemia</label>
+        <input type="checkbox" id="checkbox6" name="checkbox6">
+
+         <label for="checkbox7">Surgery</label>
+        <input type="checkbox" id="checkbox7" name="checkbox7">
+
+         <label for="checkbox8">Burn</label>
+        <input type="checkbox" id="checkbox8" name="checkbox8">
+
+         <label for="checkbox9">Thrombocytopenia</label>
+        <input type="checkbox" id="checkbox9" name="checkbox9">
+
+            <label for="checkbox10">Other(Specify)</label>
+        <input type="checkbox" id="checkbox10" name="checkbox10">
+         <input type="text" id="specifyText" name="specifyText" placeholder="Specify the Reason" disabled>
+
+         <span id="checkboxError" style="color: red;"></span>
+        </div>
+
+
+        <h3>History of Previous Transfusion (if any)</h3>
+
+        <div class="inputBox">
+                <label for="transfusion" style="display: inline-block; width: 50%;">1. No of Transfusion Given</label>
+                <input type="number" id="transfusion" name="transfusion" placeholder="Enter the number" oninput="this.value = this.value.replace(/[^0-9]/g, ''); width: 50%;">
+            </div>
+
+
+            <div class="inputBox">
+                <label for="day">2. Approximate Date (DD-MM-YYYY)</label>
+                <div class="date-input">
+                    <input type="text" id="day" name="day" placeholder="DD" maxlength="2" class="day">
+                    <span>-</span>
+                    <input type="text" id="month" name="month" placeholder="MM" maxlength="2" class="month">
+                    <span>-</span>
+                    <input type="text" id="year" name="year" placeholder="YYYY" maxlength="4" class="year">
+                </div>
+            </div>
+
+
+            <div class="inputBox">
+                <label for="reactions">3. Presence/ Absence of Reaction</label>
+                <select name="reaction" id="reactions">
+                    <option value="presence">Presence of Reaction</option>
+                    <option value="absence">Absence of Reaction</option>
+                </select>
+            </div>
+
+
+    <h3>History of Pregnancies (if applicable)</h3>
+
+        <div class="inputBox">
+            <label for="pregnancies">1. No of Pregnancies</label>
+            <input type="number" id="pregnancies" name="pregnancies" placeholder="Enter the number">
+        </div>
+
+        <div class="inputBox">
+            <label for="miscarriages">2. No of Miscarriages</label>
+            <input type="number" id="miscarriages" name="miscarriages" placeholder="Enter the number">
+        </div>
+
+        <div class="inputBox">
+            <label for="hemolyticChildren">3. No of Children with Hemolytic Disease of Newborn</label>
+            <input type="number" id="hemolyticChildren" name="hemolyticChildren" placeholder="Enter the number">
+        </div>
+
+
+    <h3>Medical Officer Details</h3>
+
+        <div class="inputBox">
+            <label for="officername">1. Medical Officer's (Doctor's) Name</label>
+            <input type="text" id="officername" name="officername" placeholder="Enter the Doctor's Name" required>
+        </div>
+
+        <div class="inputBox">
+            <label for="officerqualification">2. Qualification</label>
+            <input type="text" id="officerqualification" name="officequalification" placeholder="Enter Medical Officer's Qualification" required>
+        </div>
+
+        <div class="inputBox">
+            <label for="regno">3. Registration No. </label>
+            <input type="number" id="regno" name="regno" placeholder="Enter the Doctor's Reg. No">
+        </div>
+
+        <div class="inputBox">
+            <label for="mobileno">4. Mobile No. </label>
+            <input type="number" id="mobileno" name="mobileno" placeholder="Enter the Doctor's Mobile No" required>
+        </div>
+
+         <div class="inputBox">
+            <label for="address">5. Address (Optional)</label>
+            <input type="text" id="address" name="address" placeholder="Enter Medical Officer's Address" >
+         </div>
+
+
+    <div class="br">
+        <input type="submit" class="btn" value="Request Blood Bag">
+    </div>
+
+       <p id="orderDateTime"></p>
+
+</form>
+
+</section>
+
+
+
+
+<!-- footer section  -->
+
+<section class="footer">
+
+    <div class="box-container">
+
+        <div class="box">
+            <h3>about us</h3>
+            <p>TransfusioTrack is India's first<br> blood bag delivary system <br> Innovating seamless blood delivery through advanced technology and precision logistics.<br> <br>Launched in 2023</p>
+        </div>
+
+        <div class="box">
+            <h3>quick links</h3>
+            <a href="/">Home</a>
+            <a href="/HospDashboard">Hosp Dashboard</a>
+            <a href="/BBDashboard">BB Dashboard</a>
+            <a href="/SearchBlood">Search Blood</a>
+            <a href="/BBNewReq">BB req</a>
+            <a href="/Blood order">Hosp BO</a>
+        </div>
+
+        <div class="box">
+            <h3>follow us</h3>
+            <a href="https://www.facebook.com/">facebook</a>
+            <a href="https://twitter.com/home">twitter</a>
+            <a href="https://instagram.com/_muskiii.___?igshid=YmMyMTA2M2Y=">instagram</a>
+            <a href="https://www.linkedin.com/in/muskan-bhattad-bb73a121a">linkedin</a>
+        </div>
+
+        <div class="box">
+            <h3>contact us</h3>
+           <p> <i class="fas fa-phone"></i> +91 - 9518920645 </p>
+           <p> <i class="fas fa-envelope"></i> transfusiontrack@gmail.com </p>
+           <p> <i class="fas fa-map-marker-alt"></i> Aurangabad, india - 431001 </p>
+        </div>
+
+    </div>
+
+    <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to TransfusioTrack
+    </div>
+
+</section>
+</div>
+
+<script>
+    // Get references to the checkbox and input field
+    const checkbox = document.getElementById('checkbox10');
+    const specifyInput = document.getElementById('specifyText');
+
+    // Add an event listener to the checkbox
+    checkbox.addEventListener('change', function () {
+        if (checkbox.checked) {
+            specifyInput.disabled = false; // Enable the input field
+        } else {
+            specifyInput.disabled = true; // Disable the input field
+            specifyInput.value = ''; // Clear any previously entered text
+        }
+    });
+
+    // Function to get the current date and time
+    function getCurrentDateTime() {
+        const now = new Date();
+        return now.toLocaleString(); // You can format this as needed
+    }
+
+    // Function to set the order date and time in the HTML element
+    function setOrderDateTime() {
+        const orderDateTimeElement = document.getElementById('orderDateTime');
+        const currentDateTime = getCurrentDateTime();
+        orderDateTimeElement.textContent = `Order Date and Time: ${currentDateTime}`;
+    }
+
+    // Attach the setOrderDateTime function to the form's submit event
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+        setOrderDateTime(); // Call the function to set the order date and time
+    });
+
+    function validateForm() {
+    // Get all checkboxes by name
+    const checkboxes = document.querySelectorAll('input[name="checkboxGroup"]');
+    let checked = false;
+
+    // Check if at least one checkbox is checked
+    checkboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+            checked = true;
+        }
+    });
+
+    // Display an error message if no checkbox is checked
+    if (!checked) {
+        document.getElementById('checkboxError').textContent = 'Please select at least one option.';
+        return false; // Prevent form submission
+    }
+
+    return true; // Allow form submission if at least one checkbox is checked
+}
+
+</script>
+
+
+
+<!-- custom js file link -->
+<script src="js/script.js"></script>
+
+</body>
+</html>
