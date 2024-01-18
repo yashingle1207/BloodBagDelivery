@@ -11,7 +11,7 @@ app.secret_key = os.urandom(24)
 
 
 # MongoDB configuration
-client = MongoClient('mongodb://localhost:27017/')  # Update the MongoDB connection string
+client = MongoClient(os.environ.get("MONGO_URI"))  # Update the MongoDB connection string
 db = client['BloodBag']  # Update with your database name
 HospUser = db['HospitalUsers']  # Collection for storing user data
 BBUser = db['BloodBankUsers']  # Collection for storing user data
