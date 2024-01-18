@@ -11,7 +11,12 @@ app.secret_key = os.urandom(24)
 
 
 # MongoDB configuration
-client = MongoClient(os.environ.get("MONGO_URI"))  # Update the MongoDB connection string
+atlas_uri = "mongodb+srv://yashingle007:YASHsteyr124@clusterbb.uyk8mkp.mongodb.net/"
+
+# Create a MongoClient instance using the Atlas URI
+client = MongoClient(atlas_uri)
+
+
 db = client['BloodBag']  # Update with your database name
 HospUser = db['HospitalUsers']  # Collection for storing user data
 BBUser = db['BloodBankUsers']  # Collection for storing user data
