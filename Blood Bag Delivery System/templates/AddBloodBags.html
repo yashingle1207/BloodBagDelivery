@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AddBlood</title>
+
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="static/style.css">
+
+</head>
+<body>
+    
+<div class="container">
+
+<header>
+
+    <a href="/" class="logo">Transfusio<span>Track</span></a>
+
+
+    <div id="menu" class="fas fa-bars"></div>
+
+    <nav class="navbar">
+          <a href="/BBDashboard">BloodBank Dashboard</a>
+         <a href="/">Logout</a>
+
+    </nav>
+</header>
+
+<h1 class="heading">Edit Blood Stock</h1>
+
+<!-- contact section  -->
+
+<section class="contact">
+
+
+<form action="/addbb" method="POST">
+
+    <h2>Add/Update Blood Stock</h2>
+      <div class="inputBox">
+        <select name="bloodgrp" id="bloodgrp" required>
+                <option value="">Select Blood Group</option>
+                <option value="A+"  name="bloodgrp">A +ve</option>
+                <option value="A-"  name="bloodgrp">A -ve</option>
+                <option value="B+"  name="bloodgrp">B +ve</option>
+                <option value="B-"  name="bloodgrp">B -ve</option>
+                <option value="AB+"  name="bloodgrp">AB +ve</option>
+                <option value="AB-"  name="bloodgrp">AB -ve</option>
+                <option value="O+"  name="bloodgrp">O +ve</option>
+                <option value="O-"  name="bloodgrp">O -ve</option>
+                <option value="Oh+"  name="bloodgrp">Oh +ve</option>
+                <option value="Oh-"  name="bloodgrp">Oh -ve</option>
+        </select>
+    </div>
+
+       <div class="inputBox">
+        <select name="comptype" id="comptype" required>
+                <option value="">Select Blood Component</option>
+                <option value="wholeblood" name="comptype"> Whole Blood</option>
+                <option value="SDP" name="comptype"> Single Donor Platelet</option>
+                <option value="RDP" name="comptype">Random Donar Platelets </option>
+                <option value="PCV" name="comptype"> Packed Red Blood cells</option>
+                <option value="FFP" name="comptype">Fresh Frozen Plasma</option>
+        </select>
+    </div>
+
+    <div class="inputBox">
+        <input type="number" name= "quantity" placeholder="Quantity (in count)" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+     </div>
+
+        <div style="text-align: center;">
+        <button class="btn">Add Blood Bags</button>
+    </div>
+
+</form>
+
+
+    <form action="/removebb" method="POST">
+
+    <h2>Remove Blood Stock</h2>
+      <div class="inputBox">
+        <select name="bloodgrp1" id="bloodgrp1" required>
+                <option value="">Select Blood Group</option>
+                <option value="A+"  name="bloodgrp">A +ve</option>
+                <option value="A-"  name="bloodgrp">A -ve</option>
+                <option value="B+"  name="bloodgrp">B +ve</option>
+                <option value="B-"  name="bloodgrp">B -ve</option>
+                <option value="AB+"  name="bloodgrp">AB +ve</option>
+                <option value="AB-"  name="bloodgrp">AB -ve</option>
+                <option value="O+"  name="bloodgrp">O +ve</option>
+                <option value="O-"  name="bloodgrp">O -ve</option>
+                <option value="Oh+"  name="bloodgrp">Oh +ve</option>
+                <option value="Oh-"  name="bloodgrp">Oh -ve</option>
+        </select>
+    </div>
+
+       <div class="inputBox">
+        <select name="comptype1" id="comptype1" required>
+                <option value="">Select Blood Component</option>
+                <option value="wholeblood" name="comptype"> Whole Blood</option>
+                <option value="SDP" name="comptype"> Single Donor Platelet</option>
+                <option value="RDP" name="comptype">Random Donar Platelets </option>
+                <option value="PCV" name="comptype"> Packed Red Blood cells</option>
+                <option value="FFP" name="comptype">Fresh Frozen Plasma</option>
+        </select>
+    </div>
+
+    <div class="inputBox">
+        <input type="number" name= "quantity1" placeholder="Quantity (in count)" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+     </div>
+
+        <div style="text-align: center;">
+        <button class="btn">Remove Blood Bags</button>
+    </div>
+
+</form>
+</section>
+
+
+    <!-- footer section  -->
+
+ <section class="footer">
+
+
+
+    <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to TransfusioTrack
+    </div>
+
+</section>
+</div>
+
+<script>
+    // Get references to the checkbox and input field
+    const checkbox = document.getElementById('checkbox10');
+    const specifyInput = document.getElementById('specifyText');
+
+    // Add an event listener to the checkbox
+    checkbox.addEventListener('change', function () {
+        if (checkbox.checked) {
+            specifyInput.disabled = false; // Enable the input field
+        } else {
+            specifyInput.disabled = true; // Disable the input field
+            specifyInput.value = ''; // Clear any previously entered text
+        }
+    });
+
+    // Function to get the current date and time
+    function getCurrentDateTime() {
+        const now = new Date();
+        return now.toLocaleString(); // You can format this as needed
+    }
+
+    // Function to set the order date and time in the HTML element
+    function setOrderDateTime() {
+        const orderDateTimeElement = document.getElementById('orderDateTime');
+        const currentDateTime = getCurrentDateTime();
+        orderDateTimeElement.textContent = `Order Date and Time: ${currentDateTime}`;
+    }
+
+    // Attach the setOrderDateTime function to the form's submit event
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the form from submitting normally
+        setOrderDateTime(); // Call the function to set the order date and time
+    });
+
+    function validateForm() {
+    // Get all checkboxes by name
+    const checkboxes = document.querySelectorAll('input[name="checkboxGroup"]');
+    let checked = false;
+
+    // Check if at least one checkbox is checked
+    checkboxes.forEach((checkbox) => {
+        if (checkbox.checked) {
+            checked = true;
+        }
+    });
+
+    // Display an error message if no checkbox is checked
+    if (!checked) {
+        document.getElementById('checkboxError').textContent = 'Please select at least one option.';
+        return false; // Prevent form submission
+    }
+
+    return true; // Allow form submission if at least one checkbox is checked
+}
+
+</script>
+
+
+
+<!-- custom js file link -->
+<script src="js/script.js"></script>
+
+</body>
+</html>

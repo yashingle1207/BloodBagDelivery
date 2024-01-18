@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViewStock</title>
+
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="static/style.css">
+
+         <style>
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                max-width: 90%;
+                margin-left: auto;
+                margin-right: auto;
+                margin-top: 10px;
+            }
+
+            th, td {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+                font-size: 20px;
+                max-width: 0;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            th {
+                background-color: #f2f2f2;
+            }
+            </style>
+</head>
+<body>
+
+<div class="container">
+
+<header>
+
+    <a href="/" class="logo">Transfusio<span>Track</span></a>
+
+
+    <div id="menu" class="fas fa-bars"></div>
+      <nav class="navbar">
+          <a href="/BBDashboard">BloodBank Dashboard</a>
+         <a href="/">Logout</a>
+
+    </nav>
+
+
+</header>
+
+
+<h1 class="heading">Blood Bag Stock </h1>
+
+
+
+  <table>
+    <tr>
+        <th>Blood Component</th>
+        <th>O+</th>
+        <th>O-</th>
+        <th>A+</th>
+        <th>A-</th>
+        <th>B+</th>
+        <th>B-</th>
+        <th>AB+</th>
+        <th>AB-</th>
+        <th>OH+</th>
+        <th>OH-</th>
+    </tr>
+    {% for blood_component, blood_groups in results.items() %}
+        <tr>
+            <td>{{ blood_component }}</td>
+            {% for blood_group, quantity in blood_groups.items() %}
+                <td>{{ quantity }}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table>
+
+
+ <section class="footer">
+
+
+
+    <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to TransfusioTrack
+    </div>
+
+</section>
+
+<!-- custom js file link -->
+<script src="js/script.js"></script>
+
+</body>
+</html>

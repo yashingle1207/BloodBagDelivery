@@ -1,0 +1,75 @@
+<!-- sign up section  -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sign Up</title>
+
+        <!-- font awesome cdn link  -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+        <!-- custom css file link  -->
+        <link rel="stylesheet" href="static/style1.css">
+		<link rel="stylesheet" href="static/style.css">
+
+    </head>
+<body>
+
+<section class="home">
+
+	<div class="container" id="container">
+		<div class="form-container sign-up-container">
+			<form  id="signup-form" action="/HospSignUp" method="POST" onsubmit="return validateForm();">
+
+				<h1>Create Hospital Account</h1>
+
+
+				 <input type="text" id="facilityName" name="facilityName" placeholder="Healthcare Facility Name" required />
+				<input type="email" id="facilityEmailId" name="facilityEmailId" placeholder="Hospital Email ID" required />
+				<input type="password" id="facilityPassword" name="facilityPassword" placeholder="Password" required />
+				<input type="tel" id="facilityContactNum" name="facilityContactNum" placeholder="Contact Number" required />
+				<input type="text" id="facilityAddress" name="facilityAddress" placeholder="Address" required />
+				<input type="text" id="facilityRegNum" name="facilityRegNum" placeholder="Registration Number" required />
+				<button onclick="signUp()" >Sign Up</button>
+			</form>
+		</div>
+
+		<div class="form-container sign-in-container">
+			<form id="signin-form" action="/HospSignIn" method="POST">
+				<h1>Hospital Sign in</h1>
+
+				<span>or Create your account</span>
+
+				<input type="email"  id="hospEmailId"  name="hospEmailId" placeholder="Hospital EmailID" required/>
+				<input type="password" id="hospPassword" name="hospPassword" placeholder="Password" required/>
+
+				<a href="#">Forgot your password?</a>
+				<button>Sign In</button>
+			</form>
+		</div>
+		<div class="overlay-container">
+			<div class="overlay">
+				<div class="overlay-panel overlay-left">
+					<h1>Welcome Back!</h1>
+					<p>To keep connected with us please login with your personal info</p>
+					<button class="ghost" id="signIn">Sign In</button>
+				</div>
+				<div class="overlay-panel overlay-right">
+					<h1>Hello, Doctor!</h1>
+					<p>Enter your Hospital details and start journey with us</p>
+					<button class="ghost" id="signUp">Sign Up</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+<script src="static/js/script1.js"></script>
+
+
+</body>
+</html>
+

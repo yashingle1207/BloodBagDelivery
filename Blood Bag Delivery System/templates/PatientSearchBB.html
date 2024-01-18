@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Blood Bag</title>
+
+    <!-- Font Awesome CDN link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Custom CSS file link -->
+    <link rel="stylesheet" href="static/style.css">
+
+    <style>
+        /* Custom CSS for layout */
+        .price {
+            display: flex;
+            align-items: center;
+        }
+
+        .image-container {
+            flex: 1;
+        }
+
+        .form-container {
+            flex: 1;
+            padding: 20px; /* Add padding to separate form components from the image */
+        }
+
+        /* Adjust image size to cover the left portion */
+        .image-container img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Optional: Style form components for better spacing */
+        .form-container label,
+        .form-container input,
+        .form-container select {
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+
+        <a href="/" class="logo">Transfusio<span>Track</span></a>
+
+        <div id="menu" class="fas fa-bars"></div>
+
+        <nav class="navbar">
+            <a href="/PDashboard">Patient Dashboard</a>
+          <a href="/">Logout</a>
+        </nav>
+    </header>
+
+    <h1 class="heading">Search Blood Bag</h1>
+
+    <section class="contact">
+
+
+<form action="/PatientSearchBB" method="POST">
+
+    <h2>Enter Blood Group</h2>
+
+    <div class="inputBox">
+        <select name="bloodgrp1" id="bloodgrp1" required>
+                <option value="">Select Blood Group</option>
+                <option value="A+"  name="bloodgrp">A +ve</option>
+                <option value="A-"  name="bloodgrp">A -ve</option>
+                <option value="B+"  name="bloodgrp">B +ve</option>
+                <option value="B-"  name="bloodgrp">B -ve</option>
+                <option value="AB+"  name="bloodgrp">AB +ve</option>
+                <option value="AB-"  name="bloodgrp">AB -ve</option>
+                <option value="O+"  name="bloodgrp">O +ve</option>
+                <option value="O-"  name="bloodgrp">O -ve</option>
+                <option value="Oh+"  name="bloodgrp">Oh +ve</option>
+                <option value="Oh-"  name="bloodgrp">Oh -ve</option>
+        </select>
+    </div>
+
+    <h2>Select Blood Component</h2>
+
+
+       <div class="inputBox">
+      <select name="comptype1" id="comptype1" required>
+                <option value="">Select Blood Component</option>
+                <option value="wholeblood" name="comptype"> Whole Blood</option>
+                <option value="SDP" name="comptype"> Single Donor Platelet</option>
+                <option value="RDP" name="comptype">Random Donar Platelets </option>
+                <option value="PCV" name="comptype"> Packed Red Blood cells</option>
+                <option value="FFP" name="comptype">Fresh Frozen Plasma</option>
+        </select>
+    </div>
+
+    <h2>Enter Bag Quantity</h2>
+
+         <div class="inputBox">
+            <input type="number" name= "quantity1" placeholder="Quantity (in count)" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+         </div>
+
+<!--          <section class="price">-->
+
+<!--           <div class="image1">-->
+<!--                <img src="{{ url_for('static', filename='images/bb3.jpg') }}" alt="">-->
+<!--            </div>-->
+
+<!--        </section>-->
+
+
+    <div style="text-align: center;">
+        <button class="btn">Search Blood Bag</button>
+    </div>
+
+
+
+
+
+
+</form>
+    </section>
+
+
+
+
+
+
+
+
+<!--        </div>-->
+<!--        <div class="form-container">-->
+<!--            <h1>Fill in the following details</h1>-->
+<!--            <label for="bloodType">Enter Blood Type:</label>-->
+<!--            <select id="bloodType" required>-->
+<!--                <option value="A">A</option>-->
+<!--                <option value="B">B</option>-->
+<!--                <option value="AB">AB</option>-->
+<!--                <option value="O">O</option>-->
+<!--                <option value="-O">-O</option>-->
+<!--                <option value="-A">-A</option>-->
+<!--                <option value="-AB">-AB</option>-->
+<!--                <option value="-B">-B</option>-->
+<!--            </select>-->
+<!--            <label for="bloodComponent">Enter Blood Component:</label>-->
+<!--            <input type="text" id="bloodComponent" required placeholder="Blood Component">-->
+<!--            <label for="bloodQuantity">Enter Blood Quantity:</label>-->
+<!--            <input type="number" id="bloodQuantity" required min="1" max="10" placeholder="Blood Quantity">-->
+<!--      <button type="submit" class="black-button">Submit</button>-->
+<!--  </div>-->
+<!--    </section>-->
+<!--</div>-->
+
+ <section class="footer">
+
+
+
+    <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to TransfusioTrack
+    </div>
+
+</section>
+</body>
+</html>
