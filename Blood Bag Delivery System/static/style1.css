@@ -275,34 +275,3 @@ footer a {
 }
 
 
-/* Add Media Queries for responsiveness */
-
-@media screen and (max-width: 768px) {
-    /* Adjust styling for tablets */
-    h1 {
-        font-size: 2rem;
-    }
-
-    form {
-        padding: 0 1rem;
-    }
-
-    .container {
-        width: 90%;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    /* Adjust styling for phones */
-    h1 {
-        font-size: 1.8rem;
-    }
-
-    form {
-        padding: 0 0.5rem;
-    }
-
-    .container {
-        width: 100%;
-    }
-}
