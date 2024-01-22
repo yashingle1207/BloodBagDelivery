@@ -122,6 +122,17 @@ header .navbar a:hover{
   gap:4.0rem;
   align-items: center;
 }
+.home .container {
+  flex: 1 1 40rem;
+}
+
+.home .form-container {
+  width: 100%;
+}
+
+.home .overlay-container {
+  display: none;
+}
 
 .home .content{
   flex:1 1 40rem;
@@ -588,6 +599,13 @@ th {
   section{
     padding:2rem;
   }
+.home {
+    gap: 2.0rem;
+  }
+  
+  .home .container {
+    flex: 1 1 100%;
+  }
 
 }
 
@@ -619,6 +637,20 @@ th {
 
   .contact form .inputBox input{
     width:100%;
+  }
+.home {
+    flex-direction: column;
+    align-items: center;
+  }
+  .home .container {
+    flex: 1 1 100%;
+    margin-bottom: 2rem;
+  }
+
+  .home .overlay-container {
+    display: block;
+    width: 100%;
+    max-width: 100%;
   }
 
 }
