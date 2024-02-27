@@ -942,6 +942,10 @@ def Psign():
 def faillogin():
     return render_template('LoginUnsuccessful.html')
 
+@app.route('/privacy')
+def pp():
+    return render_template('privacypolicy.html')
+
 # Decorator to handle CORS headers
 def add_cors_headers(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
