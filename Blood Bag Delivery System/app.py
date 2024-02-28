@@ -950,7 +950,7 @@ def privacyfun():
 def TnC():
     return render_template('T&C.html')
 
-@app.route('/return')
+@app.route('/refund')
 def refund():
     return render_template('Return_Refund_policy.html')
 
