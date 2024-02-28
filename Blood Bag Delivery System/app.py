@@ -943,8 +943,16 @@ def faillogin():
     return render_template('LoginUnsuccessful.html')
 
 @app.route('/privacy')
-def pp():
+def privacyfun():
     return render_template('privacypolicy.html')
+
+@app.route('/terms')
+def TnC():
+    return render_template('T&C.html')
+
+@app.route('/return')
+def refund():
+    return render_template('Return_Refund_policy.html')
 
 # Decorator to handle CORS headers
 def add_cors_headers(response):
