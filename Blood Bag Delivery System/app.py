@@ -954,6 +954,10 @@ def TnC():
 def refund():
     return render_template('Return_Refund_policy.html')
 
+@app.route('/pricing')
+def price():
+    return render_template('PricingPolicy.html')
+
 # Decorator to handle CORS headers
 def add_cors_headers(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
