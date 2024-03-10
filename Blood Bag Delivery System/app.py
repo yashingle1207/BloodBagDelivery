@@ -775,7 +775,7 @@ def BBsignup():
         # Insert the new user into the MongoDB collection
         BBUser.insert_one(new_user)
 
-    return render_template('BloodBankDashboard.html')
+     return render_template('BB_verification.html')
 
 
 @app.route('/BBSignIn', methods=['POST'])
@@ -957,6 +957,11 @@ def refund():
 @app.route('/pricing')
 def price():
     return render_template('PricingPolicy.html')
+    
+@app.route('/BB_verify')
+def verf():
+    return render_template('BB_verification.html')
+
 
 # Decorator to handle CORS headers
 def add_cors_headers(response):
