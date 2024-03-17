@@ -4,8 +4,6 @@ Flask-PyMongo==2.3.0
 gunicorn==21.2.0
 pymongo==4.5.0
 requests
-base64
 jsons
-hashlib
 shortuuid
 cryptography
