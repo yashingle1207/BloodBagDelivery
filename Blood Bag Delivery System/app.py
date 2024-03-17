@@ -3,7 +3,15 @@ from bson import ObjectId
 import os
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from pymongo import MongoClient
-import razorpay
+import requests
+import base64
+import json
+import jsons
+import hashlib
+import shortuuid
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.backends import default_backend
+
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -26,70 +34,99 @@ Order = db['Orders']
 PatientUser = db['PatientUsers']
 PatientSearchBB = db['BloodStock']
 
-####################### Payment Razorpay ###########################
 
-razorpay_client = razorpay.Client(auth=("rzp_test_VwLhATIx3XC6MI", "RqdEsP8mak311TwNRBxYQZZA"))
+def calculate_sha256_string(input_string):
+    # Create a hash object using the SHA-256 algorithm
+    sha256 = hashes.Hash(hashes.SHA256(), backend=default_backend())
+    # Update hash with the encoded string
+    sha256.update(input_string.encode('utf-8'))
+    # Return the hexadecimal representation of the hash
+    return sha256.finalize().hex()
 
-@app.route('/hosp_payment', methods=['POST'])
-def Hosp_initiate_payment():
-    # Process requisition form data and calculate the payment amount
-    amount = 1000  # Replace with the actual amount
 
-    # Create a Razorpay order
-    order = razorpay_client.order.create({'amount': amount, 'currency': 'INR', 'payment_capture': '1'})
+def base64_encode(input_dict):
+    # Convert the dictionary to a JSON string
+    json_data = jsons.dumps(input_dict)
+    # Encode the JSON string to bytes
+    data_bytes = json_data.encode('utf-8')
+    # Perform Base64 encoding and return the result as a string
+    return base64.b64encode(data_bytes).decode('utf-8')
 
-    # Store the order details in the session
-    session['razorpay_order_id'] = order['id']
-    session['order_amount'] = order['amount']
+@app.route("/make_payment", methods=['POST'])
+def pay():
+    MAINPAYLOAD = {
+        "merchantId": "M22S8FP278KQA",
+        "merchantTransactionId": shortuuid.uuid(),
+        "merchantUserId": "MUID123",
+        "amount": 1000,
+        "redirectUrl": "http://127.0.0.1:5000/return-to-me",
+        "redirectMode": "POST",
+        "callbackUrl": "http://127.0.0.1:5000/return-to-me",
+        "mobileNumber": "9518920645",
+        "paymentInstrument": {
+            "type": "PAY_PAGE"
+        }
+    }
 
-    return render_template('HospPayment.html', order=order)
+    INDEX = "1"
+    ENDPOINT = "/pg/v1/pay"
+    SALTKEY = "cfaaec9b-b797-4e15-b14b-ac8cd11ac8f2"
+ 
+    base64String = base64_encode(MAINPAYLOAD)
+    mainString = base64String + ENDPOINT + SALTKEY;
+    sha256Val = calculate_sha256_string(mainString)
+    checkSum = sha256Val + '###' + INDEX;
+  
+    headers = {
+        'Content-Type': 'application/json',
+        'X-VERIFY': checkSum,
+        'accept': 'application/json',
+    }
+    json_data = {
+        'request': base64String,
+    }
+    response = requests.post('https://api.phonepe.com/apis/hermes/pg/v1/pay', headers=headers, json=json_data)
+    responseData = response.json();
+    return redirect(responseData['data']['instrumentResponse']['redirectInfo']['url'])
 
-####### blood bank####
-@app.route('/BB_payment', methods=['POST'])
-def Blood_bank_initiate_payment():
-    # Process requisition form data and calculate the payment amount
-    amount = 1000  # Replace with the actual amount
 
-    # Create a Razorpay order
-    order = razorpay_client.order.create({'amount': amount, 'currency': 'INR', 'payment_capture': '1'})
 
-    # Store the order details in the session
-    session['razorpay_order_id'] = order['id']
-    session['order_amount'] = order['amount']
+@app.route("/return-to-me", methods=['GET', 'POST'])
+def payment_return():
+ 
+   
+    INDEX = "1"
+    SALTKEY = "cfaaec9b-b797-4e15-b14b-ac8cd11ac8f2"
+ 
+    form_data = request.form
+    form_data_dict = dict(form_data)
+    # respond_json_data = jsonify(form_data_dict)
+    # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    # 1.In the live please match the amount you get byamount you send also so that hacker can't pass static value.
+    # 2.Don't take Marchent ID directly validate it with yoir Marchent ID
+    # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    if request.form.get('transactionId'):
+        request_url = 'https://api.phonepe.com/apis/hermes/pg/v1/status/M22S8FP278KQA/' + request.form.get('transactionId');
+        sha256_Pay_load_String = '/pg/v1/status/M22S8FP278KQA/' + request.form.get('transactionId') + SALTKEY;
+        sha256_val = calculate_sha256_string(sha256_Pay_load_String);
+        checksum = sha256_val + '###' + INDEX;
+        # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        # Payload Send
+        # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        headers = {
+            'Content-Type': 'application/json',
+            'X-VERIFY': checksum,
+            'X-MERCHANT-ID': request.form.get('transactionId'),
+            'accept': 'application/json',
+        }
+        response = requests.get(request_url, headers=headers)
+        #print(response.text);
+    return render_template('map.html', page_respond_data=form_data_dict, page_respond_data_varify=response.text)
 
-    return render_template('BBPayment.html', order=order)
-#################
-
+########################################### payment end#############################
 
 def update_requisition_status(order_id, param):
     pass
-
-
-@app.route('/payment/success', methods=['POST'])
-def payment_success():
-    # Handle success callback from Razorpay
-    razorpay_payment_id = request.form['razorpay_payment_id']
-    razorpay_order_id = request.form['razorpay_order_id']
-    razorpay_signature = request.form['razorpay_signature']
-
-    # Verify the payment signature
-    # Replace 'your_api_secret' with your actual Razorpay API secret
-    is_valid_signature = razorpay_client.utility.verify_payment_signature({
-        'razorpay_order_id': razorpay_order_id,
-        'razorpay_payment_id': razorpay_payment_id,
-        'razorpay_signature': razorpay_signature
-    }, 'RqdEsP8mak311TwNRBxYQZZA')
-
-    if is_valid_signature:
-        # Payment success, update the requisition status in the database
-        update_requisition_status(session.get('razorpay_order_id'), 'paid')
-        return render_template('map.html')
-    else:
-        # Invalid signature, handle accordingly (e.g., redirect to try again page)
-        return render_template('payment_try_again.html')
-
-
-########################################### payment end#############################
 
 
 def update_delivery_status(order_id):
