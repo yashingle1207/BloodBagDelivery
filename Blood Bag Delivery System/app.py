@@ -34,52 +34,7 @@ PatientSearchBB = db['BloodStock']
 
 ####################### Payment PhonePe #######################
 
-# @app.route('/make_payment', methods=['POST'])
-# def make_payment():
-#     # Generate unique transaction ID
-#     merchant_transaction_id = str(uuid.uuid4())
-#
-#     # Base URL for PhonePe API
-#     url = "https://api-preprod.phonepe.com/apis/hermes/pg/v1/pay"
-#
-#     # Payload for the request
-#     payload = {
-#         "merchantId": "PGTESTPAYUAT",
-#         "merchantTransactionId": merchant_transaction_id,
-#         "merchantUserId": session.get("hosp_reg_no"),
-#         "amount": 10000,
-#         "redirectUrl": "http://127.0.0.1:5000/return-to-me",
-#         "redirectMode": "POST",
-#         "callbackUrl": "http://127.0.0.1:5000/return-to-me",
-#         "mobileNumber": "9518920645",
-#         "paymentInstrument": {
-#             "type": "PAY_PAGE"
-#         }
-#     }
-#
-#     # Convert payload to JSON string
-#     json_payload = json.dumps(payload)
-#
-#     # Encode payload to Base64
-#     encoded_payload = base64.b64encode(json_payload.encode()).decode()
-#
-#     # Generate X-VERIFY header
-#     salt_key = "099eb0cd-02cf-4e2a-8aca-3e6c6aff0399"
-#
-#     salt_index = 1
-#     checksum = hashlib.sha256((encoded_payload + "/pg/v1/pay" + salt_key).encode()).hexdigest() + "###" + str(salt_index)
-#
-#     # Request headers
-#     headers = {
-#         "Content-Type": "application/json",
-#         "X-VERIFY": checksum
-#     }
-#
-#     # Make the request
-#     response = requests.post(url, data=json.dumps({"request": encoded_payload}), headers=headers)
-#
-#     # Return response
-#     return jsonify(response.json())
+
 
 def calculate_sha256_string(input_string):
     # Create a hash object using the SHA-256 algorithm
@@ -113,20 +68,16 @@ def pay():
             "type": "PAY_PAGE"
         }
     }
-    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    # SETTING
-    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
     INDEX = "1"
     ENDPOINT = "/pg/v1/pay"
     SALTKEY = "cfaaec9b-b797-4e15-b14b-ac8cd11ac8f2"
-    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
     base64String = base64_encode(MAINPAYLOAD)
     mainString = base64String + ENDPOINT + SALTKEY;
     sha256Val = calculate_sha256_string(mainString)
     checkSum = sha256Val + '###' + INDEX;
-    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    # Payload Send
-    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
     headers = {
         'Content-Type': 'application/json',
         'X-VERIFY': checkSum,
@@ -142,29 +93,21 @@ def pay():
 
 
 @app.route("/return-to-me", methods=['GET', 'POST'])
-# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def payment_return():
-    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    # SETTING
-    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  
+
     INDEX = "1"
     SALTKEY = "cfaaec9b-b797-4e15-b14b-ac8cd11ac8f2"
-    # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   
     form_data = request.form
     form_data_dict = dict(form_data)
-    # respond_json_data = jsonify(form_data_dict)
-    # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    # 1.In the live please match the amount you get byamount you send also so that hacker can't pass static value.
-    # 2.Don't take Marchent ID directly validate it with yoir Marchent ID
-    # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    
     if request.form.get('transactionId'):
         request_url = 'https://api.phonepe.com/apis/hermes/pg/v1/status/M22S8FP278KQA/' + request.form.get('transactionId');
         sha256_Pay_load_String = '/pg/v1/status/M22S8FP278KQA/' + request.form.get('transactionId') + SALTKEY;
         sha256_val = calculate_sha256_string(sha256_Pay_load_String);
         checksum = sha256_val + '###' + INDEX;
-        # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        # Payload Send
-        # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+       
         headers = {
             'Content-Type': 'application/json',
             'X-VERIFY': checksum,
@@ -1119,7 +1062,6 @@ def update_location():
     # Store or process the location data as needed
 
     return jsonify({'status': 'Location updated successfully'})
-
 
 
 
