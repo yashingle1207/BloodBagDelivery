@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Details</title>
+
+    <!-- Font Awesome CDN link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Custom CSS file link -->
+    <link rel="stylesheet" href="static/style.css">
+
+    <style>
+        /* Your existing styles here */
+
+        /* Additional styles for payment details */
+        .payment-details {
+            margin-top: 20px;
+            font-size: 20px;
+        }
+
+        .payment-details table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .payment-details th,
+        .payment-details td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .payment-details th {
+            background-color: #FF0000;
+            color: white;
+        }
+
+        .total {
+            font-weight: bold;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+            <a href="/" class="logo">Transfusio<span>Track</span></a>
+            <div id="menu" class="fas fa-bars"></div>
+             <nav class="navbar">
+
+          <a href="/">Logout</a>
+        </nav>
+        </header>
+
+        <section class="payment-details">
+            <div class="content">
+                <h3>Payment Details</h3>
+
+                <form action="/make_payment" method="POST">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Blood Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ session['blood_component'] }}</td>
+                            <td>{{ session['quantity'] }}</td>
+                            <td>₹{{ session['blood_product_price'] }}</td>
+                            <td class="total">₹{{ session['quantity'] * session['blood_product_price'] }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                       <div style="text-align: center;">
+                        <button class="btn">Pay Now</button>
+                    </div>
+            </form>
+
+            </div>
+
+
+        </section>
+
+        <!-- Footer Section -->
+        <section class="footer">
+            <div class="credit">Created by <span> Team Transfusio </span> | All rights reserved to Ingle Laboratory</div>
+        </section>
+
+    </div>
+
+    <!-- JavaScript file link -->
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>

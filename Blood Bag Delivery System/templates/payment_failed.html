@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+
+    <!-- Font Awesome CDN link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Custom CSS file link -->
+    <link rel="stylesheet" href="static/style.css">
+
+    <style>
+        .error-container {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .error-icon {
+            font-size: 100px;
+            color: #FF0000; /* Red color for error */
+        }
+
+        .error-message {
+            font-size: 28px;
+            color: #333; /* Dark color for message */
+            margin-top: 20px;
+        }
+
+        .error-description {
+            font-size: 20px;
+            color: #555; /* Dim color for description */
+            margin-top: 20px;
+        }
+
+        .try-again-btn {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <a href="/" class="logo">Transfusio<span>Track</span></a>
+        <div id="menu" class="fas fa-bars"></div>
+        <nav class="navbar">
+           <a href="/">Logout</a>
+        </nav>
+    </header>
+
+    <div class="error-container">
+        <div class="error-icon">
+            <i class="fas fa-exclamation-circle"></i>
+        </div>
+      <div class="error-message">
+          <p>OOPPSS!!! Payment Failed. Please try again.</p>
+        </div>
+        <div class="error-description">
+            <p>Unfortunately, we were unable to process your payment.</p> <br>
+            <p>Please double-check your payment details and try again. If the problem persists, feel free to contact our support team for assistance.</p>
+</div>
+        <div class="try-again-btn">
+            <a href="/" class="btn">Try Again</a>
+        </div>
+    </div>
+
+    <section class="footer">
+        <div class="credit">Created by <span>Team Transfusio</span> | All rights reserved to TransfusioTrack</div>
+    </section>
+
+</div>
+
+</body>
+</html>
