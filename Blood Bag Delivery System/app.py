@@ -1090,8 +1090,38 @@ def refund():
 @app.route('/pricing')
 def price():
     return render_template('PricingPolicy.html')
-    
 
+@app.route('/payment_invoice', methods=['POST'])
+def payment_invoice():
+    if request.method == 'POST':
+        # Get form data
+        req_type = request.form.get('reqtype')
+        fname = request.form.get('fname')
+        mname = request.form.get('mname')
+        lname = request.form.get('lname')
+        gender = request.form.get('gender')
+        age = request.form.get('age')
+        ward = request.form.get('ward')
+        bedno = request.form.get('bedno')
+
+        # Store form data in session
+        session['req_type'] = req_type
+        session['fname'] = fname
+        session['mname'] = mname
+        session['lname'] = lname
+        session['gender'] = gender
+        session['age'] = age
+        session['ward'] = ward
+        session['bedno'] = bedno
+
+        # Redirect to payment invoice page or wherever needed
+        return render_template('payment_details.html')
+
+    # Handle case where request method is not POST
+    return render_template('error.html', message='Invalid request method.')
+    
+    
+#################################################################################
 
 
 # Decorator to handle CORS headers
