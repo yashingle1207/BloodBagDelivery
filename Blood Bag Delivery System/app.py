@@ -709,62 +709,45 @@ def PsearchBB():
     return render_template('PatientSearchResult.html')
 
 ######################################## set bank ############
-# @app.route('/set_selected_blood_bank', methods=['POST'])
-# def set_selected_blood_bank():
-#     if request.method == 'POST':
-#         selected_blood_bank_reg_num = request.form.get('selected_blood_bank')
-
-#         # Fetch the price of the selected blood product from the database
-#         selected_blood_product = session.get('blood_component_code')
-#         blood_product_price = get_blood_product_price(selected_blood_product)
-
-#         # Check if a hospital or patient is logged in
-#         if 'hosp_reg_no' in session:
-#             # Set the selected blood bank reg_num and blood product price in the session for a hospital
-#             session['bb_reg_no'] = selected_blood_bank_reg_num
-#             session['blood_product_price'] = blood_product_price
-#             return render_template('BloodBagRequestForm.html')  # Redirect to the hospital's request form
-
-#         elif '_id' in session:
-#             # Set the selected blood bank reg_num and blood product price in the session for a patient
-#             session['bb_reg_no'] = selected_blood_bank_reg_num
-#             session['blood_product_price'] = blood_product_price
-#             return render_template('PatientBBreqform.html')  # Redirect to the patient's request form
-
-#     # Redirect to a default page or handle the case where the user type is not identified
-#     return render_template('error.html', message='User type not identified.')
-
-
-# def get_blood_product_price(blood_product_name):
-#     # Query the MongoDB collection 'pricing' to fetch the price of the given blood product
-#     blood_product = pricing_collection.find_one({'code': blood_product_name})
-#     if blood_product:
-#         session["blood_component"] = blood_product['name']
-#         return blood_product['price']
-#     else:
-#         # Return a default price or handle the case where the price is not found
-#         return None
-
-
 @app.route('/set_selected_blood_bank', methods=['POST'])
 def set_selected_blood_bank():
     if request.method == 'POST':
         selected_blood_bank_reg_num = request.form.get('selected_blood_bank')
 
+        # Fetch the price of the selected blood product from the database
+        selected_blood_product = session.get('blood_component_code')
+        blood_product_price = get_blood_product_price(selected_blood_product)
+
         # Check if a hospital or patient is logged in
         if 'hosp_reg_no' in session:
-            # Set the selected blood bank reg_num in the session for a hospital
+            # Set the selected blood bank reg_num and blood product price in the session for a hospital
             session['bb_reg_no'] = selected_blood_bank_reg_num
+            session['blood_product_price'] = blood_product_price
             return render_template('BloodBagRequestForm.html')  # Redirect to the hospital's request form
 
         elif '_id' in session:
-            # Set the selected blood bank reg_num in the session for a patient
+            # Set the selected blood bank reg_num and blood product price in the session for a patient
             session['bb_reg_no'] = selected_blood_bank_reg_num
+            session['blood_product_price'] = blood_product_price
             return render_template('PatientBBreqform.html')  # Redirect to the patient's request form
 
     # Redirect to a default page or handle the case where the user type is not identified
     return render_template('error.html', message='User type not identified.')
-##############################################################################################
+
+
+def get_blood_product_price(blood_product_name):
+    # Query the MongoDB collection 'pricing' to fetch the price of the given blood product
+    blood_product = pricing_collection.find_one({'code': blood_product_name})
+    if blood_product:
+        session["blood_component"] = blood_product['name']
+        return blood_product['price']
+    else:
+        # Return a default price or handle the case where the price is not found
+        return None
+
+
+
+#################################################################################tBBre#############
 
 @app.route('/addbb', methods=['POST'])
 def add_blood_bag():
