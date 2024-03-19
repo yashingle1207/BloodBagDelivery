@@ -33,6 +33,7 @@ Searchbb = db['BloodStock']
 Order = db['Orders']
 PatientUser = db['PatientUsers']
 PatientSearchBB = db['BloodStock']
+pricing_collection = db['pricing']
 
 
 def calculate_sha256_string(input_string):
@@ -54,14 +55,16 @@ def base64_encode(input_dict):
 
 @app.route("/make_payment", methods=['POST'])
 def pay():
+    total_amt = session.get("quantity")*session.get('blood_product_price')
+
     MAINPAYLOAD = {
         "merchantId": "M22S8FP278KQA",
         "merchantTransactionId": shortuuid.uuid(),
         "merchantUserId": "MUID123",
-        "amount": 1000,
-        "redirectUrl": "http://127.0.0.1:5000/return-to-me",
+        "amount": total_amt,
+        "redirectUrl": "http://127.0.0.1:5000//payment_response",
         "redirectMode": "POST",
-        "callbackUrl": "http://127.0.0.1:5000/return-to-me",
+        "callbackUrl": "http://127.0.0.1:5000//payment_response",
         "mobileNumber": "9518920645",
         "paymentInstrument": {
             "type": "PAY_PAGE"
@@ -91,37 +94,111 @@ def pay():
 
 
 
-@app.route("/return-to-me", methods=['GET', 'POST'])
-def payment_return():
+# @app.route("/payment_response", methods=['GET', 'POST'])
+# def payment_return():
  
    
+#     INDEX = "1"
+#     SALTKEY = "cfaaec9b-b797-4e15-b14b-ac8cd11ac8f2"
+ 
+#     form_data = request.form
+#     form_data_dict = dict(form_data)
+#     # respond_json_data = jsonify(form_data_dict)
+#     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#     # 1.In the live please match the amount you get byamount you send also so that hacker can't pass static value.
+#     # 2.Don't take Marchent ID directly validate it with yoir Marchent ID
+#     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#     if request.form.get('transactionId'):
+#         request_url = 'https://api.phonepe.com/apis/hermes/pg/v1/status/M22S8FP278KQA/' + request.form.get('transactionId');
+#         sha256_Pay_load_String = '/pg/v1/status/M22S8FP278KQA/' + request.form.get('transactionId') + SALTKEY;
+#         sha256_val = calculate_sha256_string(sha256_Pay_load_String);
+#         checksum = sha256_val + '###' + INDEX;
+#         # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#         # Payload Send
+#         # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#         headers = {
+#             'Content-Type': 'application/json',
+#             'X-VERIFY': checksum,
+#             'X-MERCHANT-ID': request.form.get('transactionId'),
+#             'accept': 'application/json',
+#         }
+#         response = requests.get(request_url, headers=headers)
+#         #print(response.text);
+#     return render_template('map.html', page_respond_data=form_data_dict, page_respond_data_varify=response.text)
+
+@app.route("/payment_response", methods=['POST'])
+def payment_response():
     INDEX = "1"
     SALTKEY = "cfaaec9b-b797-4e15-b14b-ac8cd11ac8f2"
- 
+
     form_data = request.form
     form_data_dict = dict(form_data)
-    # respond_json_data = jsonify(form_data_dict)
-    # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    # 1.In the live please match the amount you get byamount you send also so that hacker can't pass static value.
-    # 2.Don't take Marchent ID directly validate it with yoir Marchent ID
-    # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
     if request.form.get('transactionId'):
-        request_url = 'https://api.phonepe.com/apis/hermes/pg/v1/status/M22S8FP278KQA/' + request.form.get('transactionId');
-        sha256_Pay_load_String = '/pg/v1/status/M22S8FP278KQA/' + request.form.get('transactionId') + SALTKEY;
-        sha256_val = calculate_sha256_string(sha256_Pay_load_String);
-        checksum = sha256_val + '###' + INDEX;
-        # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        # Payload Send
-        # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        request_url = 'https://api.phonepe.com/apis/hermes/pg/v1/status/M22S8FP278KQA/' + request.form.get(
+            'transactionId')
+        sha256_Pay_load_String = '/pg/v1/status/M22S8FP278KQA/' + request.form.get('transactionId') + SALTKEY
+        sha256_val = calculate_sha256_string(sha256_Pay_load_String)
+        checksum = sha256_val + '###' + INDEX
+
         headers = {
             'Content-Type': 'application/json',
             'X-VERIFY': checksum,
             'X-MERCHANT-ID': request.form.get('transactionId'),
             'accept': 'application/json',
         }
+
         response = requests.get(request_url, headers=headers)
-        #print(response.text);
-    return render_template('map.html', page_respond_data=form_data_dict, page_respond_data_varify=response.text)
+
+        # Check if payment was successful
+        if response.status_code == 200:
+            # Extract order details from session
+            req_type = session.get('req_type')
+            fname = session.get('fname')
+            mname = session.get('mname')
+            lname = session.get('lname')
+            age = session.get('age')
+            ward = session.get('ward')
+            bedno = session.get('bedno')
+            gender = session.get('gender')
+            blood_group = session.get('blood_group')
+            blood_component = session.get('blood_component')
+            requested_quantity = session.get('quantity')
+            user_id = session.get('_id')
+            blood_bank_id = session.get('bb_reg_no')
+
+            # Create order data
+            order_data = {
+                'User_ID': user_id,
+                'BloodBank_Id': blood_bank_id,
+                'BloodGrp': blood_group,
+                'BloodComp': blood_component,
+                'BloodQuantity': requested_quantity,
+                'req_type': req_type,
+                'fname': fname,
+                'mname': mname,
+                'lname': lname,
+                'age': age,
+                'ward': ward,
+                'bedno': bedno,
+                'gender': gender,
+                'timestamp': datetime.now(),
+                'status': 'undelivered'
+            }
+
+            # Insert order data into MongoDB
+            Order.insert_one(order_data)
+
+            # Redirect to success page
+            return render_template('map.html', form_data=form_data_dict)
+
+        else:
+            # Payment failed, redirect to payment failure page
+            return render_template('payment_failed.html', form_data=form_data_dict)
+
+    # Handle case where transaction ID is missing or request fails
+    return render_template('error.html', message='Transaction ID missing or invalid')
+
 
 ########################################### payment end#############################
 
@@ -571,39 +648,20 @@ def search_blood_bag():
                 'address': blood_bank_user['address'],  # Assuming the field name is 'address' in your users table
             })
 
+      
+
         # Store the values in the user's session
         session['blood_group'] = blood_group
-        session['blood_component'] = blood_component
+        session['blood_component_code'] = blood_component
         session['quantity'] = quantity
+
+
 
         # Return the results to the template
         return render_template('SearchResults.html', results=results)
 
     return render_template('SearchResults.html')
 
-
-####################################################################
-@app.route('/set_selected_blood_bank', methods=['POST'])
-def set_selected_blood_bank():
-    if request.method == 'POST':
-        selected_blood_bank_reg_num = request.form.get('selected_blood_bank')
-
-        # Check if a hospital or patient is logged in
-        if 'hosp_reg_no' in session:
-            # Set the selected blood bank reg_num in the session for a hospital
-            session['bb_reg_no'] = selected_blood_bank_reg_num
-            return render_template('BloodBagRequestForm.html')  # Redirect to the hospital's request form
-
-        elif '_id' in session:
-            # Set the selected blood bank reg_num in the session for a patient
-            session['bb_reg_no'] = selected_blood_bank_reg_num
-            return render_template('PatientBBreqform.html')  # Redirect to the patient's request form
-
-    # Redirect to a default page or handle the case where the user type is not identified
-    return render_template('error.html', message='User type not identified.')
-
-
-###################################################################
 
 @app.route('/PatientSearchBB', methods=['POST'])
 def PsearchBB():
@@ -637,13 +695,51 @@ def PsearchBB():
 
         # Store the values in the user's session
         session['blood_group'] = blood_group
-        session['blood_component'] = blood_component
+        session['blood_component_code'] = blood_component
         session['quantity'] = quantity
 
         # Return the results to the template
         return render_template('PatientSearchResult.html', results=results)
 
     return render_template('PatientSearchResult.html')
+
+####################################################################
+@app.route('/set_selected_blood_bank', methods=['POST'])
+def set_selected_blood_bank():
+    if request.method == 'POST':
+        selected_blood_bank_reg_num = request.form.get('selected_blood_bank')
+
+        # Fetch the price of the selected blood product from the database
+        selected_blood_product = session.get('blood_component_code')
+        blood_product_price = get_blood_product_price(selected_blood_product)
+
+        # Check if a hospital or patient is logged in
+        if 'hosp_reg_no' in session:
+            # Set the selected blood bank reg_num and blood product price in the session for a hospital
+            session['bb_reg_no'] = selected_blood_bank_reg_num
+            session['blood_product_price'] = blood_product_price
+            return render_template('BloodBagRequestForm.html')  # Redirect to the hospital's request form
+
+        elif '_id' in session:
+            # Set the selected blood bank reg_num and blood product price in the session for a patient
+            session['bb_reg_no'] = selected_blood_bank_reg_num
+            session['blood_product_price'] = blood_product_price
+            return render_template('PatientBBreqform.html')  # Redirect to the patient's request form
+
+    # Redirect to a default page or handle the case where the user type is not identified
+    return render_template('error.html', message='User type not identified.')
+
+
+def get_blood_product_price(blood_product_name):
+    # Query the MongoDB collection 'pricing' to fetch the price of the given blood product
+    blood_product = pricing_collection.find_one({'code': blood_product_name})
+    if blood_product:
+        session["blood_component"] = blood_product['name']
+        return blood_product['price']
+    else:
+        # Return a default price or handle the case where the price is not found
+        return None
+
 ##################################################################
 
 @app.route('/addbb', methods=['POST'])
