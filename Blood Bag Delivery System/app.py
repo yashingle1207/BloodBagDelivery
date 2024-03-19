@@ -18,7 +18,7 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.secret_key = os.urandom(24)
 
 
-# MongoDB configuration
+######################## MongoDB configuration for the remote #####################################
 atlas_uri = "mongodb+srv://yashingle007:YASHsteyr124@clusterbb.uyk8mkp.mongodb.net/"
 
 # Create a MongoClient instance using the Atlas URI
@@ -36,6 +36,8 @@ PatientSearchBB = db['BloodStock']
 pricing_collection = db['pricing']
 
 
+
+################################# PhonePe payment Code #####################################
 def calculate_sha256_string(input_string):
     # Create a hash object using the SHA-256 algorithm
     sha256 = hashes.Hash(hashes.SHA256(), backend=default_backend())
@@ -93,38 +95,6 @@ def pay():
     return redirect(responseData['data']['instrumentResponse']['redirectInfo']['url'])
 
 
-
-# @app.route("/payment_response", methods=['GET', 'POST'])
-# def payment_return():
- 
-   
-#     INDEX = "1"
-#     SALTKEY = "cfaaec9b-b797-4e15-b14b-ac8cd11ac8f2"
- 
-#     form_data = request.form
-#     form_data_dict = dict(form_data)
-#     # respond_json_data = jsonify(form_data_dict)
-#     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#     # 1.In the live please match the amount you get byamount you send also so that hacker can't pass static value.
-#     # 2.Don't take Marchent ID directly validate it with yoir Marchent ID
-#     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#     if request.form.get('transactionId'):
-#         request_url = 'https://api.phonepe.com/apis/hermes/pg/v1/status/M22S8FP278KQA/' + request.form.get('transactionId');
-#         sha256_Pay_load_String = '/pg/v1/status/M22S8FP278KQA/' + request.form.get('transactionId') + SALTKEY;
-#         sha256_val = calculate_sha256_string(sha256_Pay_load_String);
-#         checksum = sha256_val + '###' + INDEX;
-#         # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#         # Payload Send
-#         # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#         headers = {
-#             'Content-Type': 'application/json',
-#             'X-VERIFY': checksum,
-#             'X-MERCHANT-ID': request.form.get('transactionId'),
-#             'accept': 'application/json',
-#         }
-#         response = requests.get(request_url, headers=headers)
-#         #print(response.text);
-#     return render_template('map.html', page_respond_data=form_data_dict, page_respond_data_varify=response.text)
 
 @app.route("/payment_response", methods=['POST'])
 def payment_response():
@@ -199,11 +169,43 @@ def payment_response():
     # Handle case where transaction ID is missing or request fails
     return render_template('error.html', message='Transaction ID missing or invalid')
 
+# @app.route("/payment_response", methods=['GET', 'POST'])
+# def payment_return():
+ 
+   
+#     INDEX = "1"
+#     SALTKEY = "cfaaec9b-b797-4e15-b14b-ac8cd11ac8f2"
+ 
+#     form_data = request.form
+#     form_data_dict = dict(form_data)
+#     # respond_json_data = jsonify(form_data_dict)
+#     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#     # 1.In the live please match the amount you get byamount you send also so that hacker can't pass static value.
+#     # 2.Don't take Marchent ID directly validate it with yoir Marchent ID
+#     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#     if request.form.get('transactionId'):
+#         request_url = 'https://api.phonepe.com/apis/hermes/pg/v1/status/M22S8FP278KQA/' + request.form.get('transactionId');
+#         sha256_Pay_load_String = '/pg/v1/status/M22S8FP278KQA/' + request.form.get('transactionId') + SALTKEY;
+#         sha256_val = calculate_sha256_string(sha256_Pay_load_String);
+#         checksum = sha256_val + '###' + INDEX;
+#         # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#         # Payload Send
+#         # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#         headers = {
+#             'Content-Type': 'application/json',
+#             'X-VERIFY': checksum,
+#             'X-MERCHANT-ID': request.form.get('transactionId'),
+#             'accept': 'application/json',
+#         }
+#         response = requests.get(request_url, headers=headers)
+#         #print(response.text);
+#     return render_template('map.html', page_respond_data=form_data_dict, page_respond_data_varify=response.text)
+
+
+
 
 ########################################### payment end#############################
 
-def update_requisition_status(order_id, param):
-    pass
 
 
 def update_delivery_status(order_id):
@@ -615,6 +617,9 @@ def submit_order():
     return f"Order placed: Blood Type - {blood_type}, Quantity - {quantity}"
 
 
+
+
+######################## Search Code #######################################################
 from flask import render_template, request, session
 
 
@@ -703,7 +708,7 @@ def PsearchBB():
 
     return render_template('PatientSearchResult.html')
 
-####################################################################
+######################################## set bank ############
 @app.route('/set_selected_blood_bank', methods=['POST'])
 def set_selected_blood_bank():
     if request.method == 'POST':
@@ -740,7 +745,7 @@ def get_blood_product_price(blood_product_name):
         # Return a default price or handle the case where the price is not found
         return None
 
-##################################################################
+##############################################################################################
 
 @app.route('/addbb', methods=['POST'])
 def add_blood_bag():
@@ -775,7 +780,7 @@ def add_blood_bag():
 
     return render_template('StockAddSuccessful.html')
 
-#################################################################################################
+############################################
 @app.route('/removebb', methods=['POST'])
 def remove_blood_bag():
     if request.method == 'POST':
@@ -808,7 +813,7 @@ def remove_blood_bag():
 
 
 
-###########################################
+########################### Login and sign-ups ####################################
 
 @app.route('/HospSignUp', methods=['POST'])
 def Hospsignup():
@@ -866,18 +871,7 @@ def HospsignIn():
 
     return response
 
-@app.route('/HospDashboard')
-def HospDashboard():
-    # Retrieve the registration number from the session
-    hosp_reg_no = session.get('hosp_reg_no')
-
-    # Check if the user is logged in
-    if hosp_reg_no:
-        return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
-    else:
-        # Redirect to the login page if not logged in
-        return redirect(url_for('HospsignIn'))
-
+#################### BB #### 
 
 @app.route('/BBSignUp', methods=['POST'])
 def BBsignup():
@@ -930,9 +924,6 @@ def BBsignIn():
             return render_template('LoginUnsuccessful.html')
 
     return render_template('BloodBankDashboard.html')  # Update with the correct template name
-
-##############################################################################
-
 
 
 @app.route('/Patientsignup', methods=['POST'])
@@ -989,6 +980,24 @@ def PsignIn():
 
     return render_template('PatientDashboard.html')  # Update with the correct template name
 
+
+
+##### Dashbaord###
+
+@app.route('/HospDashboard')
+def HospDashboard():
+    # Retrieve the registration number from the session
+    hosp_reg_no = session.get('hosp_reg_no')
+
+    # Check if the user is logged in
+    if hosp_reg_no:
+        return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
+    else:
+        # Redirect to the login page if not logged in
+        return redirect(url_for('HospsignIn'))
+
+
+##############################################################################
 
 
 ##################################
@@ -1090,6 +1099,9 @@ def refund():
 @app.route('/pricing')
 def price():
     return render_template('PricingPolicy.html')
+
+
+
 
 @app.route('/payment_invoice', methods=['POST'])
 def payment_invoice():
