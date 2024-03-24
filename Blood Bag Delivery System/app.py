@@ -3,6 +3,7 @@ from bson import ObjectId
 import os
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from pymongo import MongoClient
+import uuid
 import requests
 import base64
 import json
@@ -24,7 +25,6 @@ atlas_uri = "mongodb+srv://yashingle007:YASHsteyr124@clusterbb.uyk8mkp.mongodb.n
 # Create a MongoClient instance using the Atlas URI
 client = MongoClient(atlas_uri)
 
-
 db = client['BloodBag']  # Update with your database name
 HospUser = db['HospitalUsers']  # Collection for storing user data
 BBUser = db['BloodBankUsers']  # Collection for storing user data
@@ -37,7 +37,9 @@ pricing_collection = db['pricing']
 
 
 
-################################# PhonePe payment Code #####################################
+####################### Payment PhonePe #######################
+
+
 def calculate_sha256_string(input_string):
     # Create a hash object using the SHA-256 algorithm
     sha256 = hashes.Hash(hashes.SHA256(), backend=default_backend())
@@ -57,6 +59,7 @@ def base64_encode(input_dict):
 
 @app.route("/make_payment", methods=['POST'])
 def pay():
+
     total_amt = session.get("quantity")*session.get('blood_product_price')
 
     MAINPAYLOAD = {
@@ -64,9 +67,9 @@ def pay():
         "merchantTransactionId": shortuuid.uuid(),
         "merchantUserId": "MUID123",
         "amount": total_amt,
-        "redirectUrl": "http://127.0.0.1:5000//payment_response",
+        "redirectUrl": "http://127.0.0.1:5000/payment_response",
         "redirectMode": "POST",
-        "callbackUrl": "http://127.0.0.1:5000//payment_response",
+        "callbackUrl": "http://127.0.0.1:5000/payment_response",
         "mobileNumber": "9518920645",
         "paymentInstrument": {
             "type": "PAY_PAGE"
@@ -76,12 +79,12 @@ def pay():
     INDEX = "1"
     ENDPOINT = "/pg/v1/pay"
     SALTKEY = "cfaaec9b-b797-4e15-b14b-ac8cd11ac8f2"
- 
+
     base64String = base64_encode(MAINPAYLOAD)
     mainString = base64String + ENDPOINT + SALTKEY;
     sha256Val = calculate_sha256_string(mainString)
     checkSum = sha256Val + '###' + INDEX;
-  
+
     headers = {
         'Content-Type': 'application/json',
         'X-VERIFY': checkSum,
@@ -93,7 +96,6 @@ def pay():
     response = requests.post('https://api.phonepe.com/apis/hermes/pg/v1/pay', headers=headers, json=json_data)
     responseData = response.json();
     return redirect(responseData['data']['instrumentResponse']['redirectInfo']['url'])
-
 
 
 @app.route("/payment_response", methods=['POST'])
@@ -169,43 +171,142 @@ def payment_response():
     # Handle case where transaction ID is missing or request fails
     return render_template('error.html', message='Transaction ID missing or invalid')
 
-# @app.route("/payment_response", methods=['GET', 'POST'])
-# def payment_return():
- 
-   
-#     INDEX = "1"
-#     SALTKEY = "cfaaec9b-b797-4e15-b14b-ac8cd11ac8f2"
- 
-#     form_data = request.form
-#     form_data_dict = dict(form_data)
-#     # respond_json_data = jsonify(form_data_dict)
-#     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#     # 1.In the live please match the amount you get byamount you send also so that hacker can't pass static value.
-#     # 2.Don't take Marchent ID directly validate it with yoir Marchent ID
-#     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#     if request.form.get('transactionId'):
-#         request_url = 'https://api.phonepe.com/apis/hermes/pg/v1/status/M22S8FP278KQA/' + request.form.get('transactionId');
-#         sha256_Pay_load_String = '/pg/v1/status/M22S8FP278KQA/' + request.form.get('transactionId') + SALTKEY;
-#         sha256_val = calculate_sha256_string(sha256_Pay_load_String);
-#         checksum = sha256_val + '###' + INDEX;
-#         # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#         # Payload Send
-#         # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#         headers = {
-#             'Content-Type': 'application/json',
-#             'X-VERIFY': checksum,
-#             'X-MERCHANT-ID': request.form.get('transactionId'),
-#             'accept': 'application/json',
-#         }
-#         response = requests.get(request_url, headers=headers)
-#         #print(response.text);
-#     return render_template('map.html', page_respond_data=form_data_dict, page_respond_data_varify=response.text)
+
+###############################################################
 
 
+
+################# Login Session##########################
+@app.route('/logout')
+def logout():
+    # Clear the session
+    session.clear()
+
+    # Redirect to the home page
+    return redirect(url_for('home'))
+
+# Home route
+@app.route('/')
+def home():
+    return render_template('home.html')
+
+
+@app.route('/HospSignIn', methods=['POST', 'GET'])
+def HospsignIn():
+    if request.method == 'POST':
+        hosp_email = request.form.get('hospEmailId')
+        hosp_password = request.form.get('hospPassword')
+
+        existing_user = HospUser.find_one({'email': hosp_email, 'password': hosp_password})
+        if existing_user:
+            hosp_reg_no = existing_user.get('reg_num')
+
+            # Set the registration number in the session
+            session['hosp_reg_no'] = hosp_reg_no
+
+            # Redirect to the hospital dashboard
+            return redirect(url_for('HospDashboard'))
+
+        else:
+            return render_template('LoginUnsuccessful.html')
+
+    response = app.make_response(render_template('HospitalSignIn.html'))
+    response.headers['Cache-Control'] = 'no-store'
+
+    return response
+
+
+@app.route('/BBSignIn', methods=['POST'])
+def BBsignIn():
+    if request.method == 'POST':
+        # Get user input from the login form
+        bb_email = request.form.get('BBemail1')
+        bb_password = request.form.get('BBpass1')
+
+        # Check if the user exists in the database
+        existing_user = BBUser.find_one({'email': bb_email, 'password': bb_password})
+        if existing_user:
+            bb_reg_no = existing_user.get('reg_num')
+            session['bb_reg_no'] = bb_reg_no
+
+            # You can redirect to the blood bank dashboard or render a template
+            return render_template('BloodBankDashboard.html', bb_email=bb_email)
+        else:
+            return render_template('LoginUnsuccessful.html')
+
+    return render_template('BloodBankDashboard.html') 
+
+
+@app.route('/HospSignUp', methods=['POST'])
+def Hospsignup():
+    if request.method == 'POST':
+        # Get user input from the signup form
+        facility_name = request.form.get('facilityName')
+        facility_email = request.form.get('facilityEmailId')
+        facility_password = request.form.get('facilityPassword')
+        facility_contact_num = request.form.get('facilityContactNum')
+        facility_address = request.form.get('facilityAddress')
+        facility_reg_num = request.form.get('facilityRegNum')
+
+        # Check if the email already exists
+        existing_user = HospUser.find_one({'reg_num': facility_reg_num})
+        if existing_user:
+            return render_template('AlreadyExistHosp.html')
+
+        # Create a new user document
+        new_user = {
+            'facility_name': facility_name,
+            'email': facility_email,
+            'password': facility_password,
+            'contact_num': facility_contact_num,
+            'address': facility_address,
+            'reg_num': facility_reg_num
+        }
+
+        # Insert the new user into the MongoDB collection
+        HospUser.insert_one(new_user)
+
+    return render_template('HospitalDashboard.html')
+
+
+
+@app.route('/BBSignUp', methods=['POST'])
+def BBsignup():
+    if request.method == 'POST':
+        # Get user input from the signup form
+        bb_name = request.form.get('BBName')
+        bb_email = request.form.get('BBEmail')
+        bb_password = request.form.get('BBPass')
+        contact_num = request.form.get('ContactNum')
+        address = request.form.get('Address')
+        reg_num = request.form.get('RegNum')
+
+        # Check if the email already exists
+        existing_user = BBUser.find_one({'reg_num': reg_num})
+        if existing_user:
+            return render_template('AlreadyExistBB.html')
+
+        # Create a new user document
+        new_user = {
+            'bb_name': bb_name,
+            'email': bb_email,
+            'password': bb_password,
+            'contact_num': contact_num,
+            'address': address,
+            'reg_num': reg_num
+        }
+
+        # Insert the new user into the MongoDB collection
+        BBUser.insert_one(new_user)
+
+    return render_template('BB_verification.html')
+
+
+def update_requisition_status(order_id, param):
+    pass
 
 
 ########################################### payment end#############################
-
 
 
 def update_delivery_status(order_id):
@@ -460,151 +561,70 @@ def Patient_Blood_bag_inProgress():
 
     return render_template('PatientPendingReq.html', orders=order_list)
 
-################################################
-
-@app.route('/submit_request', methods=['POST'])
-def submit_request():
-    if request.method == 'POST':
-        # Get user input from the form
-        req_type = request.form.get('reqtype')
-        fname = request.form.get('fname')
-        mname = request.form.get('mname')
-        lname = request.form.get('lname')
-        age = int(request.form.get('age'))
-        ward = request.form.get('ward')
-        bedno = request.form.get('bedno')
-        gender = request.form.get('gender')
-
-        # Decrease the quantity of blood bags in MongoDB
-        blood_group = session.get('blood_group')
-        blood_component = session.get('blood_component')
-        requested_quantity = int(session.get('quantity'))
-
-        # Create a dictionary with the form data
-        form_data = {
-            'User_ID': session.get('hosp_reg_no'),
-            'BloodBank_Id': session.get('bb_reg_no'),
-            'BloodGrp': blood_group,
-            'BloodComp': blood_component,
-            'BloodQuantity': requested_quantity,
-            'req_type': req_type,
-            'fname': fname,
-            'mname': mname,
-            'lname': lname,
-            'age': age,
-            'ward': ward,
-            'bedno': bedno,
-            'gender': gender,
-            'timestamp': datetime.now(),
-            'status': 'undelivered'
-        }
-
-        # Insert the form data into the Order collection in MongoDB
-        order_insert_result = Order.insert_one(form_data)
-        order_id = order_insert_result.inserted_id  # Get the inserted order ID
-
-        # Find the relevant blood bags in the database
-        blood_bags = BloodStockAdd.find({'reg_num': session.get('bb_reg_no'),
-                                         'blood_group': blood_group,
-                                         'blood_component': blood_component})
-
-        # Update the quantity of each blood bag
-        for blood_bag in blood_bags:
-            available_quantity = blood_bag.get('quantity', 0)
-            if available_quantity >= requested_quantity:
-                new_quantity = available_quantity - requested_quantity
-                # Update the quantity in the database
-                BloodStockAdd.update_one(
-                    {'_id': blood_bag['_id']},
-                    {'$set': {'quantity': new_quantity}}
-                )
-            else:
-                # Handle insufficient quantity error
-                return render_template('error.html', message='Insufficient quantity of blood bags.')
-
-        # Assume you receive payment details from Razorpay success callback
-        razorpay_payment_id = request.form.get('razorpay_payment_id')
-        razorpay_order_id = str(order_id)  # Convert order ID to string
-        # Add other relevant payment details you want to store in the database
-
-        # Update the order status and store payment details in the database
-        Order.update_one(
-            {'_id': ObjectId(razorpay_order_id)},
-            {
-                '$set': {
-                    'status': 'delivered',
-                    'payment_id': razorpay_payment_id,
-                    # Add other payment details here
-                }
-            }
-        )
-
-    return render_template('map.html')
-#############################################
 
 
-@app.route('/Psubmit_req', methods=['POST'])
-def Patient_sr():
-    if request.method == 'POST':
-        # Get user input from the form
-        req_type = request.form.get('reqtype')
-        fname = request.form.get('fname')
-        mname = request.form.get('mname')
-        lname = request.form.get('lname')
-        age = int(request.form.get('age'))
-        ward = request.form.get('ward')
-        bedno = request.form.get('bedno')
-        gender = request.form.get('gender')
-
-
-        # Decrease the quantity of blood bags in MongoDB
-
-        blood_group = session.get('blood_group')
-        blood_component = session.get('blood_component')
-        requested_quantity = int(session.get('quantity'))
-
-        # Create a dictionary with the form data
-        form_data = {
-            'User_ID': session.get('_id'),
-            'BloodBank_Id': session.get('bb_reg_no'),
-            'BloodGrp': blood_group,
-            'BloodComp':blood_component,
-            'BloodQuantity': requested_quantity,
-            'req_type': req_type,
-            'fname': fname,
-            'mname': mname,
-            'lname': lname,
-            'age': age,
-            'ward': ward,
-            'bedno': bedno,
-            'gender': gender,
-            'timestamp': datetime.now(),
-            'status': 'undelivered'
-        }
-
-        # Insert the form data into the Order collection in MongoDB
-        Order.insert_one(form_data)
-
-
-
-        # Find the relevant blood bags in the database
-        blood_bags = BloodStockAdd.find({'reg_num':session.get('bb_reg_no'),'blood_group': blood_group, 'blood_component': blood_component})
-
-        # Update the quantity of each blood bag
-        for blood_bag in blood_bags:
-            available_quantity = blood_bag.get('quantity', 0)
-            if available_quantity >= requested_quantity:
-                new_quantity = available_quantity - requested_quantity
-                # Update the quantity in the database
-                BloodStockAdd.update_one(
-                    {'_id': blood_bag['_id']},
-                    {'$set': {'quantity': new_quantity}}
-                )
-            else:
-                # Handle insufficient quantity error
-                return render_template('error.html', message='Insufficient quantity of blood bags.')
-
-    return render_template('Patientmap.html')
+# @app.route('/Psubmit_req', methods=['POST'])
+# def Patient_sr():
+#     if request.method == 'POST':
+#         # Get user input from the form
+#         req_type = session['req_type']
+#         fname = session['fname']
+#         mname = session['mname']
+#         lname = session['lname']
+#         age = session['age']
+#         ward = session['ward']
+#         bedno = session['bedno']
+#         gender = session['gender']
+#
+#
+#         # Decrease the quantity of blood bags in MongoDB
+#
+#         blood_group = session.get('blood_group')
+#         blood_component = session.get('blood_component')
+#         requested_quantity = int(session.get('quantity'))
+#
+#         # Create a dictionary with the form data
+#         form_data = {
+#             'User_ID': session.get('_id'),
+#             'BloodBank_Id': session.get('bb_reg_no'),
+#             'BloodGrp': blood_group,
+#             'BloodComp':blood_component,
+#             'BloodQuantity': requested_quantity,
+#             'req_type': req_type,
+#             'fname': fname,
+#             'mname': mname,
+#             'lname': lname,
+#             'age': age,
+#             'ward': ward,
+#             'bedno': bedno,
+#             'gender': gender,
+#             'timestamp': datetime.now(),
+#             'status': 'undelivered'
+#         }
+#
+#         # Insert the form data into the Order collection in MongoDB
+#         Order.insert_one(form_data)
+#
+#
+#
+#         # Find the relevant blood bags in the database
+#         blood_bags = BloodStockAdd.find({'reg_num':session.get('bb_reg_no'),'blood_group': blood_group, 'blood_component': blood_component})
+#
+#         # Update the quantity of each blood bag
+#         for blood_bag in blood_bags:
+#             available_quantity = blood_bag.get('quantity', 0)
+#             if available_quantity >= requested_quantity:
+#                 new_quantity = available_quantity - requested_quantity
+#                 # Update the quantity in the database
+#                 BloodStockAdd.update_one(
+#                     {'_id': blood_bag['_id']},
+#                     {'$set': {'quantity': new_quantity}}
+#                 )
+#             else:
+#                 # Handle insufficient quantity error
+#                 return render_template('error.html', message='Insufficient quantity of blood bags.')
+#
+#     return render_template('map.html')
 
 
 
@@ -618,9 +638,6 @@ def submit_order():
 
 
 
-
-######################## Search Code #######################################################
-from flask import render_template, request, session
 
 
 @app.route('/searchbb', methods=['POST'])
@@ -653,7 +670,7 @@ def search_blood_bag():
                 'address': blood_bank_user['address'],  # Assuming the field name is 'address' in your users table
             })
 
-      
+
 
         # Store the values in the user's session
         session['blood_group'] = blood_group
@@ -666,6 +683,7 @@ def search_blood_bag():
         return render_template('SearchResults.html', results=results)
 
     return render_template('SearchResults.html')
+
 
 
 @app.route('/PatientSearchBB', methods=['POST'])
@@ -708,8 +726,8 @@ def PsearchBB():
 
     return render_template('PatientSearchResult.html')
 
-######################################## set bank ############
-from flask import render_template, request, session
+
+####################################################################
 @app.route('/set_selected_blood_bank', methods=['POST'])
 def set_selected_blood_bank():
     if request.method == 'POST':
@@ -748,7 +766,7 @@ def get_blood_product_price(blood_product_name):
 
 
 
-#################################################################################tBBre#############
+##################################################################
 
 @app.route('/addbb', methods=['POST'])
 def add_blood_bag():
@@ -783,7 +801,7 @@ def add_blood_bag():
 
     return render_template('StockAddSuccessful.html')
 
-############################################
+#################################################################################################
 @app.route('/removebb', methods=['POST'])
 def remove_blood_bag():
     if request.method == 'POST':
@@ -816,117 +834,26 @@ def remove_blood_bag():
 
 
 
-########################### Login and sign-ups ####################################
-
-@app.route('/HospSignUp', methods=['POST'])
-def Hospsignup():
-    if request.method == 'POST':
-        # Get user input from the signup form
-        facility_name = request.form.get('facilityName')
-        facility_email = request.form.get('facilityEmailId')
-        facility_password = request.form.get('facilityPassword')
-        facility_contact_num = request.form.get('facilityContactNum')
-        facility_address = request.form.get('facilityAddress')
-        facility_reg_num = request.form.get('facilityRegNum')
-
-        # Check if the email already exists
-        existing_user = HospUser.find_one({'reg_num': facility_reg_num})
-        if existing_user:
-            return render_template('AlreadyExistHosp.html')
-
-        # Create a new user document
-        new_user = {
-            'facility_name': facility_name,
-            'email': facility_email,
-            'password': facility_password,
-            'contact_num': facility_contact_num,
-            'address': facility_address,
-            'reg_num': facility_reg_num
-        }
-
-        # Insert the new user into the MongoDB collection
-        HospUser.insert_one(new_user)
-
-    return render_template('HospitalDashboard.html')
+###########################################
 
 
-@app.route('/HospSignIn', methods=['POST', 'GET'])
-def HospsignIn():
-    if request.method == 'POST':
-        hosp_email = request.form.get('hospEmailId')
-        hosp_password = request.form.get('hospPassword')
 
-        existing_user = HospUser.find_one({'email': hosp_email, 'password': hosp_password})
-        if existing_user:
-            hosp_reg_no = existing_user.get('reg_num')
+@app.route('/HospDashboard')
+def HospDashboard():
+    # Retrieve the registration number from the session
+    hosp_reg_no = session.get('hosp_reg_no')
 
-            # Set the registration number in the session
-            session['hosp_reg_no'] = hosp_reg_no
-
-            # Redirect to the hospital dashboard
-            return redirect(url_for('HospDashboard'))
-
-        else:
-            return render_template('LoginUnsuccessful.html')
-
-    response = app.make_response(render_template('HospitalSignIn.html'))
-    response.headers['Cache-Control'] = 'no-store'
-
-    return response
-
-#################### BB #### 
-
-@app.route('/BBSignUp', methods=['POST'])
-def BBsignup():
-    if request.method == 'POST':
-        # Get user input from the signup form
-        bb_name = request.form.get('BBName')
-        bb_email = request.form.get('BBEmail')
-        bb_password = request.form.get('BBPass')
-        contact_num = request.form.get('ContactNum')
-        address = request.form.get('Address')
-        reg_num = request.form.get('RegNum')
-
-        # Check if the email already exists
-        existing_user = BBUser.find_one({'reg_num': reg_num})
-        if existing_user:
-            return render_template('AlreadyExistBB.html')
-
-        # Create a new user document
-        new_user = {
-            'bb_name': bb_name,
-            'email': bb_email,
-            'password': bb_password,
-            'contact_num': contact_num,
-            'address': address,
-            'reg_num': reg_num
-        }
-
-        # Insert the new user into the MongoDB collection
-        BBUser.insert_one(new_user)
-        
-        return render_template('BB_verification.html')
+    # Check if the user is logged in
+    if hosp_reg_no:
+        return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
+    else:
+        # Redirect to the login page if not logged in
+        return redirect(url_for('HospsignIn'))
 
 
-@app.route('/BBSignIn', methods=['POST'])
-def BBsignIn():
-    if request.method == 'POST':
-        # Get user input from the login form
-        bb_email = request.form.get('BBemail1')
-        bb_password = request.form.get('BBpass1')
 
-        # Check if the user exists in the database
-        existing_user = BBUser.find_one({'email': bb_email, 'password': bb_password})
-        if existing_user:
-            bb_reg_no = existing_user.get('reg_num')
-            session['bb_reg_no'] = bb_reg_no
+##############################################################################
 
-            # You can redirect to the blood bank dashboard or render a template
-            return render_template('BloodBankDashboard.html', bb_email=bb_email)
-        else:
-            return render_template('LoginUnsuccessful.html')
-
-    return render_template('BloodBankDashboard.html')  # Update with the correct template name
 
 
 @app.route('/Patientsignup', methods=['POST'])
@@ -985,29 +912,11 @@ def PsignIn():
 
 
 
-##### Dashbaord###
-
-@app.route('/HospDashboard')
-def HospDashboard():
-    # Retrieve the registration number from the session
-    hosp_reg_no = session.get('hosp_reg_no')
-
-    # Check if the user is logged in
-    if hosp_reg_no:
-        return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
-    else:
-        # Redirect to the login page if not logged in
-        return redirect(url_for('HospsignIn'))
-
-
-##############################################################################
-
-
 ##################################
 
-@app.route('/')
-def home():
-    return render_template('home.html')
+
+
+
 
 @app.route('/PDashboard')
 def pdash():
@@ -1062,7 +971,7 @@ def contactus():
     return render_template('contactus.html')
 
 
-@app.route('/map')
+@app.route('/map', methods=['POST'])
 def map():
     return render_template('map.html')
 
@@ -1134,9 +1043,7 @@ def payment_invoice():
 
     # Handle case where request method is not POST
     return render_template('error.html', message='Invalid request method.')
-    
-    
-#################################################################################
+
 
 
 # Decorator to handle CORS headers
