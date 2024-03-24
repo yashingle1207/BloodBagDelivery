@@ -211,9 +211,12 @@ def HospsignIn():
             return render_template('LoginUnsuccessful.html')
 
     response = app.make_response(render_template('HospitalSignIn.html'))
-    response.headers['Cache-Control'] = 'no-store'
+  
 
     return response
+
+
+
 
 
 @app.route('/BBSignIn', methods=['POST'])
