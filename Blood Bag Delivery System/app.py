@@ -729,9 +729,34 @@ def HospsignIn():
             return render_template('LoginUnsuccessful.html')
 
     response = app.make_response(render_template('HospitalSignIn.html'))
-    response.headers['Cache-Control'] = 'no-store'
+ 
 
     return response
+
+
+
+@app.route('/PatientSign', methods=['POST'])
+def PsignIn():
+    if request.method == 'POST':
+        # Get user input from the login form
+        p_email = request.form.get('patientEmailId1')
+        p_password = request.form.get('patientPassword1')
+
+        # Check if the user exists in the database
+        existing_user = PatientUser.find_one({'email': p_email, 'password': p_password})
+        if existing_user:
+            patient_reg_no = str(existing_user.get('email'))
+
+            # Set the registration number in the session
+            session['_id'] = patient_reg_no
+
+                        # You can redirect to the blood bank dashboard or render a template
+            return render_template('PatientDashboard.html', p_email=p_email)
+        else:
+            return render_template('LoginUnsuccessful.html')
+
+    return render_template('PatientDashboard.html')  # Update with the correct template name
+
 
 @app.route('/HospDashboard')
 def HospDashboard():
@@ -834,27 +859,6 @@ def Psignup():
         return render_template('PatientDashboard.html')
 
 
-@app.route('/PatientSign', methods=['POST'])
-def PsignIn():
-    if request.method == 'POST':
-        # Get user input from the login form
-        p_email = request.form.get('patientEmailId1')
-        p_password = request.form.get('patientPassword1')
-
-        # Check if the user exists in the database
-        existing_user = PatientUser.find_one({'email': p_email, 'password': p_password})
-        if existing_user:
-            patient_reg_no = str(existing_user.get('email'))
-
-            # Set the registration number in the session
-            session['_id'] = patient_reg_no
-
-                        # You can redirect to the blood bank dashboard or render a template
-            return render_template('PatientDashboard.html', p_email=p_email)
-        else:
-            return render_template('LoginUnsuccessful.html')
-
-    return render_template('PatientDashboard.html')  # Update with the correct template name
 
 
 
