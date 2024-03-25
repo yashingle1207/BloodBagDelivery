@@ -24,8 +24,12 @@
     <div id="menu" class="fas fa-bars"></div>
 
    <nav class="navbar">
+          {% if 'hosp_reg_no' in session %}
+            <a>User ID: {{ session['_id'] }}</a>
+        {% endif %}
 
           <a href="/">Logout</a>
+       
         </nav>
 </header>
 
