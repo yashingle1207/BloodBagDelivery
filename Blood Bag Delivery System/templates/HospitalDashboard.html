@@ -23,10 +23,12 @@
 
     <div id="menu" class="fas fa-bars"></div>
 
+   
     <nav class="navbar">
-           <a href="/">Logout</a>
-
-
+        <a href="/">Logout</a>
+        {% if 'hosp_reg_no' in session %}
+            <p>Welcome, {{ session['hosp_reg_no'] }}</p>
+        {% endif %}
     </nav>
 
 </header>
