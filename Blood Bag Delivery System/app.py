@@ -723,13 +723,17 @@ def HospsignIn():
             session['hosp_reg_no'] = hosp_reg_no
 
             # Redirect to the hospital dashboard
-            return render_template('HospitalDashboard.html', hosp_email=hosp_email)
-            # return redirect(url_for('HospDashboard'))
+            
+            return redirect(url_for('HospDashboard'))
 
         else:
             return render_template('LoginUnsuccessful.html')
 
-     return render_template('HospitalDashboard.html')
+    response = app.make_response(render_template('HospitalSignIn.html'))
+ 
+
+    return response
+
 
 
 
