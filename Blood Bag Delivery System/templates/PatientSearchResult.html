@@ -94,6 +94,9 @@
         <a href="/" class="logo">Transfusio<span>Track</span></a>
         <div id="menu" class="fas fa-bars"></div>
         <nav class="navbar">
+              {% if '_id' in session %}
+            <a>User ID: {{ session['_id'] }}</a>
+        {% endif %}
 
             <a href="/PDashboard">Patient Dashboard</a>
             <a href="/">Logout</a>
