@@ -910,7 +910,7 @@ def pdash():
 
 
 @app.route('/BBDashboard')
-def pdash():
+def BBdash():
     return render_template('BloodBankDashboard.html')
 
 
