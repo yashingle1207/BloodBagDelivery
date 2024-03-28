@@ -239,7 +239,7 @@ def BBsignIn():
     return response
 
 
-@app.route('/PatientSign', methods=['POST', 'GET'])
+@app.route('/PatientSignIn', methods=['POST', 'GET'])
 def PsignIn():
     if request.method == 'POST':
         # Get user input from the login form
@@ -951,7 +951,7 @@ def Hospsign():
 def BBsign1():
     return render_template('BBSignup.html')
 
-@app.route('/PatientSignup')
+@app.route('/PatientSign')
 def Psign1():
     return render_template('PatientLogin.html')
 
