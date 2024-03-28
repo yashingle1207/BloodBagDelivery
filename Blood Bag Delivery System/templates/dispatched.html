@@ -23,6 +23,9 @@
     <div id="menu" class="fas fa-bars"></div>
 
     <nav class="navbar">
+        {% if 'bb_reg_no' in session %}
+            <a>Blood Bank ID: {{ session['bb_reg_no'] }}</a>
+        {% endif %}
           <a href="/BBDashboard">BloodBank Dashboard</a>
          <a href="/">Logout</a>
     </nav>
