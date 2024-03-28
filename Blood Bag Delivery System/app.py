@@ -918,7 +918,7 @@ def HospDashboard():
 
 
 @app.route('/PDashboard')
-def pdash():
+def PDashboard():
     # Retrieve the registration number from the session
     patient_reg_no = session.get('_id')
 
@@ -931,7 +931,7 @@ def pdash():
 
 
 @app.route('/BBDashboard')
-def BBDashboard1():
+def BBDashboard():
     # Retrieve the registration number from the session
     bb_reg_no = session.get('bb_reg_no')
 
