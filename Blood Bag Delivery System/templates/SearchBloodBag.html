@@ -53,10 +53,17 @@
         <div id="menu" class="fas fa-bars"></div>
 
         <nav class="navbar">
-             {% if 'hosp_reg_no' in session %}
-                <a>User ID: {{ session['hosp_reg_no'] }}</a>
+             {% if patient_reg_no %}
+                <p>Patient Registration Number: {{ patient_reg_no }}</p>
+                 <a href="/PDashboard">Patient Dashboard</a>
+            {% elif hosp_reg_no %}
+                <p>Hospital Registration Number: {{ hosp_reg_no }}</p>
+                 <a href="/HospDashboard">Hospital Dashboard</a>
+            {% else %}
+                <p>No user logged in</p>
             {% endif %}
-              <a href="/HospDashboard">Hospital Dashboard</a>
+
+             
           <a href="/">Logout</a>
 
 
