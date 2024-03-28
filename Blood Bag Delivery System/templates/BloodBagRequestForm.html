@@ -28,7 +28,12 @@
             <a>User ID: {{ session['hosp_reg_no'] }}</a>
             <a href="/HospDashboard">Hospital Dashboard</a>
             {% endif %}
+           {% if '_id' in session %}
+            <a>User ID: {{ session['_id'] }}</a>
           
+        <a href="/PDashboard">Patient Dashboard</a>
+          
+        {% endif %}
          
           <a href="/">Logout</a>
         </nav>
