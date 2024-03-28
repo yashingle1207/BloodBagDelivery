@@ -54,8 +54,8 @@
 
         <nav class="navbar">
              {% if 'hosp_reg_no' in session %}
-            <a>User ID: {{ session['hosp_reg_no'] }}</a>
-        {% endif %}
+                <a>User ID: {{ session['hosp_reg_no'] }}</a>
+            {% endif %}
               <a href="/HospDashboard">Hospital Dashboard</a>
           <a href="/">Logout</a>
 
