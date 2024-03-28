@@ -951,7 +951,7 @@ def Hospsign():
 def BBsign1():
     return render_template('BBSignup.html')
 
-@app.route('/PatientSign')
+@app.route('/PatientSignup')
 def Psign1():
     return render_template('PatientLogin.html')
 
