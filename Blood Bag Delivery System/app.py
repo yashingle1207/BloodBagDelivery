@@ -230,12 +230,37 @@ def BBsignIn():
             bb_reg_no = existing_user.get('reg_num')
             session['bb_reg_no'] = bb_reg_no
 
-            # You can redirect to the blood bank dashboard or render a template
-            return render_template('BloodBankDashboard.html', bb_email=bb_email)
+            return redirect(url_for('BBDashboard'))
+
         else:
             return render_template('LoginUnsuccessful.html')
 
-    return render_template('BloodBankDashboard.html') 
+    return render_template('BloodBankSignIn.html')
+    
+
+@app.route('/PatientSign', methods=['POST'])
+def PsignIn():
+    if request.method == 'POST':
+        # Get user input from the login form
+        p_email = request.form.get('patientEmailId1')
+        p_password = request.form.get('patientPassword1')
+
+        # Check if the user exists in the database
+        existing_user = PatientUser.find_one({'email': p_email, 'password': p_password})
+        if existing_user:
+            patient_reg_no = str(existing_user.get('email'))
+
+            # Set the registration number in the session
+            session['_id'] = patient_reg_no
+
+                        # You can redirect to the blood bank dashboard or render a template
+            return render_template('PatientDashboard.html', p_email=p_email)
+        else:
+            return render_template('LoginUnsuccessful.html')
+
+    return render_template('PatientDashboard.html')  # Update with the correct template name
+
+
 
 
 
@@ -874,28 +899,6 @@ def Psignup():
         return render_template('PatientDashboard.html')
 
 
-@app.route('/PatientSign', methods=['POST'])
-def PsignIn():
-    if request.method == 'POST':
-        # Get user input from the login form
-        p_email = request.form.get('patientEmailId1')
-        p_password = request.form.get('patientPassword1')
-
-        # Check if the user exists in the database
-        existing_user = PatientUser.find_one({'email': p_email, 'password': p_password})
-        if existing_user:
-            patient_reg_no = str(existing_user.get('email'))
-
-            # Set the registration number in the session
-            session['_id'] = patient_reg_no
-
-                        # You can redirect to the blood bank dashboard or render a template
-            return render_template('PatientDashboard.html', p_email=p_email)
-        else:
-            return render_template('LoginUnsuccessful.html')
-
-    return render_template('PatientDashboard.html')  # Update with the correct template name
-
 
 
 ##################################
@@ -908,10 +911,6 @@ def PsignIn():
 def pdash():
     return render_template('PatientDashboard.html')
 
-
-@app.route('/BBDashboard')
-def BBdash():
-    return render_template('BloodBankDashboard.html')
 
 
 @app.route('/HospDashboard')
@@ -927,17 +926,43 @@ def HospDashboard():
         return redirect(url_for('HospsignIn'))
 
 
-# @app.route('/BBDashboard')
-# def BBDashboard1():
-#     # Retrieve the registration number from the session
-#     bb_reg_no = session.get('bb_reg_no')
+@app.route('/PDashboard')
+def pdash():
+    # Retrieve the registration number from the session
+    patient_reg_no = session.get('_id')
 
-#     # Check if the user is logged in
-#     if bb_reg_no:
-#         return render_template('BloodBankDashboard.html', bb_reg_no=bb_reg_no)
-#     else:
-#         # Redirect to the login page if not logged in
-#         return redirect(url_for('BBsignIn'))
+    # Check if the user is logged in
+    if patient_reg_no:
+        return render_template('PatientDashboard.html', patient_reg_no=patient_reg_no)
+    else:
+        # Redirect to the patient sign-in page if not logged in
+        return redirect(url_for('PsignIn'))
+
+
+@app.route('/BBDashboard')
+def BBDashboard1():
+    # Retrieve the registration number from the session
+    bb_reg_no = session.get('bb_reg_no')
+
+    # Check if the user is logged in
+    if bb_reg_no:
+        return render_template('BloodBankDashboard.html', bb_reg_no=bb_reg_no)
+    else:
+        # Redirect to the login page if not logged in
+        return redirect(url_for('BBsignIn'))
+
+
+# @app.route('/HospSign')
+# def Hospsign():
+#     return render_template('HospSignup.html')
+
+# @app.route('/BBSign')
+# def BBsign():
+#     return render_template('BBSignup.html')
+
+# @app.route('/PatientSign')
+# def Psign():
+#     return render_template('PatientLogin.html')
 
 
 
@@ -990,17 +1015,6 @@ def map():
 #     return render_template('dispatched.html')
 
 
-@app.route('/HospSign')
-def Hospsign():
-    return render_template('HospSignup.html')
-
-@app.route('/BBSign')
-def BBsign():
-    return render_template('BBSignup.html')
-
-@app.route('/PatientSign')
-def Psign():
-    return render_template('PatientLogin.html')
 
 @app.route('/LoginUnsuccessful')
 def faillogin():
