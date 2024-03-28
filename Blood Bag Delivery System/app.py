@@ -218,6 +218,26 @@ def HospsignIn():
 
 
 
+# @app.route('/BBSignIn', methods=['POST'])
+# def BBsignIn():
+#     if request.method == 'POST':
+#         # Get user input from the login form
+#         bb_email = request.form.get('BBemail1')
+#         bb_password = request.form.get('BBpass1')
+
+#         # Check if the user exists in the database
+#         existing_user = BBUser.find_one({'email': bb_email, 'password': bb_password})
+#         if existing_user:
+#             bb_reg_no = existing_user.get('reg_num')
+#             session['bb_reg_no'] = bb_reg_no
+
+#             # You can redirect to the blood bank dashboard or render a template
+#             return render_template('BloodBankDashboard.html', bb_email=bb_email)
+#         else:
+#             return render_template('LoginUnsuccessful.html')
+
+#     return render_template('BloodBankDashboard.html') 
+
 
 @app.route('/BBSignIn', methods=['POST'])
 def BBsignIn():
@@ -232,13 +252,16 @@ def BBsignIn():
             bb_reg_no = existing_user.get('reg_num')
             session['bb_reg_no'] = bb_reg_no
 
-            # You can redirect to the blood bank dashboard or render a template
-            return render_template('BloodBankDashboard.html', bb_email=bb_email)
+            return redirect(url_for('BBDashboard'))
+
         else:
             return render_template('LoginUnsuccessful.html')
 
-    return render_template('BloodBankDashboard.html') 
+    response = app.make_response(render_template('BloodBankSignIn.html'))
+  
 
+    return response
+    
 
 @app.route('/HospSignUp', methods=['POST'])
 def Hospsignup():
