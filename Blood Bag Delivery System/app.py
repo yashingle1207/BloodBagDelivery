@@ -216,7 +216,6 @@ def HospsignIn():
 
 
 
-
 @app.route('/BBSignIn', methods=['POST'])
 def BBsignIn():
     if request.method == 'POST':
@@ -235,8 +234,10 @@ def BBsignIn():
         else:
             return render_template('LoginUnsuccessful.html')
 
-    return render_template('BloodBankSignIn.html')
-    
+    # Create the response for the GET request
+    response = app.make_response(render_template('BloodBankSignIn.html'))
+    return response
+
 
 @app.route('/PatientSign', methods=['POST'])
 def PsignIn():
@@ -253,15 +254,14 @@ def PsignIn():
             # Set the registration number in the session
             session['_id'] = patient_reg_no
 
-                        # You can redirect to the blood bank dashboard or render a template
-            return render_template('PatientDashboard.html', p_email=p_email)
+            return redirect(url_for('PDashboard'))
+
         else:
             return render_template('LoginUnsuccessful.html')
 
-    return render_template('PatientDashboard.html')  # Update with the correct template name
+    response = app.make_response(render_template('PatientSignIn.html'))
 
-
-
+    return response
 
 
 
@@ -328,6 +328,43 @@ def BBsignup():
         BBUser.insert_one(new_user)
 
     return render_template('BB_verification.html')
+
+
+@app.route('/Patientsignup', methods=['POST'])
+def Psignup():
+    if request.method == 'POST':
+        # Get user input from the signup form
+        patient_name = request.form.get('patientName')
+        patient_email = request.form.get('patientEmailId')
+        patient_password = request.form.get('patientPassword')
+        contact_num = request.form.get('patientContactNum')
+        address = request.form.get('patientAddress')
+        p_city = request.form.get('patientCity')
+
+        # Check if the email already exists
+        existing_user = PatientUser.find_one({'email': patient_email})
+        if existing_user:
+            return render_template('AlreadyExistPatient.html')
+
+        # Create a new user document
+        new_user = {
+            'patient_name': patient_name,
+            'email': patient_email,
+            'password': patient_password,
+            'contact_num': contact_num,
+            'address': address,
+            'p_city': p_city
+        }
+
+        # Insert the new user into the MongoDB collection
+        PatientUser.insert_one(new_user)
+
+        return render_template('PatientDashboard.html')
+
+
+
+
+##################################
 
 
 def update_requisition_status(order_id, param):
@@ -865,51 +902,6 @@ def remove_blood_bag():
 
 ##############################################################################
 
-
-
-@app.route('/Patientsignup', methods=['POST'])
-def Psignup():
-    if request.method == 'POST':
-        # Get user input from the signup form
-        patient_name = request.form.get('patientName')
-        patient_email = request.form.get('patientEmailId')
-        patient_password = request.form.get('patientPassword')
-        contact_num = request.form.get('patientContactNum')
-        address = request.form.get('patientAddress')
-        p_city = request.form.get('patientCity')
-
-        # Check if the email already exists
-        existing_user = PatientUser.find_one({'email': patient_email})
-        if existing_user:
-            return render_template('AlreadyExistPatient.html')
-
-        # Create a new user document
-        new_user = {
-            'patient_name': patient_name,
-            'email': patient_email,
-            'password': patient_password,
-            'contact_num': contact_num,
-            'address': address,
-            'p_city': p_city
-        }
-
-        # Insert the new user into the MongoDB collection
-        PatientUser.insert_one(new_user)
-
-        return render_template('PatientDashboard.html')
-
-
-
-
-##################################
-
-
-
-
-
-@app.route('/PDashboard')
-def pdash():
-    return render_template('PatientDashboard.html')
 
 
 
