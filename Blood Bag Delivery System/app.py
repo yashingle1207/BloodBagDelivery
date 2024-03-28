@@ -706,7 +706,6 @@ def submit_order():
 
 
 
-
 @app.route('/searchbb', methods=['POST'])
 def search_blood_bag():
     if request.method == 'POST':
@@ -750,8 +749,6 @@ def search_blood_bag():
         return render_template('SearchResults.html', results=results)
 
     return render_template('SearchResults.html')
-
-
 
 
 
