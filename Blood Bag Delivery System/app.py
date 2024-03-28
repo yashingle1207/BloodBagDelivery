@@ -401,10 +401,12 @@ def bloodbank_completed_orders():
     return render_template('DeliveredBags.html', orders=order_list)
 
 
-@app.route('/delorder3', methods=['GET'])
+@app.route('/delorder1', methods=['GET'])
 def hosp_received_orders():
     # Query MongoDB to get all orders
-    orders = Order.find({'User_ID': session.get('hosp_reg_no'),'status': 'delivered'})
+    orders = Order.find({'User_ID': 'Reg1234', 'status': 'delivered'})
+
+  
 
     # Prepare the results to be displayed
     order_list = []
