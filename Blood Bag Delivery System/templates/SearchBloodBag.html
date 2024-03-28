@@ -54,13 +54,12 @@
 
         <nav class="navbar">
              {% if patient_reg_no %}
-                <p>Patient Registration Number: {{ patient_reg_no }}</p>
+                <a>User ID: {{ patient_reg_no }}</a>
                  <a href="/PDashboard">Patient Dashboard</a>
             {% elif hosp_reg_no %}
-                <p>Hospital Registration Number: {{ hosp_reg_no }}</p>
+                <a>User ID:: {{ hosp_reg_no }}</a>
                  <a href="/HospDashboard">Hospital Dashboard</a>
-            {% else %}
-                <p>No user logged in</p>
+          
             {% endif %}
 
              
