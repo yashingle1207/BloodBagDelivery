@@ -401,7 +401,7 @@ def bloodbank_completed_orders():
     return render_template('DeliveredBags.html', orders=order_list)
 
 
-@app.route('/delorder1', methods=['GET'])
+@app.route('/delorder3', methods=['GET'])
 def hosp_received_orders():
     # Query MongoDB to get all orders
     orders = Order.find({'User_ID': session.get('hosp_reg_no'),'status': 'delivered'})
@@ -836,25 +836,6 @@ def remove_blood_bag():
 
 
 
-
-###########################################
-
-
-
-@app.route('/HospDashboard')
-def HospDashboard():
-    # Retrieve the registration number from the session
-    hosp_reg_no = session.get('hosp_reg_no')
-
-    # Check if the user is logged in
-    if hosp_reg_no:
-        return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
-    else:
-        # Redirect to the login page if not logged in
-        return redirect(url_for('HospsignIn'))
-
-
-
 ##############################################################################
 
 
@@ -924,6 +905,20 @@ def PsignIn():
 @app.route('/PDashboard')
 def pdash():
     return render_template('PatientDashboard.html')
+
+
+@app.route('/HospDashboard')
+def HospDashboard():
+    # Retrieve the registration number from the session
+    hosp_reg_no = session.get('hosp_reg_no')
+
+    # Check if the user is logged in
+    if hosp_reg_no:
+        return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
+    else:
+        # Redirect to the login page if not logged in
+        return redirect(url_for('HospsignIn'))
+
 
 @app.route('/HDashboard')
 def hdash():
