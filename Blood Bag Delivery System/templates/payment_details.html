@@ -53,9 +53,22 @@
         <header>
             <a href="/" class="logo">Transfusio<span>Track</span></a>
             <div id="menu" class="fas fa-bars"></div>
-             <nav class="navbar">
+            
+        <nav class="navbar">
+             {% if patient_reg_no %}
+                <a>User ID: {{ patient_reg_no }}</a>
+                 <a href="/PDashboard">Patient Dashboard</a>
+            {% elif hosp_reg_no %}
+                <a>User ID:: {{ hosp_reg_no }}</a>
+                 <a href="/HospDashboard">Hospital Dashboard</a>
+          
+            {% endif %}
 
+             
           <a href="/">Logout</a>
+
+
+
         </nav>
         </header>
 
