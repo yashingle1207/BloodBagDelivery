@@ -949,11 +949,11 @@ def Hospsign():
     return render_template('HospSignup.html')
 
 @app.route('/BBSign')
-def BBsign():
+def BBsign1():
     return render_template('BBSignup.html')
 
 @app.route('/PatientSign')
-def Psign():
+def Psign1():
     return render_template('PatientLogin.html')
 
 
