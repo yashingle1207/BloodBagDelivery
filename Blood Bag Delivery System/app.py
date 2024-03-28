@@ -923,7 +923,7 @@ def HospDashboard():
 
 
 @app.route('/BBDashboard')
-def BBDashboard():
+def BBDashboard1():
     # Retrieve the registration number from the session
     bb_reg_no = session.get('bb_reg_no')
 
