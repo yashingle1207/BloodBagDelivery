@@ -944,17 +944,17 @@ def BBDashboard1():
         return redirect(url_for('BBsignIn'))
 
 
-# @app.route('/HospSign')
-# def Hospsign():
-#     return render_template('HospSignup.html')
+@app.route('/HospSign')
+def Hospsign():
+    return render_template('HospSignup.html')
 
-# @app.route('/BBSign')
-# def BBsign():
-#     return render_template('BBSignup.html')
+@app.route('/BBSign')
+def BBsign():
+    return render_template('BBSignup.html')
 
-# @app.route('/PatientSign')
-# def Psign():
-#     return render_template('PatientLogin.html')
+@app.route('/PatientSign')
+def Psign():
+    return render_template('PatientLogin.html')
 
 
 
