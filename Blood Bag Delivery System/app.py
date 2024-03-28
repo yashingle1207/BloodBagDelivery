@@ -972,9 +972,9 @@ def searchres():
     return render_template('SearchResults.html')
 
 
-@app.route('/SearchBlood')
-def searchblood():
-    return render_template('SearchBloodBag.html')
+# @app.route('/SearchBlood')
+# def searchblood():
+#     return render_template('SearchBloodBag.html')
 
 @app.route('/PatientSearchBB')
 def Psearchbb():
