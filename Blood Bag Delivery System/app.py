@@ -707,7 +707,6 @@ def submit_order():
 
 
 
-
 @app.route('/searchbb', methods=['POST'])
 def search_blood_bag():
     if request.method == 'POST':
@@ -745,12 +744,15 @@ def search_blood_bag():
         session['blood_component_code'] = blood_component
         session['quantity'] = quantity
 
+         patient_reg_no = session.get('_id')
+        hosp_reg_no = session.get('hosp_reg_no')
+
+    if hosp_reg_no:
+        return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no)
+    elif patient_reg_no:
+        return render_template('SearchResults.html', results=results, patient_reg_no=patient_reg_no)
 
 
-        # Return the results to the template
-        return render_template('SearchResults.html', results=results)
-
-    return render_template('SearchResults.html')
 
 
 @app.route('/PatientSearchBB', methods=['POST'])
