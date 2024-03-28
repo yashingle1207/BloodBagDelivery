@@ -976,6 +976,17 @@ def searchres():
 # def searchblood():
 #     return render_template('SearchBloodBag.html')
 
+
+
+@app.route('/SearchBlood')
+def searchblood():
+    # Retrieve session variables
+    patient_reg_no = session.get('_id')
+    hosp_reg_no = session.get('hosp_reg_no')
+
+    return render_template('SearchBloodBag.html', patient_reg_no=patient_reg_no, hosp_reg_no=hosp_reg_no)
+
+
 @app.route('/PatientSearchBB')
 def Psearchbb():
     return render_template('PatientSearchBB.html')
