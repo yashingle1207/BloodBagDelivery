@@ -1044,7 +1044,6 @@ def price():
 
 
 
-
 @app.route('/payment_invoice', methods=['POST'])
 def payment_invoice():
     if request.method == 'POST':
@@ -1068,11 +1067,18 @@ def payment_invoice():
         session['ward'] = ward
         session['bedno'] = bedno
 
-        # Redirect to payment invoice page or wherever needed
-        return render_template('payment_details.html')
+        # Check if the user is a patient or hospital
+        patient_reg_no = session.get('_id')
+        hosp_reg_no = session.get('hosp_reg_no')
+
+        if hosp_reg_no:
+            return render_template('payment_details.html', hosp_reg_no=hosp_reg_no)
+        elif patient_reg_no:
+            return render_template('payment_details.html', patient_reg_no=patient_reg_no)
 
     # Handle case where request method is not POST
     return render_template('error.html', message='Invalid request method.')
+
 
 
 
