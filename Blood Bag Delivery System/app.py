@@ -737,20 +737,22 @@ def search_blood_bag():
                 'address': blood_bank_user['address'],  # Assuming the field name is 'address' in your users table
             })
 
-
-
         # Store the values in the user's session
         session['blood_group'] = blood_group
         session['blood_component_code'] = blood_component
         session['quantity'] = quantity
 
-         patient_reg_no = session.get('_id')
+        # Retrieve session variables
+        patient_reg_no = session.get('_id')
         hosp_reg_no = session.get('hosp_reg_no')
 
-    if hosp_reg_no:
-        return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no)
-    elif patient_reg_no:
-        return render_template('SearchResults.html', results=results, patient_reg_no=patient_reg_no)
+        if hosp_reg_no:
+            return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no)
+        elif patient_reg_no:
+            return render_template('SearchResults.html', results=results, patient_reg_no=patient_reg_no)
+
+    # Handle case where request method is not POST
+    return render_template('error.html', message='Invalid request method.')
 
 
 
