@@ -179,8 +179,7 @@ def payment_response():
 ################# Login Session##########################
 @app.route('/logout')
 def logout():
-    # Clear the session
-    session.clear()
+  
 
     # Redirect to the home page
     return redirect(url_for('home'))
