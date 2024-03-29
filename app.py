@@ -13,6 +13,7 @@ import shortuuid
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
 from flask_login import login_required
+from flask import redirect, url_for
 
 
 app = Flask(__name__)
