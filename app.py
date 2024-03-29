@@ -980,12 +980,14 @@ def Psign1():
 
 @app.route('/AddBB')
 def addbb():
-    return render_template('AddBloodBags.html')
+    bb_reg_no = session.get('bb_reg_no')
+    return render_template('AddBloodBags.html', bb_reg_no=bb_reg_no)
 
 
 @app.route('/Stockadded')
 def stockadd():
-    return render_template('StockAddSuccessful.html')
+    bb_reg_no = session.get('bb_reg_no')
+    return render_template('StockAddSuccessful.html',bb_reg_no=bb_reg_no)
 
 
 @app.route('/SearchResults')
