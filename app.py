@@ -204,13 +204,12 @@ def HospsignIn():
             # Set the registration number in the session
             session['hosp_reg_no'] = hosp_reg_no
 
-            return render_template('HospitalDashboard.html', hosp_email=hosp_email)
+            return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
         else:
             return render_template('LoginUnsuccessful.html')
 
     return render_template('PatientDashboard.html')  # Update with the correct template name
 
-     
 
 @app.route('/PatientSignIn', methods=['POST'])
 def PsignIn():
@@ -227,8 +226,7 @@ def PsignIn():
             # Set the registration number in the session
             session['_id'] = patient_reg_no
 
-                        
-            return render_template('PatientDashboard.html', p_email=p_email)
+            return render_template('PatientDashboard.html', patient_reg_no=patient_reg_no)
         else:
             return render_template('LoginUnsuccessful.html')
 
@@ -248,8 +246,7 @@ def BBsignIn():
             bb_reg_no = existing_user.get('reg_num')
             session['bb_reg_no'] = bb_reg_no
 
-           
-            return render_template('BloodBankDashboard.html', bb_email=bb_email)
+            return render_template('BloodBankDashboard.html', bb_reg_no=bb_reg_no)
         else:
             return render_template('LoginUnsuccessful.html')
 
