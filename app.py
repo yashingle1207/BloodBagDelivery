@@ -539,7 +539,6 @@ def Hosp_Blood_bag_inProgress():
     return render_template('HospitalPendingReq.html', orders=order_list)
 
 
-
     
 @app.route('/delorder_hosp')
 def hosp_received_orders():
