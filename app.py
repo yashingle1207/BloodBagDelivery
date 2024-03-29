@@ -227,7 +227,7 @@ def PsignIn():
             # Set the registration number in the session
             session['_id'] = patient_reg_no
 
-                        # You can redirect to the blood bank dashboard or render a template
+                        
             return render_template('PatientDashboard.html', p_email=p_email)
         else:
             return render_template('LoginUnsuccessful.html')
@@ -248,7 +248,7 @@ def BBsignIn():
             bb_reg_no = existing_user.get('reg_num')
             session['bb_reg_no'] = bb_reg_no
 
-            # You can redirect to the blood bank dashboard or render a template
+           
             return render_template('BloodBankDashboard.html', bb_email=bb_email)
         else:
             return render_template('LoginUnsuccessful.html')
@@ -948,15 +948,7 @@ def remove_blood_bag():
 
 @app.route('/HospDashboard')
 def HospDashboard():
-    # Retrieve the registration number from the session
-    hosp_reg_no = session.get('hosp_reg_no')
-
-    # Check if the user is logged in
-    if hosp_reg_no:
-        return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
-    else:
-        # Redirect to the login page if not logged in
-        return redirect(url_for('HospsignIn'))
+    return render_template('HospitalDashboard.html')
 
 
 @app.route('/PatientDashboard')
