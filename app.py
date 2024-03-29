@@ -467,76 +467,6 @@ def viewstock():
 
 ####################################
 
-@app.route('/delorder')
-def bloodbank_completed_orders():
-    # Query MongoDB to get all orders
-    orders = Order.find({'BloodBank_Id':session.get('bb_reg_no'),'status': 'delivered'})
-
-    # Prepare the results to be displayed
-    order_list = []
-    for order in orders:
-        order_list.append({
-
-            '_id': order.get('_id'),
-            'User_ID': order.get('User_ID'),
-            'BloodBank_Id': order.get('BloodBank_Id'),
-            'BloodGrp': order.get('BloodGrp'),
-            'BloodComp': order.get('BloodComp'),
-            'BloodQuantity': order.get('BloodQuantity'),
-
-
-            'req_type': order.get('req_type'),
-            'fname': order.get('fname'),
-            'mname': order.get('mname'),
-            'lname': order.get('lname'),
-            'age': order.get('age'),
-            'ward': order.get('ward'),
-            'bedno': order.get('bedno'),
-            'gender': order.get('gender'),
-
-            'timestamp': order.get('timestamp')
-        })
-
-    return render_template('DeliveredBags.html', orders=order_list)
-
-
-
-   
-
-
-
-@app.route('/delorder2')
-def patient_received_orders():
-    # Query MongoDB to get all orders
-    orders = Order.find({'User_ID': session.get('_id'),'status': 'delivered'})
-
-    # Prepare the results to be displayed
-    order_list = []
-    for order in orders:
-        order_list.append({
-
-            '_id': order.get('_id'),
-            'User_ID': order.get('User_ID'),
-            'BloodBank_Id': order.get('BloodBank_Id'),
-            'BloodGrp': order.get('BloodGrp'),
-            'BloodComp': order.get('BloodComp'),
-            'BloodQuantity': order.get('BloodQuantity'),
-
-
-            'req_type': order.get('req_type'),
-            'fname': order.get('fname'),
-            'mname': order.get('mname'),
-            'lname': order.get('lname'),
-            'age': order.get('age'),
-            'ward': order.get('ward'),
-            'bedno': order.get('bedno'),
-            'gender': order.get('gender'),
-            'timestamp': order.get('timestamp')
-        })
-
-    return render_template('PatientReceivedbags.html', orders=order_list)
-
-################################################################
 
 @app.route('/BBNewReq', methods=['GET'])
 def Blood_bag_inProgress():
@@ -576,9 +506,6 @@ def Blood_bag_inProgress():
 def Hosp_search_BB():
     return render_template('SearchBloodBag.html')
 
-# @app.route('/aboutus')
-# def aboutus():
-#     return render_template('aboutus.html')
 
 @app.route('/Hosp_Pending_Req', methods=['GET'])
 def Hosp_Blood_bag_inProgress():
@@ -611,6 +538,7 @@ def Hosp_Blood_bag_inProgress():
 
     return render_template('HospitalPendingReq.html', orders=order_list)
 
+
 @app.route('/delorder_hosp')
 def hosp_received_orders():
     # Retrieve hospital registration number from session
@@ -642,9 +570,82 @@ def hosp_received_orders():
                 'timestamp': order.get('timestamp')
             })
 
-        return render_template('ReceivedBags.html', orders=order_list,hosp_reg_no=hosp_reg_no)
-        
+        return render_template('ReceivedBags.html', orders=order_list, hosp_reg_no=hosp_reg_no)
+    else:
+        # If hospital registration number does not exist in session, handle accordingly
+        return "Hospital registration number not found in session."
 
+
+@app.route('/delorder')
+def bloodbank_completed_orders():
+    # Query MongoDB to get all orders
+    orders = Order.find({'BloodBank_Id':session.get('bb_reg_no'),'status': 'delivered'})
+
+    # Prepare the results to be displayed
+    order_list = []
+    for order in orders:
+        order_list.append({
+
+            '_id': order.get('_id'),
+            'User_ID': order.get('User_ID'),
+            'BloodBank_Id': order.get('BloodBank_Id'),
+            'BloodGrp': order.get('BloodGrp'),
+            'BloodComp': order.get('BloodComp'),
+            'BloodQuantity': order.get('BloodQuantity'),
+
+
+            'req_type': order.get('req_type'),
+            'fname': order.get('fname'),
+            'mname': order.get('mname'),
+            'lname': order.get('lname'),
+            'age': order.get('age'),
+            'ward': order.get('ward'),
+            'bedno': order.get('bedno'),
+            'gender': order.get('gender'),
+
+            'timestamp': order.get('timestamp')
+        })
+
+    return render_template('DeliveredBags.html', orders=order_list)
+
+
+
+
+
+@app.route('/delorder2')
+def patient_received_orders():
+    # Query MongoDB to get all orders
+    orders = Order.find({'User_ID': session.get('_id'),'status': 'delivered'})
+
+    # Prepare the results to be displayed
+    order_list = []
+    for order in orders:
+        order_list.append({
+
+            '_id': order.get('_id'),
+            'User_ID': order.get('User_ID'),
+            'BloodBank_Id': order.get('BloodBank_Id'),
+            'BloodGrp': order.get('BloodGrp'),
+            'BloodComp': order.get('BloodComp'),
+            'BloodQuantity': order.get('BloodQuantity'),
+
+
+            'req_type': order.get('req_type'),
+            'fname': order.get('fname'),
+            'mname': order.get('mname'),
+            'lname': order.get('lname'),
+            'age': order.get('age'),
+            'ward': order.get('ward'),
+            'bedno': order.get('bedno'),
+            'gender': order.get('gender'),
+            'timestamp': order.get('timestamp')
+        })
+
+    return render_template('PatientReceivedbags.html', orders=order_list)
+
+################################################################
+
+        
 
 ########################################################
 
