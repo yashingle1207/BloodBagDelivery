@@ -470,22 +470,22 @@ def viewstock():
 
 @app.route('/BBNewReq', methods=['GET'])
 def Blood_bag_inProgress():
+    # Retrieve the blood bank registration number from the session
+    bb_reg_no = session.get('bb_reg_no')
+
     # Query MongoDB to get all orders
-    orders = Order.find({'BloodBank_Id':session.get('bb_reg_no'),'status': 'undelivered'})
+    orders = Order.find({'BloodBank_Id': bb_reg_no, 'status': 'undelivered'})
 
     # Prepare the results to be displayed
     order_list = []
     for order in orders:
         order_list.append({
-
             '_id': order.get('_id'),
             'User_ID': order.get('User_ID'),
             'BloodBank_Id': order.get('BloodBank_Id') ,
             'BloodGrp': order.get('BloodGrp'),
             'BloodComp': order.get('BloodComp'),
             'BloodQuantity': order.get('BloodQuantity'),
-
-
             'req_type': order.get('req_type'),
             'fname': order.get('fname'),
             'mname': order.get('mname'),
@@ -497,7 +497,8 @@ def Blood_bag_inProgress():
             'timestamp': order.get('timestamp')
         })
 
-    return render_template('BBNewReq.html', orders=order_list)
+    return render_template('BBNewReq.html', orders=order_list, bb_reg_no=bb_reg_no)
+
 
 ##############################################
 
