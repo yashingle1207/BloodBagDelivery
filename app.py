@@ -1097,5 +1097,4 @@ def update_location():
 
 
 if __name__ == '__main__':
-    # Run the app on port 8080
-    app.run(debug=True, port=8080)
+    app.run(debug=True)
