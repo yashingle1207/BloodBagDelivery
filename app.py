@@ -468,7 +468,7 @@ def viewstock():
 
 ####################################
 
-@app.route('/delorder', methods=['GET'])
+@app.route('/delorder')
 def bloodbank_completed_orders():
     # Query MongoDB to get all orders
     orders = Order.find({'BloodBank_Id':session.get('bb_reg_no'),'status': 'delivered'})
@@ -501,7 +501,7 @@ def bloodbank_completed_orders():
     return render_template('DeliveredBags.html', orders=order_list)
 
 
-@app.route('/delorder_hosp', methods=['GET'])
+@app.route('/delorder_hosp')
 def hosp_received_orders():
     # Retrieve hospital registration number from session
     hosp_reg_no = session.get('hosp_reg_no')
@@ -532,12 +532,12 @@ def hosp_received_orders():
                 'timestamp': order.get('timestamp')
             })
 
-        return render_template('ReceivedBags.html', orders=order_list)
+        return render_template('ReceivedBags.html', orders=order_list,hosp_reg_no=hosp_reg_no)
    
 
 
 
-@app.route('/delorder2', methods=['GET'])
+@app.route('/delorder2')
 def patient_received_orders():
     # Query MongoDB to get all orders
     orders = Order.find({'User_ID': session.get('_id'),'status': 'delivered'})
