@@ -603,10 +603,13 @@ def Blood_bag_inProgress():
 ##############################################
 
 
-@app.route('/SearchBloodHosp', methods=['GET'])
-def SearchBlood():
-    hosp_reg_no=session.get('hosp_reg_no')
-    return render_template('SearchBloodBag.html',hosp_reg_no=hosp_reg_no)
+@app.route('/SearchBB')
+def SearchBlood_hosp():
+    return render_template('SearchBloodBag.html')
+
+# @app.route('/aboutus')
+# def aboutus():
+#     return render_template('aboutus.html')
 
 @app.route('/Hosp_Pending_Req', methods=['GET'])
 def Hosp_Blood_bag_inProgress():
