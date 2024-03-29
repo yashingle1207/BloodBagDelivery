@@ -575,8 +575,8 @@ def bloodbank_completed_orders():
 @app.route('/delorder_hosp')
 def hosp_received_orders():
          # Query MongoDB to get all orders
-        orders = Order.find({'User_ID': session.get('hosp_reg_no'),'status': 'delivered'})
-       
+      
+        orders = Order.find({'reg_num': session.get('hosp_reg_no'),'status': 'delivered'})
 
         # Prepare the results to be displayed
         order_list = []
