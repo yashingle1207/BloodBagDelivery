@@ -919,14 +919,9 @@ def HospDashboard():
 @app.route('/PDashboard')
 def PDashboard():
     # Retrieve the registration number from the session
-    patient_reg_no = session.get('_id')
-
-    # Check if the user is logged in
-    if patient_reg_no:
-        return render_template('PatientDashboard.html', patient_reg_no=patient_reg_no)
-    else:
-        # Redirect to the patient sign-in page if not logged in
-        return redirect(url_for('PsignIn'))
+  
+    return render_template('PatientDashboard.html', patient_reg_no=patient_reg_no)
+    
 
 
 @app.route('/BBDashboard')
