@@ -204,16 +204,13 @@ def HospsignIn():
             # Set the registration number in the session
             session['hosp_reg_no'] = hosp_reg_no
 
-            # Redirect to the hospital dashboard
-            return redirect(url_for('HospDashboard'))
-
+            return render_template('HospitalDashboard.html', email=email)
         else:
             return render_template('LoginUnsuccessful.html')
 
-    response = app.make_response(render_template('HospitalSignIn.html'))
+    return render_template('PatientDashboard.html')  # Update with the correct template name
 
-    return response
-
+     
 
 @app.route('/PatientSignIn', methods=['POST'])
 def PsignIn():
