@@ -974,18 +974,21 @@ def Psign1():
 
 ######################################
 
-
 @app.route('/HospDashboard')
 def HospDashboard():
-    return render_template('HospitalDashboard.html')
+    hosp_reg_no = session.get('hosp_reg_no')  # Retrieve hospital registration number from session
+    return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
 
 @app.route('/PatientDashboard')
-def PatientDashboard(): 
-    return render_template('PatientDashboard.html')
+def PatientDashboard():
+    patient_reg_no = session.get('patient_reg_no')  # Retrieve patient registration number from session
+    return render_template('PatientDashboard.html', patient_reg_no=patient_reg_no)
 
 @app.route('/BBDashboard')
 def BBDashboard():
-    return render_template('BloodBankDashboard.html')
+    bb_reg_no = session.get('bb_reg_no')  # Retrieve blood bank registration number from session
+    return render_template('BloodBankDashboard.html', bb_reg_no=bb_reg_no)
+
 
 
 
