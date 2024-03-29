@@ -539,15 +539,11 @@ def Hosp_Blood_bag_inProgress():
     return render_template('HospitalPendingReq.html', orders=order_list)
 
 
+
+    
 @app.route('/delorder_hosp')
 def hosp_received_orders():
-    # Retrieve hospital registration number from session
-    hosp_reg_no = session.get('hosp_reg_no')
-
-    # Check if hospital registration number exists in session
-    if hosp_reg_no:
-        # Query MongoDB to get all orders
-        orders = Order.find({'User_ID': hosp_reg_no, 'status': 'delivered'})
+        orders = Order.find({'User_ID':session.get('hosp_reg_no'), 'status': 'delivered'})
 
         # Prepare the results to be displayed
         order_list = []
