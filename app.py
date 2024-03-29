@@ -501,13 +501,11 @@ def bloodbank_completed_orders():
     return render_template('DeliveredBags.html', orders=order_list)
 
 
+
 @app.route('/delorder1', methods=['GET'])
 def hosp_received_orders():
     # Query MongoDB to get all orders
-    hosp_reg_no = session.get('hosp_reg_no')
-
-    # Query MongoDB to get all delivered orders for the hospital
-    orders = Order.find({'User_ID': hosp_reg_no, 'status': 'delivered'})
+    orders = Order.find({'User_ID': session.get('hosp_reg_no'),'status': 'delivered'})
 
     # Prepare the results to be displayed
     order_list = []
@@ -534,6 +532,7 @@ def hosp_received_orders():
         })
 
     return render_template('ReceivedBags.html', orders=order_list)
+
 
 
 @app.route('/delorder2', methods=['GET'])
