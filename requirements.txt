@@ -1,0 +1,9 @@
+Flask==3.0.0
+Flask-Cors==4.0.0
+Flask-PyMongo==2.3.0
+gunicorn==21.2.0
+pymongo==4.5.0
+requests
+jsons
+shortuuid
+cryptography

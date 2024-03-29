@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Request</title>
+
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="static/style.css">
+      <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+            font-size: 16px;
+            max-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+
+    <script>
+        function validateForm() {
+            var radios = document.getElementsByName('selected_order');
+            var formValid = false;
+
+            for (var i = 0; i < radios.length; i++) {
+                if (radios[i].checked) {
+                    formValid = true;
+                    break;
+                }
+            }
+
+            if (!formValid) {
+                alert("Please select a Blood Bag order.");
+            }
+
+            return formValid;
+        }
+    </script>
+</head>
+<body>
+
+<div class="container">
+
+<header>
+    <a href="/" class="logo">Transfusio<span>Track</span></a>
+    <div id="menu" class="fas fa-bars"></div>
+    <nav class="navbar">
+         {% if 'hosp_reg_no' in session %}
+            <a>User ID: {{ session['hosp_reg_no'] }}</a>
+        {% endif %}
+          <a href="/HospDashboard">Hospital Dashboard</a>
+        <a href="/">Logout</a>
+    </nav>
+</header>
+
+
+    <h1 class="heading">Blood Bag (In progress)</h1>
+
+    <table>
+        <tr>
+            <th>Blood Bank ID</th>
+            <th>Blood Group</th>
+            <th>Blood Component</th>
+            <th>Blood Quantity</th>
+            <th>Request Type</th>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Last Name</th>
+            <th>Age</th>
+            <th>Ward</th>
+            <th>Bed Number</th>
+            <th>Gender</th>
+        </tr>
+
+        {% for order in orders %}
+            <tr>
+                <td>{{ order.BloodBank_Id}}</td>
+                <td>{{ order.BloodGrp }}</td>
+                <td>{{ order.BloodComp }}</td>
+                <td>{{ order.BloodQuantity }}</td>
+                <td>{{ order.req_type }}</td>
+                <td>{{ order.fname }}</td>
+                <td>{{ order.mname }}</td>
+                <td>{{ order.lname }}</td>
+                <td>{{ order.age }}</td>
+                <td>{{ order.ward }}</td>
+                <td>{{ order.bedno }}</td>
+                <td>{{ order.gender }}</td>
+            </tr>
+        {% endfor %}
+
+
+    </table>
+
+
+<!-- footer section  -->
+<section class="footer">
+   <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to Ingle Laboratory
+    </div>
+</section>
+
+</body>
+</html>

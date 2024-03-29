@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>home</title>
+
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+
+</head>
+<body>
+    
+<div class="container">
+
+<header>
+
+    <a href="/" class="logo">Transfusio<span>Track</span></a>
+    
+
+    <div id="menu" class="fas fa-bars"></div>
+
+    <nav class="navbar">
+
+        <a href="/">Home</a>
+<!--        <a href="/HospSign">Hospital Login</a>-->
+<!--        <a href="/PatientSign">Patient Login</a>-->
+<!--        <a href="/BBSign">BloodBank Login</a>-->
+
+
+        <a href="/aboutus">About Us</a>
+        <a href="/contact">Contact Us</a>
+        <a href="/pricing">Our Pricing </a>
+         <a href="/guide">Explore Guide</a>
+    </nav>
+
+</header>
+
+
+<section class="home">
+
+    <div class="content">
+        <h3>Bridging Lives, Delivering Lifelines </h3>
+        <p>
+            Efficient Blood Bag Delivery for Better Healthcare
+            <br><br>Our system ensures timely and secure delivery of blood bags
+            <br>from the blood bank to healthcare facilities, 
+            <br>saving lives when it matters the most.
+            <br>
+            <br>
+            <p>Need help using our system?</p>
+            </p>
+
+        <div class="herflink" style="text-align: left;">
+            <a href="/guide" class="btn">Check out our guide</a>
+        </div>
+
+
+    </div>
+
+
+        <div class="image">
+        <img src="{{ url_for('static', filename='images/h2.gif') }}" alt="">
+        </div>
+
+</section>
+
+
+<section class="home">
+
+    <div class="content">
+
+        <h3>Blood Bag Receiver  </h3>
+
+        <p>Seamless Blood Transport for Your Patient Care
+            <br><br>Our system empowers both hospitals and individuals to<br> effortlessly
+            search and order blood bags from top providers in the city.</p>
+
+
+        <div class="image">
+            <img src="{{ url_for('static', filename='images/bb2.jpg') }}" alt="">
+        </div>
+,.
+        <p>If you're an individual in need of swift blood delivery,access the Patient Login.
+            <br>If you represent a hospital facility, access the Healthcare Login.</p>
+
+        <div class="herflink">
+                <a href="/HospSign" class="btn">HealthCare Login</a>
+                <a href="/PatientSign" class="btn">Patient Login</a>
+            </div>
+    </div>
+
+    <div class="content">
+        <h3>Blood Bag Provider </h3>
+
+        <p>Unveiling a New Era of Delivery Excellence
+            <br><br>Welcome to the forefront of blood bank delivery innovation.
+            <br>Our cutting-edge system has been designed to redefine
+            how blood products are transported. </p>
+
+
+
+          <div class="image1">
+            <img src="{{ url_for('static', filename='images/bb1.jpg') }}" alt="">
+        </div>
+
+           <p>Ensuring that blood bags reach healthcare facilities and patients with unparalleled speed, precision,
+               and safety.Our commitment is unwavering dedication to life-saving support.</p>
+
+        <div class="herflink">
+          <a href="/BBSign" class="btn">Blood Bank Login</a>
+        </div>
+    </div>
+
+
+
+
+<!-- footer section  -->
+
+<section class="footer">
+
+    <div class="box-container">
+
+        <div class="box">
+            <h3>about us</h3>
+            <p>TransfusioTrack is India's first<br> blood bag delivary system <br> Innovating seamless blood delivery through advanced technology & precision logistics.<br> <br>Launched in 2023</p>
+        </div>
+
+        <div class="box">
+            <h3>Our Policies</h3>
+             <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms & Conditions</a>
+            <a href="/refund">Return & Refund Policy</a>
+             <a href="/pricing">Pricing Policy</a>
+        </div>
+
+        <div class="box">
+            <h3>follow us</h3>
+            <a href="https://www.facebook.com/">facebook</a>
+            <a href="https://twitter.com/home">twitter</a>
+            <a href="https://instagram.com/_muskiii.___?igshid=YmMyMTA2M2Y=">instagram</a>
+<!--             <a href="https://www.linkedin.com/in/muskan-bhattad-bb73a121a">linkedin</a> -->
+        </div>
+
+        <div class="box">
+            <h3>contact us</h3>
+           <p> <i class="fas fa-phone"></i> +91 - 9518920645 </p>
+           <p> <i class="fas fa-envelope"></i> transfusiotrack@gmail.com</p>
+           <p> <i class="fas fa-map-marker-alt"></i> Aurangabad, india - 431001 </p>
+        </div>
+
+    </div>
+
+   <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to Ingle Laboratory
+    </div>
+</section>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+
+    <!-- Font Awesome CDN link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Custom CSS file link -->
+    <link rel="stylesheet" href="static/style.css">
+      <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+
+    <style>
+        .error-container {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .error-icon {
+            font-size: 80px;
+            color: #FF0000; /* Red color for error */
+        }
+
+        .error-message {
+            font-size: 28px;
+            color: #333; /* Dark color for message */
+            margin-top: 20px;
+        }
+
+        .error-description {
+            font-size: 18px;
+            color: #555; /* Dim color for description */
+            margin-top: 20px;
+
+        }
+
+        .try-again-btn {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <a href="/" class="logo">Transfusio<span>Track</span></a>
+        <div id="menu" class="fas fa-bars"></div>
+        <nav class="navbar">
+            <a href="/">Home</a>
+            <a href="/HospSign">Hospital Login</a>
+            <a href="/BBSign">BloodBank Login</a>
+            <a href="/aboutus">About Us</a>
+            <a href="/contact">Contact Us</a>
+        </nav>
+    </header>
+
+    <div class="error-container">
+        <div class="error-icon">
+            <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <div class="error-message">
+            <p>Oops! Something went wrong.</p>
+            <p>Please try again later or contact support.</p>
+        </div>
+        <div class="error-description">
+            <p>The server failed to respond or can't be reached at the moment.</p>
+            <p>Please try logging in again.</p>
+        </div>
+        <div class="try-again-btn">
+            <a href="/" class="btn">Try Again</a>
+        </div>
+    </div>
+
+    <section class="footer">
+        <div class="credit">Created by <span>Team Transfusio</span> | All rights reserved to TransfusioTrack</div>
+    </section>
+
+</div>
+
+</body>
+</html>

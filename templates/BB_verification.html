@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You for Signing Up</title>
+
+    <!-- Font Awesome CDN link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Custom CSS file link -->
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+
+    <style>
+        h3 {
+            color: #007BFF;
+            margin-top: 20px;
+        }
+
+        p {
+            margin-bottom: 15px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px; /* Adjust as needed */
+        }
+
+        li {
+            margin-bottom: 15px;
+            position: relative;
+            color: #333; /* Set your preferred text color */
+            font-size: 20px;
+        }
+
+        li:before {
+            content: '\2022'; /* Unicode character for bullet point */
+            color: red; /* Set your preferred bullet point color */
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+            position: absolute;
+            left: 0;
+        }
+
+        strong {
+            color: black;
+        }
+
+        a {
+            color: #007BFF; /* Set your preferred link color */
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Additional styles for the page */
+        .thank-you-message {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .verification-details {
+            margin-top: 20px;
+        }
+
+        
+        .disclaimer {
+            margin-top: 20px;
+            font-style: italic;
+            color: #777;
+        }
+        
+        .access-info {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #007BFF;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <header>
+            <a href="/" class="logo">Transfusio<span>Track</span></a>
+            <div id="menu" class="fas fa-bars"></div>
+            <nav class="navbar">
+                <a href="/">Home</a>
+                <a href="/HospSign">Hospital Login</a>
+                <a href="/PatientSign">Patient Login</a>
+                <a href="/BBSign">BloodBank Login</a>
+                <a href="/aboutus">About Us</a>
+                <a href="/contact">Contact Us</a>
+            </nav>
+        </header>
+
+        <section class="home">
+            <div class="content">
+                <h3>Thank You for Signing Up!</h3>
+
+                <!-- Thanking message -->
+                <p class="thank-you-message">We appreciate your decision to sign up with TransfusioTrack. Welcome aboard!</p>
+
+                <!-- Onboarding information -->
+                <div class="verification-details">
+                    <ul>
+                        <li>
+                            We have received all your details. Now, sit back and relax. Our executive will contact you within 24 hours to confirm your blood bank credentials and details, including name, address, phone number, and most importantly, registration and other documents.
+                        </li>
+                        <li>
+                            Once verified, you will become our trusted partner. This verification is part of the onboarding process, ensuring the security and safety of public health. It also guarantees that only authenticated banks with proper government approval and compliance onboard TransfusioTrack, ensuring complete transparency and trust for the users, especially the patients.
+                        </li>
+                    </ul>
+                </div>
+
+                <p class="disclaimer">
+                    Please note that if the documents provided are not in compliance with government regulations, we may not be able to proceed with the onboarding process. Our commitment is to maintain the highest standards and provide a trustworthy platform for our users.
+                </p>
+                
+                <!-- Access Information -->
+                <p class="access-info">
+                    Upon successful verification, you will gain access to your credentials through TransfusioTrack. 
+                    <br>We will also provide a personalized, user-friendly dashboard to tailore your needs.
+                </p>
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <section class="footer">
+            <div class="credit">Created by <span> Team Transfusio </span> | All rights reserved to Ingle Laboratory</div>
+        </section>
+
+    </div>
+
+    <!-- JavaScript file link -->
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+
+    <!-- Font Awesome CDN link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Custom CSS file link -->
+    <link rel="stylesheet" href="static/style.css">
+      <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+
+     <style>
+        .contact {
+            margin-top: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            font-size: 28px;
+            margin-top: 50px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: left; /* Align the list items to the left */
+        }
+
+        li {
+            margin-bottom: 30px;
+            padding: 25px;
+            font-size: 35px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            border-radius: 5px;
+            text-align: left; /* Align the content inside each list item to the left */
+        }
+
+        p {
+            text-align: left;
+            color: #555;
+            font-size: 22px;
+            margin-top: 30px;
+        }
+
+        /* Additional styles for responsiveness */
+        .container {
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        form ul {
+            padding: 0;
+            margin: 0;
+        }
+
+        form li {
+            padding: 15px;
+            font-size: 22px;
+        }
+
+        .footer {
+            margin-top: 50px;
+        }
+    </style>
+
+    <script>
+        function validateForm() {
+            var radios = document.getElementsByName('selected_blood_bank');
+            var formValid = false;
+
+            for (var i = 0; i < radios.length; i++) {
+                if (radios[i].checked) {
+                    formValid = true;
+                    break;
+                }
+            }
+
+            if (!formValid) {
+                alert("Please select a Blood Bank.");
+            }
+
+            return formValid;
+        }
+    </script>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <a href="/" class="logo">Transfusio<span>Track</span></a>
+        <div id="menu" class="fas fa-bars"></div>
+            <nav class="navbar">
+             {% if 'hosp_reg_no' in session %}
+            <a>User ID: {{ session['hosp_reg_no'] }}</a>
+            {% endif %}
+
+                <a href="/HospDashboard">Hospital Dashboard</a>
+
+          <a href="/">Logout</a>
+        </nav>
+    </header>
+
+    <h1 class="heading">Search Results</h1>
+
+    {% if results %}
+        <form action="/set_selected_blood_bank" method="post" onsubmit="return validateForm()">
+            <ul>
+                {% for result in results %}
+                    <li>
+                        <input type="radio" name="selected_blood_bank" value="{{ result.bb_reg_no }}">
+                        <strong>Blood Bank Name:</strong> {{ result.bb_name }}<br>
+                        <strong>Address:</strong> {{ result.address }}<br>
+                        <strong>Reg number:</strong> {{ result.bb_reg_no }}<br>
+                        <strong>Blood Group:</strong> {{ result.blood_group }}<br>
+                        <strong>Blood Component:</strong> {{ result.blood_component }}<br>
+                        <strong>Quantity:</strong> {{ result.quantity }}<br>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div style="text-align: center;">
+                <button type="submit" class="btn">Select Blood Bank</button>
+            </div>
+        </form>
+    {% else %}
+        <h2>OPPS!! <br> No matching results found</h2>
+        <h2>Requested Blood Group or Blood Component is not available  </h2>
+        <h2>Search Again</h2>
+        <div style="text-align: center;">
+            <a href="/SearchBlood" class="btn">Search Blood Bag</a>
+        </div>
+    {% endif %}
+
+   <section class="footer">
+  <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to Ingle Laboratory
+    </div>
+</section>
+
+</body>
+</html>

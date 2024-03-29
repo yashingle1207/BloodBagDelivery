@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrderTrack</title>
+
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="static/style.css">
+      <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+
+</head>
+<body>
+    
+<div class="container">
+
+<header>
+
+      <a href="/" class="logo">Transfusio<span>Track</span></a>
+
+    <div id="menu" class="fas fa-bars"></div>
+
+    <nav class="navbar">
+            <a href="/HospDashboard">Hospital Dashboard</a>
+          <a href="/">Logout</a>
+    </nav>
+
+</header>
+
+
+<section class="home">
+
+    <div class="content">
+        <h3>Order Placed Successfully</h3>
+         <p>
+            <a href="/Hosp_Pending_Req" style="text-decoration: none; color: inherit;">Click Here To Track Your Blood Bag</a>
+        </p>
+    </div>
+
+
+        <div class="image">
+        <img src="{{ url_for('static', filename='images/h2.gif') }}" alt="">
+        </div>
+
+</section>
+
+
+   <section class="footer">
+
+
+
+    <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to TransfusioTrack
+    </div>
+
+</section>
+
+</body>
+</html>
