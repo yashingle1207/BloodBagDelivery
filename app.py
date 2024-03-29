@@ -918,6 +918,7 @@ def HospDashboard():
 
 @app.route('/PDashboard')
 def PDashboard():
+    patient_reg_no = session.get('_id')
     # Retrieve the registration number from the session
   
     return render_template('PatientDashboard.html', patient_reg_no=patient_reg_no)
