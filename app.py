@@ -12,8 +12,7 @@ import hashlib
 import shortuuid
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
-from flask_login import login_required
-from flask import redirect, url_for
+
 
 
 app = Flask(__name__)
@@ -471,7 +470,6 @@ def viewstock():
 
 
 @app.route('/BBNewReq', methods=['GET'])
-@login_required
 def Blood_bag_inProgress():
     # Retrieve the blood bank registration number from the session
     bb_reg_no = session.get('bb_reg_no')
