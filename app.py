@@ -603,7 +603,7 @@ def Blood_bag_inProgress():
 ##############################################
 
 
-@app.route('/SearchBB')
+@app.route('/Hosp_search_BB')
 def SearchBlood_hosp():
     return render_template('SearchBloodBag.html')
 
