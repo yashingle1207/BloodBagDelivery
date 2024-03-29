@@ -977,18 +977,15 @@ def Psign1():
 
 @app.route('/HospDashboard')
 def HospDashboard():
-    session.['hosp_reg_no'] =hosp_reg_no 
-    return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
+    return render_template('HospitalDashboard.html')
 
 @app.route('/PatientDashboard')
-def PatientDashboard():
-    session.['patient_reg_no']=patient_reg_no 
-    return render_template('PatientDashboard.html', patient_reg_no=patient_reg_no)
+def PatientDashboard(): 
+    return render_template('PatientDashboard.html')
 
 @app.route('/BBDashboard')
 def BBDashboard():
-    session['bb_reg_no'] = bb_reg_no
-    return render_template('BloodBankDashboard.html', bb_reg_no=bb_reg_no)
+    return render_template('BloodBankDashboard.html')
 
 
 
