@@ -987,9 +987,10 @@ def stockadd():
 
 ###################################
 
-@app.route('/SearchBlood')
-def searchblood():
-    return render_template('SearchBloodBag.html')
+@app.route('/SearchBloodHosp')
+def SearchBlood():
+    hosp_reg_no=session.get('hosp_reg_no')
+    return render_template('SearchBloodBag.html',hosp_reg_no=hosp_reg_no)
 
 
 @app.route('/PatientSearchBB')
