@@ -941,7 +941,21 @@ def remove_blood_bag():
 ##############################################################################
 
 
+@app.route('/HospSign')
+def Hospsign():
+    return render_template('HospSignup.html')
 
+
+@app.route('/BBSign')
+def BBsign1():
+    return render_template('BBSignup.html')
+
+
+@app.route('/PatientSign')
+def Psign1():
+    return render_template('PatientLogin.html')
+
+######################################
 
 
 @app.route('/HospDashboard')
@@ -960,48 +974,37 @@ def BBDashboard():
     return render_template('BloodBankDashboard.html', bb_reg_no=bb_reg_no)
 
 
-@app.route('/HospSign')
-def Hospsign():
-    return render_template('HospSignup.html')
-
-
-@app.route('/BBSign')
-def BBsign1():
-    return render_template('BBSignup.html')
-
-
-@app.route('/PatientSign')
-def Psign1():
-    return render_template('PatientLogin.html')
 
 
 @app.route('/AddBB')
 def addbb():
-    bb_reg_no = session.get('bb_reg_no')
-    return render_template('AddBloodBags.html', bb_reg_no=bb_reg_no)
+    return render_template('AddBloodBags.html')
 
 
 @app.route('/Stockadded')
 def stockadd():
-    bb_reg_no = session.get('bb_reg_no')
-    return render_template('StockAddSuccessful.html',bb_reg_no=bb_reg_no)
+    return render_template('StockAddSuccessful.html')
+
+
+###################################
+
+@app.route('/SearchBlood')
+def searchblood():
+    return render_template('SearchBloodBag.html')
+
+
+@app.route('/PatientSearchBB')
+def Psearchbb():
+    return render_template('PatientSearchBB.html')
 
 
 @app.route('/SearchResults')
 def searchres():
     return render_template('SearchResults.html')
 
-
-@app.route('/SearchBlood')
-def searchblood():
-    hosp_reg_no = session.get('hosp_reg_no')
-    return render_template('SearchBloodBag.html',hosp_reg_no=hosp_reg_no)
+###############################################
 
 
-@app.route('/PatientSearchBB')
-def Psearchbb():
-    patient_reg_no = session.get('patient_reg_no')
-    return render_template('PatientSearchBB.html',patient_reg_no=patient_reg_no )
 
 
 @app.route('/Blood order')
