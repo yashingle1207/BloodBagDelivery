@@ -191,7 +191,7 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/HospSignIn', methods=['POST', 'GET'])
+@app.route('/HospSignIn', methods=['POST'])
 def HospsignIn():
     if request.method == 'POST':
         hosp_email = request.form.get('hospEmailId')
