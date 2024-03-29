@@ -204,7 +204,7 @@ def HospsignIn():
             # Set the registration number in the session
             session['hosp_reg_no'] = hosp_reg_no
 
-            return render_template('HospitalDashboard.html', email=email)
+            return render_template('HospitalDashboard.html', hosp_email=hosp_email)
         else:
             return render_template('LoginUnsuccessful.html')
 
