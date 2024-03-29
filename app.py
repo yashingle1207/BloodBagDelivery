@@ -179,7 +179,8 @@ def payment_response():
 ################# Login Session##########################
 @app.route('/logout')
 def logout():
-  
+    # Clear the session
+    session.clear()
 
     # Redirect to the home page
     return redirect(url_for('home'))
@@ -918,11 +919,15 @@ def HospDashboard():
 
 @app.route('/PDashboard')
 def PDashboard():
-    patient_reg_no = session.get('_id')
     # Retrieve the registration number from the session
-  
-    return render_template('PatientDashboard.html', patient_reg_no=patient_reg_no)
-    
+    patient_reg_no = session.get('_id')
+
+    # Check if the user is logged in
+    if patient_reg_no:
+        return render_template('PatientDashboard.html', patient_reg_no=patient_reg_no)
+    else:
+        # Redirect to the patient sign-in page if not logged in
+        return redirect(url_for('PsignIn'))
 
 
 @app.route('/BBDashboard')
@@ -1021,8 +1026,6 @@ def faillogin():
 @app.route('/privacy')
 def privacyfun():
     return render_template('privacypolicy.html')
-
-
 
 @app.route('/terms')
 def TnC():
