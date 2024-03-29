@@ -542,7 +542,13 @@ def Hosp_Blood_bag_inProgress():
     
 @app.route('/delorder_hosp')
 def hosp_received_orders():
-        orders = Order.find({'User_ID':session.get('hosp_reg_no'), 'status': 'delivered'})
+    # Retrieve hospital registration number from session
+    hosp_reg_no = session.get('hosp_reg_no')
+
+    # Check if hospital registration number exists in session
+    if hosp_reg_no:
+        # Query MongoDB to get all orders
+        orders = Order.find({'User_ID': hosp_reg_no, 'status': 'delivered'})
 
         # Prepare the results to be displayed
         order_list = []
@@ -569,6 +575,7 @@ def hosp_received_orders():
     else:
         # If hospital registration number does not exist in session, handle accordingly
         return "Hospital registration number not found in session."
+
 
 
 @app.route('/delorder')
