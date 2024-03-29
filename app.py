@@ -989,7 +989,7 @@ def stockadd():
 
 ###################################
 
-@app.route('/SearchBloodHosp')
+@app.route('/SearchBloodHosp', methods=['GET'])
 def SearchBlood():
     hosp_reg_no=session.get('hosp_reg_no')
     return render_template('SearchBloodBag.html',hosp_reg_no=hosp_reg_no)
