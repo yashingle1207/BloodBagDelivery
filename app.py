@@ -215,7 +215,7 @@ def HospsignIn():
     return response
 
 
-@app.route('/PatientSign', methods=['POST'])
+@app.route('/PatientSignIn', methods=['POST'])
 def PsignIn():
     if request.method == 'POST':
         # Get user input from the login form
