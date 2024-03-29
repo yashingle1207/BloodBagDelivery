@@ -574,7 +574,9 @@ def bloodbank_completed_orders():
     
 @app.route('/delorder_hosp')
 def hosp_received_orders():
-        orders = Order.find({'User_ID': session.get('hosp_reg_no'), 'status': 'delivered'})
+         # Query MongoDB to get all orders
+        orders = Order.find({'User_ID': session.get('hosp_reg_no'),'status': 'delivered'})
+       
 
         # Prepare the results to be displayed
         order_list = []
@@ -597,11 +599,7 @@ def hosp_received_orders():
                 'timestamp': order.get('timestamp')
             })
 
-        return render_template('ReceivedBags.html', orders=order_list, hosp_reg_no=hosp_reg_no)
-    else:
-        # If hospital registration number does not exist in session, handle accordingly
-        return "Hospital registration number not found in session."
-
+        return render_template('ReceivedBags.html', orders=order_list)
 
 
 @app.route('/delorder2')
