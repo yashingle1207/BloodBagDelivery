@@ -179,8 +179,7 @@ def payment_response():
 ################# Login Session##########################
 @app.route('/logout')
 def logout():
-    # Clear the session
-    session.clear()
+  
 
     # Redirect to the home page
     return redirect(url_for('home'))
@@ -191,7 +190,7 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/HospSignIn', methods=['POST', 'GET'])
+@app.route('/HospSignIn', methods=['POST'])
 def HospsignIn():
     if request.method == 'POST':
         hosp_email = request.form.get('hospEmailId')
@@ -204,42 +203,14 @@ def HospsignIn():
             # Set the registration number in the session
             session['hosp_reg_no'] = hosp_reg_no
 
-            # Redirect to the hospital dashboard
-            return redirect(url_for('HospDashboard'))
-
+            return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
         else:
             return render_template('LoginUnsuccessful.html')
 
-    response = app.make_response(render_template('HospitalSignIn.html'))
-
-    return response
+    return render_template('PatientDashboard.html')
 
 
-
-@app.route('/BBSignIn', methods=['POST', 'GET'])
-def BBsignIn():
-    if request.method == 'POST':
-        # Get user input from the login form
-        bb_email = request.form.get('BBemail1')
-        bb_password = request.form.get('BBpass1')
-
-        # Check if the user exists in the database
-        existing_user = BBUser.find_one({'email': bb_email, 'password': bb_password})
-        if existing_user:
-            bb_reg_no = existing_user.get('reg_num')
-            session['bb_reg_no'] = bb_reg_no
-
-            return redirect(url_for('BBDashboard'))
-
-        else:
-            return render_template('LoginUnsuccessful.html')
-
-    # Create the response for the GET request
-    response = app.make_response(render_template('BloodBankSignIn.html'))
-    return response
-
-
-@app.route('/PatientSignIn', methods=['POST', 'GET'])
+@app.route('/PatientSignIn', methods=['POST'])
 def PsignIn():
     if request.method == 'POST':
         # Get user input from the login form
@@ -254,14 +225,80 @@ def PsignIn():
             # Set the registration number in the session
             session['_id'] = patient_reg_no
 
-            return redirect(url_for('PDashboard'))
-
+            return render_template('PatientDashboard.html', patient_reg_no=patient_reg_no)
         else:
             return render_template('LoginUnsuccessful.html')
 
-    response = app.make_response(render_template('PatientSignIn.html'))
+    return render_template('PatientDashboard.html') 
 
-    return response
+
+@app.route('/BBSignIn', methods=['POST'])
+def BBsignIn():
+    if request.method == 'POST':
+        # Get user input from the login form
+        bb_email = request.form.get('BBemail1')
+        bb_password = request.form.get('BBpass1')
+
+        # Check if the user exists in the database
+        existing_user = BBUser.find_one({'email': bb_email, 'password': bb_password})
+        if existing_user:
+            bb_reg_no = existing_user.get('reg_num')
+            session['bb_reg_no'] = bb_reg_no
+
+            return render_template('BloodBankDashboard.html', bb_reg_no=bb_reg_no)
+        else:
+            return render_template('LoginUnsuccessful.html')
+
+    return render_template('BloodBankDashboard.html')
+
+
+
+# @app.route('/BBSignIn', methods=['POST'])
+# def BBsignIn():
+#     if request.method == 'POST':
+#         # Get user input from the login form
+#         bb_email = request.form.get('BBemail1')
+#         bb_password = request.form.get('BBpass1')
+
+#         # Check if the user exists in the database
+#         existing_user = BBUser.find_one({'email': bb_email, 'password': bb_password})
+#         if existing_user:
+#             bb_reg_no = existing_user.get('reg_num')
+#             session['bb_reg_no'] = bb_reg_no
+
+#             return redirect(url_for('BBDashboard'))
+
+#         else:
+#             return render_template('LoginUnsuccessful.html')
+
+#     # Create the response for the GET request
+#     response = app.make_response(render_template('BloodBankSignIn.html'))
+#     return response
+
+
+# @app.route('/PatientSignIn', methods=['POST'])
+# def PsignIn():
+#     if request.method == 'POST':
+#         # Get user input from the login form
+#         p_email = request.form.get('patientEmailId1')
+#         p_password = request.form.get('patientPassword1')
+
+#         # Check if the user exists in the database
+#         existing_user = PatientUser.find_one({'email': p_email, 'password': p_password})
+#         if existing_user:
+#             patient_reg_no = str(existing_user.get('email'))
+
+#             # Set the registration number in the session
+#             session['_id'] = patient_reg_no
+
+#             return redirect(url_for('PatientDashboard'))
+
+#         else:
+#             return render_template('LoginUnsuccessful.html')
+
+#     response = app.make_response(render_template('PatientSignIn.html'))
+
+#     return response
 
 
 
@@ -430,6 +467,88 @@ def viewstock():
 
 ####################################
 
+
+@app.route('/BBNewReq', methods=['GET'])
+def Blood_bag_inProgress():
+    # Query MongoDB to get all orders
+    orders = Order.find({'BloodBank_Id':session.get('bb_reg_no'),'status': 'undelivered'})
+
+    # Prepare the results to be displayed
+    order_list = []
+    for order in orders:
+        order_list.append({
+
+            '_id': order.get('_id'),
+            'User_ID': order.get('User_ID'),
+            'BloodBank_Id': order.get('BloodBank_Id') ,
+            'BloodGrp': order.get('BloodGrp'),
+            'BloodComp': order.get('BloodComp'),
+            'BloodQuantity': order.get('BloodQuantity'),
+
+
+            'req_type': order.get('req_type'),
+            'fname': order.get('fname'),
+            'mname': order.get('mname'),
+            'lname': order.get('lname'),
+            'age': order.get('age'),
+            'ward': order.get('ward'),
+            'bedno': order.get('bedno'),
+            'gender': order.get('gender'),
+            'timestamp': order.get('timestamp')
+        })
+
+    return render_template('BBNewReq.html', orders=order_list)
+
+##############################################
+
+
+
+@app.route('/SearchBlood')
+def searchblood():
+    # Retrieve session variables
+    patient_reg_no = session.get('_id')
+    hosp_reg_no = session.get('hosp_reg_no')
+
+    if hosp_reg_no:
+        return render_template('SearchBloodBag.html', hosp_reg_no=hosp_reg_no)
+    elif patient_reg_no:
+        return render_template('SearchBloodBag.html', patient_reg_no=patient_reg_no)
+
+
+
+@app.route('/Hosp_Pending_Req', methods=['GET'])
+def Hosp_Blood_bag_inProgress():
+    # Query MongoDB to get all orders
+    orders = Order.find({'User_ID':session.get('hosp_reg_no'),'status': 'undelivered'})
+
+    # Prepare the results to be displayed
+    order_list = []
+    for order in orders:
+        order_list.append({
+
+            '_id': order.get('_id'),
+            'User_ID': order.get('User_ID'),
+            'BloodBank_Id': order.get('BloodBank_Id') ,
+            'BloodGrp': order.get('BloodGrp'),
+            'BloodComp': order.get('BloodComp'),
+            'BloodQuantity': order.get('BloodQuantity'),
+
+
+            'req_type': order.get('req_type'),
+            'fname': order.get('fname'),
+            'mname': order.get('mname'),
+            'lname': order.get('lname'),
+            'age': order.get('age'),
+            'ward': order.get('ward'),
+            'bedno': order.get('bedno'),
+            'gender': order.get('gender'),
+            'timestamp': order.get('timestamp')
+        })
+
+    return render_template('HospitalPendingReq.html', orders=order_list)
+    
+
+################################################################
 @app.route('/delorder', methods=['GET'])
 def bloodbank_completed_orders():
     # Query MongoDB to get all orders
@@ -530,72 +649,9 @@ def patient_received_orders():
 
 ################################################################
 
-@app.route('/BBNewReq', methods=['GET'])
-def Blood_bag_inProgress():
-    # Query MongoDB to get all orders
-    orders = Order.find({'BloodBank_Id':session.get('bb_reg_no'),'status': 'undelivered'})
+        
 
-    # Prepare the results to be displayed
-    order_list = []
-    for order in orders:
-        order_list.append({
-
-            '_id': order.get('_id'),
-            'User_ID': order.get('User_ID'),
-            'BloodBank_Id': order.get('BloodBank_Id') ,
-            'BloodGrp': order.get('BloodGrp'),
-            'BloodComp': order.get('BloodComp'),
-            'BloodQuantity': order.get('BloodQuantity'),
-
-
-            'req_type': order.get('req_type'),
-            'fname': order.get('fname'),
-            'mname': order.get('mname'),
-            'lname': order.get('lname'),
-            'age': order.get('age'),
-            'ward': order.get('ward'),
-            'bedno': order.get('bedno'),
-            'gender': order.get('gender'),
-            'timestamp': order.get('timestamp')
-        })
-
-    return render_template('BBNewReq.html', orders=order_list)
-
-##############################################
-
-@app.route('/Hosp_Pending_Req', methods=['GET'])
-def Hosp_Blood_bag_inProgress():
-    # Query MongoDB to get all orders
-    orders = Order.find({'User_ID':session.get('hosp_reg_no'),'status': 'undelivered'})
-
-    # Prepare the results to be displayed
-    order_list = []
-    for order in orders:
-        order_list.append({
-
-            '_id': order.get('_id'),
-            'User_ID': order.get('User_ID'),
-            'BloodBank_Id': order.get('BloodBank_Id') ,
-            'BloodGrp': order.get('BloodGrp'),
-            'BloodComp': order.get('BloodComp'),
-            'BloodQuantity': order.get('BloodQuantity'),
-
-
-            'req_type': order.get('req_type'),
-            'fname': order.get('fname'),
-            'mname': order.get('mname'),
-            'lname': order.get('lname'),
-            'age': order.get('age'),
-            'ward': order.get('ward'),
-            'bedno': order.get('bedno'),
-            'gender': order.get('gender'),
-            'timestamp': order.get('timestamp')
-        })
-
-    return render_template('HospitalPendingReq.html', orders=order_list)
-
-
-#########
+########################################################
 
 @app.route('/Patient_Pending_Req', methods=['GET'])
 def Patient_Blood_bag_inProgress():
@@ -808,13 +864,13 @@ def set_selected_blood_bank():
             # Set the selected blood bank reg_num and blood product price in the session for a hospital
             session['bb_reg_no'] = selected_blood_bank_reg_num
             session['blood_product_price'] = blood_product_price
-            return render_template('BloodBagRequestForm.html')  # Redirect to the hospital's request form
+            return render_template('BloodBagRequestForm.html', hosp_reg_no=session['hosp_reg_no'])
 
         elif '_id' in session:
             # Set the selected blood bank reg_num and blood product price in the session for a patient
             session['bb_reg_no'] = selected_blood_bank_reg_num
             session['blood_product_price'] = blood_product_price
-            return render_template('PatientBBreqform.html')  # Redirect to the patient's request form
+            return render_template('PatientBBreqform.html', _id=session['_id'])
 
     # Redirect to a default page or handle the case where the user type is not identified
     return render_template('error.html', message='User type not identified.')
@@ -902,58 +958,38 @@ def remove_blood_bag():
 ##############################################################################
 
 
-
-
-@app.route('/HospDashboard')
-def HospDashboard():
-    # Retrieve the registration number from the session
-    hosp_reg_no = session.get('hosp_reg_no')
-
-    # Check if the user is logged in
-    if hosp_reg_no:
-        return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
-    else:
-        # Redirect to the login page if not logged in
-        return redirect(url_for('HospsignIn'))
-
-
-@app.route('/PDashboard')
-def PDashboard():
-    # Retrieve the registration number from the session
-    patient_reg_no = session.get('_id')
-
-    # Check if the user is logged in
-    if patient_reg_no:
-        return render_template('PatientDashboard.html', patient_reg_no=patient_reg_no)
-    else:
-        # Redirect to the patient sign-in page if not logged in
-        return redirect(url_for('PsignIn'))
-
-
-@app.route('/BBDashboard')
-def BBDashboard():
-    # Retrieve the registration number from the session
-    bb_reg_no = session.get('bb_reg_no')
-
-    # Check if the user is logged in
-    if bb_reg_no:
-        return render_template('BloodBankDashboard.html', bb_reg_no=bb_reg_no)
-    else:
-        # Redirect to the login page if not logged in
-        return redirect(url_for('BBsignIn'))
-
-
 @app.route('/HospSign')
 def Hospsign():
     return render_template('HospSignup.html')
+
 
 @app.route('/BBSign')
 def BBsign1():
     return render_template('BBSignup.html')
 
+
 @app.route('/PatientSign')
 def Psign1():
     return render_template('PatientLogin.html')
+
+######################################
+
+
+@app.route('/HospDashboard')
+def HospDashboard():
+    hosp_reg_no = session.get('hosp_reg_no')
+    return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
+
+@app.route('/PatientDashboard')
+def PatientDashboard():
+    patient_reg_no = session.get('patient_reg_no')
+    return render_template('PatientDashboard.html', patient_reg_no=patient_reg_no)
+
+@app.route('/BBDashboard')
+def BBDashboard():
+    bb_reg_no = session.get('bb_reg_no')
+    return render_template('BloodBankDashboard.html', bb_reg_no=bb_reg_no)
+
 
 
 
@@ -961,35 +997,29 @@ def Psign1():
 def addbb():
     return render_template('AddBloodBags.html')
 
+
 @app.route('/Stockadded')
 def stockadd():
     return render_template('StockAddSuccessful.html')
 
 
-@app.route('/SearchResults')
-def searchres():
-    return render_template('SearchResults.html')
-
-
-# @app.route('/SearchBlood')
-# def searchblood():
-#     return render_template('SearchBloodBag.html')
-
-
-@app.route('/SearchBlood')
-def searchblood():
-    # Retrieve session variables
-    
-    hosp_reg_no = session.get('hosp_reg_no')
-
-    return render_template('SearchBloodBag.html', hosp_reg_no=hosp_reg_no)
-  
+###################################
 
 
 
 @app.route('/PatientSearchBB')
 def Psearchbb():
     return render_template('PatientSearchBB.html')
+
+
+@app.route('/SearchResults')
+def searchres():
+    return render_template('SearchResults.html')
+
+###############################################
+
+
+
 
 @app.route('/Blood order')
 def reqform():
@@ -1026,6 +1056,9 @@ def faillogin():
 @app.route('/privacy')
 def privacyfun():
     return render_template('privacypolicy.html')
+
+
+
 
 @app.route('/terms')
 def TnC():
