@@ -978,14 +978,26 @@ def searchres():
 #     return render_template('SearchBloodBag.html')
 
 
+# @app.route('/SearchBlood')
+# def searchblood():
+#     # Retrieve session variables
+    
+#     hosp_reg_no = session.get('hosp_reg_no')
+
+#     return render_template('SearchBloodBag.html', hosp_reg_no=hosp_reg_no)
+
+
 @app.route('/SearchBlood')
 def searchblood():
-    # Retrieve session variables
-    
+    # Retrieve the registration number from the session
     hosp_reg_no = session.get('hosp_reg_no')
 
-    return render_template('SearchBloodBag.html', hosp_reg_no=hosp_reg_no)
-  
+    # Check if the user is logged in
+    if hosp_reg_no:
+        return render_template('SearchBloodBag.html', hosp_reg_no=hosp_reg_no)
+    else:
+        # Redirect to the login page if not logged in
+        return redirect(url_for('HospsignIn'))
 
 
 
