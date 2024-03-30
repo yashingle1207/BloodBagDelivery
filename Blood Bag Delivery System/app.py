@@ -708,6 +708,52 @@ def submit_order():
 
 from flask import session
 
+# @app.route('/searchbb', methods=['POST'])
+# def search_blood_bag():
+#     if request.method == 'POST':
+#         # Get user input from the form
+#         blood_group = request.form.get('bloodgrp')
+#         blood_component = request.form.get('comptype')
+#         quantity = int(request.form.get('quantity'))
+
+#         # Retrieve hosp_reg_no from the session
+#         hosp_reg_no = session.get('hosp_reg_no')
+
+#         # Query MongoDB to find matching blood bags
+#         blood_bags = Searchbb.find({
+#             'blood_group': blood_group,
+#             'blood_component': blood_component,
+#             'quantity': {'$gte': quantity}  # Filter bags with quantity greater than or equal to user input
+#         })
+
+#         # Prepare the results to be displayed or processed further
+#         results = []
+#         for bag in blood_bags:
+#             # Fetch additional details from the users table using reg_num
+#             blood_bank_user = BBUser.find_one({'reg_num': bag['reg_num']})
+
+#             results.append({
+#                 'bb_reg_no': bag['reg_num'],
+#                 'blood_group': bag['blood_group'],
+#                 'blood_component': bag['blood_component'],
+#                 'quantity': bag['quantity'],
+#                 'bb_name': blood_bank_user['bb_name'],  # Assuming the field name is 'bb_name' in your users table
+#                 'address': blood_bank_user['address'],  # Assuming the field name is 'address' in your users table
+#             })
+
+#         # Store the values in the user's session
+#         session['blood_group'] = blood_group
+#         session['blood_component'] = blood_component
+#         session['quantity'] = quantity
+
+#         # Return the results to the template along with hosp_reg_no
+#         return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no)
+
+#     return render_template('SearchResults.html')
+
+
+from flask import session, render_template, request
+
 @app.route('/searchbb', methods=['POST'])
 def search_blood_bag():
     if request.method == 'POST':
@@ -745,6 +791,8 @@ def search_blood_bag():
         session['blood_group'] = blood_group
         session['blood_component'] = blood_component
         session['quantity'] = quantity
+        # Set the hospital registration number in the session
+        session['hosp_reg_no'] = hosp_reg_no
 
         # Return the results to the template along with hosp_reg_no
         return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no)
