@@ -503,6 +503,7 @@ def submit_order():
 
 from flask import render_template, request, session
 
+from flask import session
 
 @app.route('/searchbb', methods=['POST'])
 def search_blood_bag():
@@ -511,6 +512,9 @@ def search_blood_bag():
         blood_group = request.form.get('bloodgrp')
         blood_component = request.form.get('comptype')
         quantity = int(request.form.get('quantity'))
+
+        # Retrieve hosp_reg_no from the session
+        hosp_reg_no = session.get('hosp_reg_no')
 
         # Query MongoDB to find matching blood bags
         blood_bags = Searchbb.find({
@@ -539,10 +543,11 @@ def search_blood_bag():
         session['blood_component'] = blood_component
         session['quantity'] = quantity
 
-        # Return the results to the template
-        return render_template('SearchResults.html', results=results)
+        # Return the results to the template along with hosp_reg_no
+        return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no)
 
     return render_template('SearchResults.html')
+
 
 
 ####################################################################
