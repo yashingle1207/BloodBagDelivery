@@ -254,7 +254,7 @@ def PsignIn():
             # Set the registration number in the session
             session['_id'] = patient_reg_no
 
-            return redirect(url_for('PDashboard'))
+            return redirect(url_for('PatientDashboard'))
 
         else:
             return render_template('LoginUnsuccessful.html')
@@ -914,11 +914,12 @@ def HospDashboard():
         return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
     else:
         # Redirect to the login page if not logged in
-        return redirect(url_for('HospsignIn'))
+         return render_template('HospSignup.html')
 
 
-@app.route('/PDashboard')
-def PDashboard():
+
+@app.route('/PatientDashboard')
+def PatientDashboard():
     # Retrieve the registration number from the session
     patient_reg_no = session.get('_id')
 
@@ -927,7 +928,7 @@ def PDashboard():
         return render_template('PatientDashboard.html', patient_reg_no=patient_reg_no)
     else:
         # Redirect to the patient sign-in page if not logged in
-        return redirect(url_for('PsignIn'))
+        return render_template('PatientLogin.html')
 
 
 @app.route('/BBDashboard')
@@ -940,7 +941,7 @@ def BBDashboard():
         return render_template('BloodBankDashboard.html', bb_reg_no=bb_reg_no)
     else:
         # Redirect to the login page if not logged in
-        return redirect(url_for('BBsignIn'))
+        return render_template('BBSignup.html')
 
 
 @app.route('/HospSign')
@@ -1038,6 +1039,11 @@ def refund():
 @app.route('/pricing')
 def price():
     return render_template('PricingPolicy.html')
+
+
+@app.route('/guide')
+def guidemanual():
+    return render_template('guideManual.html')
 
 
 
