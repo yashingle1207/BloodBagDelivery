@@ -752,7 +752,7 @@ from flask import session
 #     return render_template('SearchResults.html')
 
 
-@app.route('/searchbb', methods=['POST'])
+@app.route('/searchbb_hosp', methods=['POST'])
 def search_blood_bag():
     if request.method == 'POST':
         # Get user input from the form
@@ -793,7 +793,7 @@ def search_blood_bag():
         # Return the results to the template along with hosp_reg_no
         return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no)
 
-    return render_template('SearchResults.html')
+    return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no)
 
 
 
@@ -809,7 +809,7 @@ def PsearchBB():
         patient_reg_no = session.get('_id')
 
         # Query MongoDB to find matching blood bags
-        blood_bags = Searchbb.find({
+        blood_bags = PatientSearchBB.find({
             'blood_group': blood_group,
             'blood_component': blood_component,
             'quantity': {'$gte': quantity}  # Filter bags with quantity greater than or equal to user input
@@ -838,7 +838,7 @@ def PsearchBB():
         # Return the results to the template along with patient ID
         return render_template('PatientSearchResult.html', results=results, patient_reg_no=patient_reg_no)
 
-    return render_template('PatientSearchResult.html')
+    return render_template('PatientSearchResult.html',results=results, patient_reg_no=patient_reg_no)
 
 
 # @app.route('/PatientSearchBB', methods=['POST'])
