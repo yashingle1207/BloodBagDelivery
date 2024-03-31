@@ -17,7 +17,7 @@
 }
 
 html{
-  font-size: 70.5%;
+  font-size: 62.5%;
   overflow-x: hidden;
 }
 
@@ -36,7 +36,7 @@ html::-webkit-scrollbar-thumb{
 
 body{
   background:var(--gradient);
-  padding:8rem 7%;
+  padding:4rem 5%;
 }
 
 section{
@@ -582,7 +582,7 @@ th {
   }
 
   header{
-    padding:2rem; 
+    padding:2rem;
   }
 
   section{
