@@ -1091,21 +1091,9 @@ def searchres():
     return render_template('SearchResults.html')
 
 
-# @app.route('/SearchBlood')
-# def searchblood():
-#     return render_template('SearchBloodBag.html')
 
 
-# @app.route('/SearchBlood')
-# def searchblood():
-#     # Retrieve session variables
-    
-#     hosp_reg_no = session.get('hosp_reg_no')
-
-#     return render_template('SearchBloodBag.html', hosp_reg_no=hosp_reg_no)
-
-
-@app.route('/SearchBlood')
+@app.route('/SearchBlood', methods=['POST'])
 def searchblood():
     # Retrieve the registration number from the session
     hosp_reg_no = session.get('hosp_reg_no')
