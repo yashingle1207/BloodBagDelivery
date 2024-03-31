@@ -194,6 +194,32 @@ def home():
     return render_template('home.html')
 
 
+# @app.route('/HospSignIn', methods=['POST'])
+# def HospsignIn():
+#     if request.method == 'POST':
+#         hosp_email = request.form.get('hospEmailId')
+#         hosp_password = request.form.get('hospPassword')
+
+#         existing_user = HospUser.find_one({'email': hosp_email, 'password': hosp_password})
+#         if existing_user:
+#             hosp_reg_no = existing_user.get('reg_num')
+
+#             # Set the registration number in the session
+#             session['hosp_reg_no'] = hosp_reg_no
+
+#             # Redirect to the hospital dashboard
+#             return redirect(url_for('HospDashboard'))
+#            
+
+#         else:
+#             return render_template('LoginUnsuccessful.html')
+
+#     response = app.make_response(render_template('HospitalSignIn.html'))
+
+#     return response
+
+
+
 @app.route('/HospSignIn', methods=['POST'])
 def HospsignIn():
     if request.method == 'POST':
@@ -208,7 +234,8 @@ def HospsignIn():
             session['hosp_reg_no'] = hosp_reg_no
 
             # Redirect to the hospital dashboard
-            return redirect(url_for('HospDashboard'))
+            # return redirect(url_for('HospDashboard'))
+            return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
 
         else:
             return render_template('LoginUnsuccessful.html')
