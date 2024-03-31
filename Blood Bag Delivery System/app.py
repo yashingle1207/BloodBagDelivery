@@ -817,7 +817,7 @@ def search_blood_bag():
 
         # Store the values in the user's session
         session['blood_group'] = blood_group
-        session['blood_component'] = blood_component
+        session['blood_component_code'] = blood_component
         session['quantity'] = quantity
 
         # Return the results to the template along with hosp_reg_no
