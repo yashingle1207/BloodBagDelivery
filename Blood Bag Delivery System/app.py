@@ -19,6 +19,7 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.secret_key = os.urandom(24)
 
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SESSION_COOKIE_SECURE'] = True
 
 
 ######################## MongoDB configuration for the remote #####################################
@@ -193,7 +194,7 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/HospSignIn', methods=['POST', 'GET'])
+@app.route('/HospSignIn', methods=['POST'])
 def HospsignIn():
     if request.method == 'POST':
         hosp_email = request.form.get('hospEmailId')
@@ -218,7 +219,7 @@ def HospsignIn():
 
 
 
-@app.route('/BBSignIn', methods=['POST', 'GET'])
+@app.route('/BBSignIn', methods=['POST'])
 def BBsignIn():
     if request.method == 'POST':
         # Get user input from the login form
@@ -241,7 +242,7 @@ def BBsignIn():
     return response
 
 
-@app.route('/PatientSignIn', methods=['POST', 'GET'])
+@app.route('/PatientSignIn', methods=['POST'])
 def PsignIn():
     if request.method == 'POST':
         # Get user input from the login form
@@ -995,7 +996,7 @@ def remove_blood_bag():
 
 
 
-@app.route('/HospDashboard')
+@app.route('/HospDashboard', method=['POST'])
 def HospDashboard():
     # Retrieve the registration number from the session
     hosp_reg_no = session.get('hosp_reg_no')
@@ -1009,7 +1010,7 @@ def HospDashboard():
 
 
 
-@app.route('/PatientDashboard')
+@app.route('/PatientDashboard', method=['POST'])
 def PatientDashboard():
     # Retrieve the registration number from the session
     patient_reg_no = session.get('_id')
@@ -1022,7 +1023,7 @@ def PatientDashboard():
         return render_template('PatientLogin.html')
 
 
-@app.route('/BBDashboard')
+@app.route('/BBDashboard', method=['POST'])
 def BBDashboard():
     # Retrieve the registration number from the session
     bb_reg_no = session.get('bb_reg_no')
