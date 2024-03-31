@@ -524,7 +524,7 @@ def hosp_received_orders():
             'timestamp': order.get('timestamp')
         })
 
-    return render_template('ReceivedBags.html', orders=order_list)
+    return render_template('Receivedbags.html', orders=order_list)
 
 
 @app.route('/delorder2', methods=['GET'])
