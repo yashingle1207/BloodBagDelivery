@@ -752,8 +752,6 @@ from flask import session
 #     return render_template('SearchResults.html')
 
 
-from flask import session, render_template, request
-
 @app.route('/searchbb', methods=['POST'])
 def search_blood_bag():
     if request.method == 'POST':
@@ -791,8 +789,6 @@ def search_blood_bag():
         session['blood_group'] = blood_group
         session['blood_component'] = blood_component
         session['quantity'] = quantity
-        # Set the hospital registration number in the session
-        session['hosp_reg_no'] = hosp_reg_no
 
         # Return the results to the template along with hosp_reg_no
         return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no)
@@ -808,6 +804,9 @@ def PsearchBB():
         blood_group = request.form.get('bloodgrp1')
         blood_component = request.form.get('comptype1')
         quantity = int(request.form.get('quantity1'))
+
+        # Retrieve the patient ID from the session
+        patient_reg_no = session.get('_id')
 
         # Query MongoDB to find matching blood bags
         blood_bags = Searchbb.find({
@@ -836,10 +835,51 @@ def PsearchBB():
         session['blood_component_code'] = blood_component
         session['quantity'] = quantity
 
-        # Return the results to the template
-        return render_template('PatientSearchResult.html', results=results)
+        # Return the results to the template along with patient ID
+        return render_template('PatientSearchResult.html', results=results, patient_reg_no=patient_reg_no)
 
     return render_template('PatientSearchResult.html')
+
+
+# @app.route('/PatientSearchBB', methods=['POST'])
+# def PsearchBB():
+#     if request.method == 'POST':
+#         # Get user input from the form
+#         blood_group = request.form.get('bloodgrp1')
+#         blood_component = request.form.get('comptype1')
+#         quantity = int(request.form.get('quantity1'))
+
+#         # Query MongoDB to find matching blood bags
+#         blood_bags = Searchbb.find({
+#             'blood_group': blood_group,
+#             'blood_component': blood_component,
+#             'quantity': {'$gte': quantity}  # Filter bags with quantity greater than or equal to user input
+#         })
+
+#         # Prepare the results to be displayed or processed further
+#         results = []
+#         for bag in blood_bags:
+#             # Fetch additional details from the users table using reg_num
+#             blood_bank_user = BBUser.find_one({'reg_num': bag['reg_num']})
+
+#             results.append({
+#                 'bb_reg_no': bag['reg_num'],
+#                 'blood_group': bag['blood_group'],
+#                 'blood_component': bag['blood_component'],
+#                 'quantity': bag['quantity'],
+#                 'bb_name': blood_bank_user['bb_name'],  # Assuming the field name is 'bb_name' in your users table
+#                 'address': blood_bank_user['address'],  # Assuming the field name is 'address' in your users table
+#             })
+
+#         # Store the values in the user's session
+#         session['blood_group'] = blood_group
+#         session['blood_component_code'] = blood_component
+#         session['quantity'] = quantity
+
+#         # Return the results to the template
+#         return render_template('PatientSearchResult.html', results=results)
+
+#     return render_template('PatientSearchResult.html')
 
 
 ####################################################################
