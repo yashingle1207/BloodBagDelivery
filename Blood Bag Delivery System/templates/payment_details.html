@@ -11,7 +11,6 @@
 
     <!-- Custom CSS file link -->
     <link rel="stylesheet" href="static/style.css">
-      <link rel="icon" type="image/png" href="static/images/LogoTT.png">
 
     <style>
         /* Your existing styles here */
@@ -55,18 +54,20 @@
             <a href="/" class="logo">Transfusio<span>Track</span></a>
             <div id="menu" class="fas fa-bars"></div>
 
-            <nav class="navbar">
-                {% if '_id' in session %}
-                    <a>User ID: {{ session['_id'] }}</a>
-                    <a href="/PatientDashboard">Patient Dashboard</a>
-                {% elif 'hosp_reg_no' in session %}
-                    <a>User ID: {{ session['hosp_reg_no'] }}</a>
-                    <a href="/HospDashboard">Hospital Dashboard</a>
-                {% endif %}
-                <a href="/">Logout</a>
-            </nav
-            
-  
+        <nav class="navbar">
+             {% if patient_reg_no %}
+                <a>User ID: {{ patient_reg_no }}</a>
+                 <a href="/PDashboard">Patient Dashboard</a>
+            {% elif hosp_reg_no %}
+                <a>User ID: {{ hosp_reg_no }}</a>
+                 <a href="/HospDashboard">Hospital Dashboard</a>
+
+            {% endif %}
+
+
+          <a href="/">Logout</a>
+
+        </nav>
         </header>
 
         <section class="payment-details">
