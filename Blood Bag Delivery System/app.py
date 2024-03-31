@@ -18,6 +18,8 @@ app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.secret_key = os.urandom(24)
 
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+
 
 ######################## MongoDB configuration for the remote #####################################
 atlas_uri = "mongodb+srv://yashingle007:YASHsteyr124@clusterbb.uyk8mkp.mongodb.net/"
