@@ -18,8 +18,8 @@ body {
 
 h1 {
 	font-weight: bold;
-	text-size: 120px;
-	margin: 0;
+	text-size: 100px;
+	margin-bottom:10px;
 }
 
 h2 {
@@ -27,7 +27,7 @@ h2 {
 }
 
 p {
-	font-size: 45px;
+	font-size: 35px;
 	font-weight: 100;
 	line-height: 50px;
 	letter-spacing: 2.5px;
@@ -57,6 +57,7 @@ button {
 	letter-spacing: 1px;
 	text-transform: uppercase;
 	transition: transform 80ms ease-in;
+
 }
 
 button:active {
@@ -86,24 +87,28 @@ form {
 input {
 	background-color: #eee;
 	border: none;
-	font-size:20px;
-	padding: 25px 25px;
+	font-size:18px;
+	padding: 20px 25px;
 	margin: 10px 0;
 	width: 100%;
+	margin-bottom:10px;
 }
 
 .container {
 	background-color: #fff;
 	border-radius: 10px;
-  	box-shadow: 0 14px 28px rgba(0,0,0,0.25), 
+  	box-shadow: 0 14px 28px rgba(0,0,0,0.25),
 			0 10px 10px rgba(0,0,0,0.22);
 	position: relative;
 	overflow: hidden;
 	margin-top: 35px;
-	width: 1300px;
+	width: 1100px;
 	max-width: 100%;
-	min-height: 800px;
+	max-height:90%;
+	min-height: 650px;
+	padding: 2rem;
 }
+
 
 .form-container {
 	position: absolute;
@@ -119,7 +124,7 @@ input {
 }
 
 .form-container.sign-in-container h1 {
-    font-size: 54px;
+    font-size: 48px;
 }
 
 .form-container.sign-up-container h1 {
@@ -160,7 +165,7 @@ input {
 		opacity: 0;
 		z-index: 1;
 	}
-	
+
 	50%, 100% {
 		opacity: 1;
 		z-index: 5;
