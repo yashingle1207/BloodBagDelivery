@@ -1095,7 +1095,7 @@ def searchres():
 
 @app.route('/SearchBlood')
 def searchblood():
-    return template('SearchBloodBag.html')
+    return render_template('SearchBloodBag.html')
   
 
 
