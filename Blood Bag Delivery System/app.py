@@ -19,7 +19,7 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.secret_key = os.urandom(24)
 
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
-app.config['SESSION_COOKIE_SECURE'] = True
+# app.config['SESSION_COOKIE_SECURE'] = True
 
 
 ######################## MongoDB configuration for the remote #####################################
