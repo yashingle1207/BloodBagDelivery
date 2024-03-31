@@ -194,7 +194,7 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/HospSignIn', methods=['POST'])
+@app.route('/HospSignIn', methods=['POST','GET'])
 def HospsignIn():
     if request.method == 'POST':
         hosp_email = request.form.get('hospEmailId')
@@ -219,7 +219,7 @@ def HospsignIn():
 
 
 
-@app.route('/BBSignIn', methods=['POST'])
+@app.route('/BBSignIn', methods=['POST', 'GET'])
 def BBsignIn():
     if request.method == 'POST':
         # Get user input from the login form
@@ -242,7 +242,7 @@ def BBsignIn():
     return response
 
 
-@app.route('/PatientSignIn', methods=['POST'])
+@app.route('/PatientSignIn', methods=['POST','GET'])
 def PsignIn():
     if request.method == 'POST':
         # Get user input from the login form
@@ -996,7 +996,7 @@ def remove_blood_bag():
 
 
 
-@app.route('/HospDashboard', method=['POST'])
+@app.route('/HospDashboard')
 def HospDashboard():
     # Retrieve the registration number from the session
     hosp_reg_no = session.get('hosp_reg_no')
@@ -1010,7 +1010,7 @@ def HospDashboard():
 
 
 
-@app.route('/PatientDashboard', method=['POST'])
+@app.route('/PatientDashboard')
 def PatientDashboard():
     # Retrieve the registration number from the session
     patient_reg_no = session.get('_id')
@@ -1023,7 +1023,7 @@ def PatientDashboard():
         return render_template('PatientLogin.html')
 
 
-@app.route('/BBDashboard', method=['POST'])
+@app.route('/BBDashboard')
 def BBDashboard():
     # Retrieve the registration number from the session
     bb_reg_no = session.get('bb_reg_no')
