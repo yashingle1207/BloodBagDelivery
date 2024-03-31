@@ -69,7 +69,7 @@ section{
   background:#333;
   color:#fff;
   cursor: pointer;
-  font-size: 1.7rem;
+  font-size: 1.5rem;
 }
 
 .btn:hover{
@@ -137,7 +137,7 @@ header .navbar a:hover{
   background:var(--gradient);
   -webkit-background-clip: text;
   background-clip: text;
-  font-size: 2rem;
+  font-size: 2.5rem;
   padding-top: 22px;
   padding-bottom: 20px;
 
@@ -174,7 +174,7 @@ header .navbar a:hover{
   background:var(--gradient);
   -webkit-background-clip: text;
   background-clip: text;
-  font-size: 4rem;
+  font-size: 3.2rem;
   padding-top: 22px;
   padding-bottom: 20px;
 
@@ -182,7 +182,7 @@ header .navbar a:hover{
 
 .home .content p{
   padding:.7rem 0;
-  font-size: 2.0rem;
+  font-size: 1.9rem;
   color:#666;
 }
 
@@ -526,7 +526,7 @@ th {
 }
 
 .footer .box-container .box h3{
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   color:var(--violet);
   padding:.7rem 0;
 }
