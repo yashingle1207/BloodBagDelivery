@@ -54,14 +54,12 @@
         <div id="menu" class="fas fa-bars"></div>
 
         <nav class="navbar">
-             {% if patient_reg_no %}
-                <a>User ID: {{ patient_reg_no }}</a>
-                 <a href="/PDashboard">Patient Dashboard</a>
-            {% elif hosp_reg_no %}
-                <a>User ID: {{ hosp_reg_no }}</a>
+            {% if 'hosp_reg_no' in session %}
+            <a>User ID: {{ session['hosp_reg_no'] }}</a>
+        {% endif %}
                  <a href="/HospDashboard">Hospital Dashboard</a>
           
-            {% endif %}
+     
 
              
           <a href="/">Logout</a>
@@ -76,7 +74,7 @@
     <section class="contact">
 
 
-<form action="/searchbb" method="POST">
+<form action="/searchbb_hosp" method="POST">
 
     <h2>Enter Blood Group</h2>
 
