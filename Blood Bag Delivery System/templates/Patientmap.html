@@ -24,8 +24,10 @@
     <div id="menu" class="fas fa-bars"></div>
 
     <nav class="navbar">
-
-        <a href="/PDashboard">Patient Dashboard</a>
+          {% if '_id' in session %}
+            <a>User ID: {{ session['_id'] }}</a>
+        {% endif %}
+        <a href="/PatientDashboard">Patient Dashboard</a>
           <a href="/">Logout</a>
     </nav>
 
