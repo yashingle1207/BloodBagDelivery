@@ -625,10 +625,41 @@ th {
 
 }
 
-@media (max-width:400px){
-
-  html{
-    font-size: 50%;
+@media (max-width: 400px) {
+  html {
+    font-size: 62.5%;
   }
 
+  .heading {
+    font-size: 3.5rem;
+  }
+
+  .btn {
+    font-size: 2rem;
+  }
+
+  .contact form .inputBox input,
+  .contact form .box,
+  .contact form textarea,
+  .contact form select {
+    width: 100%;
+  }
+
+  .contact form h1 {
+    font-size: 2rem;
+  }
+
+  .contact form h2,
+  .contact form h3 {
+    font-size: 2rem;
+  }
+
+  .contact form p {
+    font-size: 1.8rem;
+  }
+
+  .contact form .checkbox-group label {
+    font-size: 2rem;
+  }
+}
 } 
