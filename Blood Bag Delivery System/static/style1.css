@@ -280,3 +280,98 @@ footer a {
 }
 
 
+@media only screen and (max-width: 768px) {
+    .form-container {
+        width: 100%; /* Take up full width on smaller screens */
+        height:100%
+    }
+
+    .sign-in-container{
+
+        width: 100%;
+        position: static;
+        opacity: 1;
+        z-index: auto;
+        padding: 20px; /* Add padding for better spacing on smaller screens */
+
+        border-radius: 10px; /* Add border radius for rounded corners */
+        margin-bottom: 200px; /* Add margin for separation between containers */
+    }
+    .sign-up-container {
+        width: 100%;
+        position: static;
+        opacity: 1;
+        z-index: auto;
+        padding: 20px; /* Add padding for better spacing on smaller screens */
+        margin-top:25px;
+        border-radius: 10px; /* Add border radius for rounded corners */
+        margin-top: 500px; /* Add margin for separation between containers */
+    }
+
+    .sign-in-container {
+        background-color: #f9f9f9; /* Set background color for sign in container */
+    }
+
+    .sign-up-container {
+        background-color: #ffffff; /* Set background color for sign up container */
+    }
+
+    .sign-in-container input,
+    .sign-up-container input,
+    .form-container h1{
+        margin-bottom: 7px; /* Reduce margin between input fields and headings */
+        font-size:22px;
+        margin-top:20px;
+    }
+
+ .form-container  button, a{
+  margin-top: 10px}
+
+   .form-container  a{
+  margin-bottom: 2px}
+
+  .form-container span {
+        margin-bottom: 7px;
+        margin-top:7px;
+    }
+
+
+
+
+
+    .overlay-container {
+        width: 100%; /* Take up full width on smaller screens */
+    }
+
+    .overlay {
+        width: 100%; /* Take up full width on smaller screens */
+    }
+
+    .overlay-panel {
+        width: 100%; /* Take up full width on smaller screens */
+    }
+
+    .container.right-panel-active .overlay-container {
+        transform: none; /* Remove transform on smaller screens */
+    }
+
+    .container.right-panel-active .overlay {
+        transform: none; /* Remove transform on smaller screens */
+    }
+
+    .overlay-panel.overlay-left,
+    .overlay-panel.overlay-right {
+        transform: none; /* Remove transform on smaller screens */
+    }
+
+    .container {
+        width: auto; /* Remove fixed width on smaller screens */
+        padding: 0.5rem; /* Adjust padding for smaller screens */
+        margin-top:2rem;
+    }
+
+    .form-container.sign-in-container h1,
+    .form-container.sign-up-container h1 {
+        font-size: 32px; /* Adjust font size for smaller screens */
+    }
+}
