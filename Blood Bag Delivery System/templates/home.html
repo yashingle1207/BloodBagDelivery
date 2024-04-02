@@ -10,7 +10,7 @@
 
     <!-- custom css file link  -->
     <link rel="stylesheet" href="static/style.css">
-      <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
 
 </head>
 <body>
@@ -24,24 +24,20 @@
 
     <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
 
-  <nav class="navbar">
-
-        <a href="/">Home</a>
-<!--        <a href="/HospSign">Hospital Login</a>-->
-<!--        <a href="/PatientSign">Patient Login</a>-->
-<!--        <a href="/BBSign">BloodBank Login</a>-->
-
-
-        <a href="/aboutus">About Us</a>
-        <a href="/contact">Contact Us</a>
-        <a href="/pricing">Our Pricing </a>
-         <a href="/guide">Explore Guide</a>
-    </nav>
+        <!-- Define the navigation bar with links -->
+        <nav class="navbar" id="navbar">
+            <a href="/">Home</a>
+            <a href="/aboutus">About Us</a>
+            <a href="/contact">Contact Us</a>
+            <a href="/pricing">Our Pricing</a>
+            <a href="/guide">Explore Guide</a>
+        </nav>
 
 
 </header>
 
-           <script>
+       <!-- Include your JavaScript code -->
+        <script>
         function toggleNavbar() {
             var navbar = document.getElementById("navbar");
             if (navbar.classList.contains("active")) {
@@ -53,8 +49,8 @@
         </script>
 
 
-
 <section class="home">
+
 
     <div class="content">
         <h3>Bridging Lives, Delivering Lifelines </h3>
