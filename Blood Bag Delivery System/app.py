@@ -77,13 +77,13 @@ def pay():
     total_amt = session.get("quantity") * session.get("blood_product_price")
 
     # Determine the merchantUserId based on which user is logged in
-    patient_reg_no = session.get('_id')
-    hosp_reg_no = session.get('hosp_reg_no')
+    patient_reg_no1 = session.get('_id')
+    hosp_reg_no1 = session.get('hosp_reg_no')
     
-    if patient_reg_no:
-        merchantUserId = patient_reg_no
-    elif hosp_reg_no:
-        merchantUserId = hosp_reg_no
+    if patient_reg_no1:
+        merchantUserId = patient_reg_no1
+    elif hosp_reg_no1:
+        merchantUserId = hosp_reg_no1
     else:
         raise ValueError("No user is logged in")
 
