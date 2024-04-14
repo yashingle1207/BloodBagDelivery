@@ -233,10 +233,10 @@ def payment_invoice():
 
         # Check if the user is a patient or hospital
         patient_reg_no = session.get('_id')
-        _no = session.get('_no')
+        hosp_reg_no = session.get('hosp_reg_no')
 
-        if _no:
-            return render_template('payment_details.html', _no=_no)
+        if hosp_reg_no:
+            return render_template('payment_details.html', hosp_reg_no=hosp_reg_no)
         elif patient_reg_no:
             return render_template('payment_details.html', patient_reg_no=patient_reg_no)
 
@@ -274,14 +274,14 @@ def HospsignIn():
 
         existing_user = HospUser.find_one({'email': hosp_email, 'password': hosp_password})
         if existing_user:
-            _no = existing_user.get('reg_num')
+            hosp_reg_no = existing_user.get('reg_num')
 
             # Set the registration number in the session
-            session['_no'] = _no
+            session['hosp_reg_no'] = hosp_reg_no 
 
             # Redirect to the hospital dashboard
             # return redirect(url_for('HospDashboard'))
-            return render_template('HospitalDashboard.html', _no=_no)
+            return render_template('HospitalDashboard.html',  hosp_reg_no=hosp_reg_no )
 
         else:
             return render_template('LoginUnsuccessful.html')
@@ -773,7 +773,7 @@ def Blood_bag_inProgress():
 @app.route('/Hosp_Pending_Req', methods=['GET'])
 def Hosp_Blood_bag_inProgress():
     # Query MongoDB to get all orders
-    orders = Order.find({'User_ID':session.get('_no'),'status': 'undelivered'})
+    orders = Order.find({'User_ID':session.get('hosp_reg_no'),'status': 'undelivered'})
 
     # Prepare the results to be displayed
     order_list = []
@@ -923,8 +923,8 @@ from flask import session
 #         blood_component = request.form.get('comptype')
 #         quantity = int(request.form.get('quantity'))
 
-#         # Retrieve _no from the session
-#         _no = session.get('_no')
+#         # Retrieve hosp_reg_no from the session
+#         hosp_reg_no= session.get('hosp_reg_no')
 
 #         # Query MongoDB to find matching blood bags
 #         blood_bags = Searchbb.find({
@@ -953,8 +953,8 @@ from flask import session
 #         session['blood_component'] = blood_component
 #         session['quantity'] = quantity
 
-#         # Return the results to the template along with _no
-#         return render_template('SearchResults.html', results=results, _no=_no)
+#         # Return the results to the template along with hosp_reg_no
+#         return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no)
 
 #     return render_template('SearchResults.html')
 
@@ -967,8 +967,8 @@ def search_blood_bag():
         blood_component = request.form.get('comptype')
         quantity = int(request.form.get('quantity'))
 
-        # Retrieve _no from the session
-        _no = session.get('_no')
+        # Retrieve hosp_reg_no from the session
+        hosp_reg_no= session.get('hosp_reg_no')
 
         # Query MongoDB to find matching blood bags
         blood_bags = Searchbb.find({
@@ -997,10 +997,10 @@ def search_blood_bag():
         session['blood_component_code'] = blood_component
         session['quantity'] = quantity
 
-        # Return the results to the template along with _no
-        return render_template('SearchResults.html', results=results, _no=_no)
+        # Return the results to the template along with hosp_reg_no
+        return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no)
 
-    return render_template('SearchResults.html', results=results, _no=_no)
+    return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no)
 
 
 
@@ -1060,7 +1060,7 @@ def set_selected_blood_bank():
         blood_product_price = get_blood_product_price(selected_blood_product)
 
         # Check if a hospital or patient is logged in
-        if '_no' in session:
+        if 'hosp_reg_no' in session:
             # Set the selected blood bank reg_num and blood product price in the session for a hospital
             session['bb_reg_no'] = selected_blood_bank_reg_num
             session['blood_product_price'] = blood_product_price
@@ -1160,11 +1160,11 @@ def remove_blood_bag():
 @app.route('/HospDashboard')
 def HospDashboard():
     # Retrieve the registration number from the session
-    _no = session.get('_no')
+    hosp_reg_no = session.get('hosp_reg_no')
 
     # Check if the user is logged in
-    if _no:
-        return render_template('HospitalDashboard.html', _no=_no)
+    if hosp_reg_no:
+        return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
     else:
         # Redirect to the login page if not logged in
          return render_template('HospSignup.html')
