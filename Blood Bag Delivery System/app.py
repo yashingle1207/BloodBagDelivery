@@ -70,9 +70,9 @@ def pay():
         "merchantTransactionId": shortuuid.uuid(),
         "merchantUserId": "MUID123",
         "amount": total_amt,
-        "redirectUrl": "http://127.0.0.1:5000/payment_response",
+        "redirectUrl": "https://www.transfusiotrack.com/payment_response",
         "redirectMode": "POST",
-        "callbackUrl": "http://127.0.0.1:5000/payment_response",
+        "callbackUrl": "https://www.transfusiotrack.com/payment_response",
         "mobileNumber": "9518920645",
         "paymentInstrument": {
             "type": "PAY_PAGE"
@@ -175,6 +175,44 @@ def payment_response():
     return render_template('error.html', message='Transaction ID missing or invalid')
 
 
+
+@app.route('/payment_invoice', methods=['POST'])
+def payment_invoice():
+    if request.method == 'POST':
+        # Get form data
+        req_type = request.form.get('reqtype')
+        fname = request.form.get('fname')
+        mname = request.form.get('mname')
+        lname = request.form.get('lname')
+        gender = request.form.get('gender')
+        age = request.form.get('age')
+        ward = request.form.get('ward')
+        bedno = request.form.get('bedno')
+
+        # Store form data in session
+        session['req_type'] = req_type
+        session['fname'] = fname
+        session['mname'] = mname
+        session['lname'] = lname
+        session['gender'] = gender
+        session['age'] = age
+        session['ward'] = ward
+        session['bedno'] = bedno
+
+        # Check if the user is a patient or hospital
+        patient_reg_no = session.get('_id')
+        hosp_reg_no = session.get('hosp_reg_no')
+
+        if hosp_reg_no:
+            return render_template('payment_details.html', hosp_reg_no=hosp_reg_no)
+        elif patient_reg_no:
+            return render_template('payment_details.html', patient_reg_no=patient_reg_no)
+
+    # Handle case where request method is not POST
+    return render_template('error.html', message='Invalid request method.')
+
+
+
 ###############################################################
 
 
@@ -193,30 +231,6 @@ def logout():
 def home():
     return render_template('home.html')
 
-
-# @app.route('/HospSignIn', methods=['POST'])
-# def HospsignIn():
-#     if request.method == 'POST':
-#         hosp_email = request.form.get('hospEmailId')
-#         hosp_password = request.form.get('hospPassword')
-
-#         existing_user = HospUser.find_one({'email': hosp_email, 'password': hosp_password})
-#         if existing_user:
-#             hosp_reg_no = existing_user.get('reg_num')
-
-#             # Set the registration number in the session
-#             session['hosp_reg_no'] = hosp_reg_no
-
-#             # Redirect to the hospital dashboard
-#             return redirect(url_for('HospDashboard'))
-#            
-
-#         else:
-#             return render_template('LoginUnsuccessful.html')
-
-#     response = app.make_response(render_template('HospitalSignIn.html'))
-
-#     return response
 
 
 
@@ -391,14 +405,6 @@ def Psignup():
 
         return render_template('PatientDashboard.html')
 
-
-
-
-##################################
-
-
-def update_requisition_status(order_id, param):
-    pass
 
 
 ########################################### payment end#############################
@@ -871,46 +877,6 @@ def PsearchBB():
     return render_template('PatientSearchResult.html',results=results, patient_reg_no=patient_reg_no)
 
 
-# @app.route('/PatientSearchBB', methods=['POST'])
-# def PsearchBB():
-#     if request.method == 'POST':
-#         # Get user input from the form
-#         blood_group = request.form.get('bloodgrp1')
-#         blood_component = request.form.get('comptype1')
-#         quantity = int(request.form.get('quantity1'))
-
-#         # Query MongoDB to find matching blood bags
-#         blood_bags = Searchbb.find({
-#             'blood_group': blood_group,
-#             'blood_component': blood_component,
-#             'quantity': {'$gte': quantity}  # Filter bags with quantity greater than or equal to user input
-#         })
-
-#         # Prepare the results to be displayed or processed further
-#         results = []
-#         for bag in blood_bags:
-#             # Fetch additional details from the users table using reg_num
-#             blood_bank_user = BBUser.find_one({'reg_num': bag['reg_num']})
-
-#             results.append({
-#                 'bb_reg_no': bag['reg_num'],
-#                 'blood_group': bag['blood_group'],
-#                 'blood_component': bag['blood_component'],
-#                 'quantity': bag['quantity'],
-#                 'bb_name': blood_bank_user['bb_name'],  # Assuming the field name is 'bb_name' in your users table
-#                 'address': blood_bank_user['address'],  # Assuming the field name is 'address' in your users table
-#             })
-
-#         # Store the values in the user's session
-#         session['blood_group'] = blood_group
-#         session['blood_component_code'] = blood_component
-#         session['quantity'] = quantity
-
-#         # Return the results to the template
-#         return render_template('PatientSearchResult.html', results=results)
-
-#     return render_template('PatientSearchResult.html')
-
 
 ####################################################################
 @app.route('/set_selected_blood_bank', methods=['POST'])
@@ -1020,9 +986,6 @@ def remove_blood_bag():
 
 ##############################################################################
 
-
-
-
 @app.route('/HospDashboard')
 def HospDashboard():
     # Retrieve the registration number from the session
@@ -1091,13 +1054,10 @@ def searchres():
     return render_template('SearchResults.html')
 
 
-
-
 @app.route('/SearchBlood')
 def searchblood():
     return render_template('SearchBloodBag.html')
   
-
 
 @app.route('/PatientSearchBB')
 def Psearchbb():
@@ -1155,43 +1115,6 @@ def price():
 @app.route('/guide')
 def guidemanual():
     return render_template('guideManual.html')
-
-
-
-@app.route('/payment_invoice', methods=['POST'])
-def payment_invoice():
-    if request.method == 'POST':
-        # Get form data
-        req_type = request.form.get('reqtype')
-        fname = request.form.get('fname')
-        mname = request.form.get('mname')
-        lname = request.form.get('lname')
-        gender = request.form.get('gender')
-        age = request.form.get('age')
-        ward = request.form.get('ward')
-        bedno = request.form.get('bedno')
-
-        # Store form data in session
-        session['req_type'] = req_type
-        session['fname'] = fname
-        session['mname'] = mname
-        session['lname'] = lname
-        session['gender'] = gender
-        session['age'] = age
-        session['ward'] = ward
-        session['bedno'] = bedno
-
-        # Check if the user is a patient or hospital
-        patient_reg_no = session.get('_id')
-        hosp_reg_no = session.get('hosp_reg_no')
-
-        if hosp_reg_no:
-            return render_template('payment_details.html', hosp_reg_no=hosp_reg_no)
-        elif patient_reg_no:
-            return render_template('payment_details.html', patient_reg_no=patient_reg_no)
-
-    # Handle case where request method is not POST
-    return render_template('error.html', message='Invalid request method.')
 
 
 
