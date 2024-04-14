@@ -232,7 +232,7 @@ def payment_response():
         headers = {
             'Content-Type': 'application/json',
             'X-VERIFY': checksum,
-            'X-MERCHANT-ID': 'M22S8FP278KQA',
+            'X-MERCHANT-ID': 'M22S8FP278KQA',  # Merchant ID should be your merchant ID
             'accept': 'application/json',
         }
 
@@ -247,8 +247,8 @@ def payment_response():
             print("Response Data:", response_data)
 
             # Check if the payment was successful
-            if response_data.get('success') and response_data.get('code') == 'PAYMENT_INITIATED':
-                # Successful payment
+            if response_data.get('success') and response_data.get('code') == 'PAYMENT_SUCCESS':
+                # Payment successful
                 phonepe_transaction_id = response_data.get('data', {}).get('transactionId')
 
                 # Extract order details from session
@@ -305,6 +305,7 @@ def payment_response():
     # Handle case where transaction ID is missing or invalid
     print("Missing or invalid transaction ID.")
     return render_template('error.html', message='Transaction ID missing or invalid')
+
 
 
 
