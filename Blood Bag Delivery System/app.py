@@ -215,39 +215,42 @@ def payment_response():
     # Retrieve form data
     form_data = request.form
     form_data_dict = dict(form_data)
-    
+
     # Retrieve transaction ID from the request
     transaction_id = request.form.get('transactionId')
-    
+
     if transaction_id:
         # Construct the request URL
         request_url = f'https://api.phonepe.com/apis/hermes/pg/v1/status/M22S8FP278KQA/{transaction_id}'
-        
+
         # Construct the checksum string
         sha256_pay_load_string = f'/pg/v1/status/M22S8FP278KQA/{transaction_id}{SALTKEY}'
         sha256_val = calculate_sha256_string(sha256_pay_load_string)
         checksum = f'{sha256_val}###{INDEX}'
-        
+
         # Set the request headers
         headers = {
             'Content-Type': 'application/json',
             'X-VERIFY': checksum,
-            'X-MERCHANT-ID': 'M22S8FP278KQA',  # Merchant ID should be your merchant ID
+            'X-MERCHANT-ID': 'M22S8FP278KQA',
             'accept': 'application/json',
         }
-        
+
         # Make the GET request to the API
         response = requests.get(request_url, headers=headers)
-        
+
         # Process the response
         if response.status_code == 200:
             response_data = response.json()
-            
-            # Check if the payment was successful and initiated
+
+            # Log the response data for debugging
+            print("Response Data:", response_data)
+
+            # Check if the payment was successful
             if response_data.get('success') and response_data.get('code') == 'PAYMENT_INITIATED':
-                # Successful payment, handle the successful response
-                transaction_id = response_data.get('data', {}).get('transactionId', None)
-                
+                # Successful payment
+                phonepe_transaction_id = response_data.get('data', {}).get('transactionId')
+
                 # Extract order details from session
                 req_type = session.get('req_type')
                 fname = session.get('fname')
@@ -262,7 +265,7 @@ def payment_response():
                 requested_quantity = session.get('quantity')
                 user_id = session.get('_id')
                 blood_bank_id = session.get('bb_reg_no')
-                
+
                 # Create order data
                 order_data = {
                     'User_ID': user_id,
@@ -280,24 +283,29 @@ def payment_response():
                     'gender': gender,
                     'timestamp': datetime.now(),
                     'status': 'undelivered',
-                    'transactionId': transaction_id
+                    'phonepe_transaction_id': phonepe_transaction_id  # Add PhonePe transaction ID
                 }
-                
+
                 # Insert order data into MongoDB
                 Order.insert_one(order_data)
-                
+
                 # Redirect to the success page
                 return render_template('map.html', form_data=form_data_dict)
-                
+
             else:
-                # Payment initiation failed, redirect to payment failure page
+                # Payment failed, log and redirect to payment failure page
+                print("Payment failed. Response:", response_data)
                 return render_template('payment_failed.html', form_data=form_data_dict, message=response_data.get('message', 'Unknown error occurred during payment initiation'))
+
         else:
-            # Request failed, handle error accordingly
-            return render_template('error.html', message='Error during request: Unexpected response status code')
-    
+            # Log and handle unexpected status code
+            print("Unexpected response status code:", response.status_code)
+            return render_template('error.html', message=f'Error during request: Unexpected response status code {response.status_code}')
+
     # Handle case where transaction ID is missing or invalid
+    print("Missing or invalid transaction ID.")
     return render_template('error.html', message='Transaction ID missing or invalid')
+
 
 
 
