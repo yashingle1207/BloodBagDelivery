@@ -10,15 +10,15 @@
 
     <!-- custom css file link  -->
     <link rel="stylesheet" href="static/style.css">
+      <link rel="icon" type="image/png" href="static/images/LogoTT.png">
 
-    <style>
+     <style>
+        /* General table styles */
         table {
             border-collapse: collapse;
             width: 100%;
             max-width: 90%;
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 10px;
+            margin: 10px auto;
         }
 
         th, td {
@@ -26,14 +26,21 @@
             text-align: left;
             padding: 8px;
             font-size: 16px;
-            max-width: 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            white-space: normal; /* Allow text to wrap */
+            word-wrap: break-word; /* Wrap text in data cells */
         }
 
         th {
             background-color: #f2f2f2;
+            width: 150px; /* Adjust the width as needed for larger screens */
+        }
+
+        /* Media query for smaller screens */
+        @media (max-width: 768px) {
+            /* Hide columns with data-hide="true" on smaller screens */
+            th[data-hide="true"], td[data-hide="true"] {
+                display: none;
+            }
         }
     </style>
 
@@ -65,7 +72,10 @@
     <a href="/" class="logo">Transfusio<span>Track</span></a>
     <div id="menu" class="fas fa-bars"></div>
     <nav class="navbar">
-        <a href="/PDashboard">Patient Dashboard</a>
+           {% if '_id' in session %}
+            <a>User ID: {{ session['_id'] }}</a>
+        {% endif %}
+        <a href="/PatientDashboard">Patient Dashboard</a>
         <a href="/">Logout</a>
     </nav>
 </header>
@@ -81,11 +91,11 @@
             <th>Blood Quantity</th>
             <th>Request Type</th>
             <th>First Name</th>
-            <th>Middle Name</th>
+            <th data-hide="true">Middle Name</th>
             <th>Last Name</th>
             <th>Age</th>
-            <th>Ward</th>
-            <th>Bed Number</th>
+            <th data-hide="true">Ward</th>
+            <th data-hide="true">Bed Number</th>
             <th>Gender</th>
         </tr>
 
@@ -98,12 +108,12 @@
                 <td>{{ order.BloodQuantity }}</td>
                 <td>{{ order.req_type }}</td>
                 <td>{{ order.fname }}</td>
-                <td>{{ order.mname }}</td>
+                <td data-hide="true">{{ order.mname }}</td>
                 <td>{{ order.lname }}</td>
                 <td>{{ order.age }}</td>
-                <td>{{ order.ward }}</td>
-                <td>{{ order.bedno }}</td>
-                <td>{{ order.gender }}</td>
+                <td data-hide="true">{{ order.ward }}</td>
+                <td data-hide="true">{{ order.bedno }}</td>
+                <td >{{ order.gender }}</td>
             </tr>
         {% endfor %}
 
