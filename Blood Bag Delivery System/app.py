@@ -128,8 +128,8 @@ def pay():
     }
 
     # Make the API request
-    response = requests.post('https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay', headers=headers, json=json_data)
-    response_data = response.json()
+    response = requests.post('https://api.phonepe.com/apis/hermes/pg/v1/pay', headers=headers, json=json_data)
+    responseData = response.json();
     return redirect(responseData['data']['instrumentResponse']['redirectInfo']['url'])
 
   
