@@ -130,16 +130,9 @@ def pay():
     # Make the API request
     response = requests.post('https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay', headers=headers, json=json_data)
     response_data = response.json()
+    return redirect(responseData['data']['instrumentResponse']['redirectInfo']['url'])
 
-    # Redirect the user to the payment URL
-    if 'data' in response_data and 'instrumentResponse' in response_data['data'] and 'redirectInfo' in response_data['data']['instrumentResponse']:
-        redirect_url = response_data['data']['instrumentResponse']['redirectInfo']['url']
-        return redirect(redirect_url)
-    else:
-        # Handle unexpected API response
-        return "Unexpected API response", 500
-
-
+  
 @app.route("/payment_response", methods=['POST'])
 def payment_response():
     INDEX = "1"
