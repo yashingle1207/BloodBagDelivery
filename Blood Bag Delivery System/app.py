@@ -12,6 +12,11 @@ import hashlib
 import shortuuid
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
+import secrets
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
 
 
 app = Flask(__name__)
@@ -37,6 +42,11 @@ Order = db['Orders']
 PatientUser = db['PatientUsers']
 PatientSearchBB = db['BloodStock']
 pricing_collection = db['pricing']
+
+SMTP_SERVER = 'smtp.gmail.com'
+SMTP_PORT = 587
+EMAIL_FROM = 'transfusiotrack@gmail.com'
+EMAIL_PASSWORD = 'engv kjsl qjrn eroa '
 
 
 
@@ -309,7 +319,39 @@ def PsignIn():
 
 
 
-@app.route('/HospSignUp', methods=['POST'])
+# @app.route('/HospSignUp', methods=['POST'])
+# def Hospsignup():
+#     if request.method == 'POST':
+#         # Get user input from the signup form
+#         facility_name = request.form.get('facilityName')
+#         facility_email = request.form.get('facilityEmailId')
+#         facility_password = request.form.get('facilityPassword')
+#         facility_contact_num = request.form.get('facilityContactNum')
+#         facility_address = request.form.get('facilityAddress')
+#         facility_reg_num = request.form.get('facilityRegNum')
+
+#         # Check if the email already exists
+#         existing_user = HospUser.find_one({'reg_num': facility_reg_num})
+#         if existing_user:
+#             return render_template('AlreadyExistHosp.html')
+
+#         # Create a new user document
+#         new_user = {
+#             'facility_name': facility_name,
+#             'email': facility_email,
+#             'password': facility_password,
+#             'contact_num': facility_contact_num,
+#             'address': facility_address,
+#             'reg_num': facility_reg_num
+#         }
+
+#         # Insert the new user into the MongoDB collection
+#         HospUser.insert_one(new_user)
+
+#     return render_template('HospitalDashboard.html')
+
+
+@app.route('/HospSignUp', methods=['GET', 'POST'])
 def Hospsignup():
     if request.method == 'POST':
         # Get user input from the signup form
@@ -321,24 +363,164 @@ def Hospsignup():
         facility_reg_num = request.form.get('facilityRegNum')
 
         # Check if the email already exists
-        existing_user = HospUser.find_one({'reg_num': facility_reg_num})
+        existing_user = HospUser.find_one({'email': facility_email})
         if existing_user:
             return render_template('AlreadyExistHosp.html')
 
-        # Create a new user document
+        # Generate a random verification token
+        verification_token = secrets.token_urlsafe(16)
+
+        # Create a new user document with email verification status
         new_user = {
             'facility_name': facility_name,
             'email': facility_email,
             'password': facility_password,
             'contact_num': facility_contact_num,
             'address': facility_address,
-            'reg_num': facility_reg_num
+            'reg_num': facility_reg_num,
+            'email_verified': False,
+            'verification_token': verification_token
         }
 
         # Insert the new user into the MongoDB collection
         HospUser.insert_one(new_user)
 
-    return render_template('HospitalDashboard.html')
+        # Send email verification
+        send_email_verification(facility_email, verification_token)
+
+        return render_template('VerifyEmail.html', email=facility_email)
+
+    return render_template('HospitalSignUp.html')
+
+
+def send_email_verification(email, token):
+    subject = 'Email Verification'
+    body = f'To verify your email, please click the following link: <a href="{url_for("verify_email", token=token, _external=True)}">Verify Email</a>'
+    message = MIMEMultipart()
+    message['From'] = EMAIL_FROM
+    message['To'] = email
+    message['Subject'] = subject
+    message.attach(MIMEText(body, 'html'))
+
+    server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+    server.starttls()
+    server.login(EMAIL_FROM, EMAIL_PASSWORD)
+    server.sendmail(EMAIL_FROM, email, message.as_string())
+    server.quit()
+
+
+@app.route('/verify_email/<token>', methods=['GET'])
+def verify_email(token):
+    user = HospUser.find_one({'verification_token': token})
+    if user:
+        # Mark email as verified
+        HospUser.update_one({'verification_token': token}, {'$set': {'email_verified': True}})
+        return render_template('EmailVerified.html')
+    else:
+        return render_template('InvalidToken.html')
+
+
+@app.route('/Patientsignup', methods=['GET', 'POST'])
+def Psignup():
+    if request.method == 'POST':
+        # Get user input from the signup form
+        patient_name = request.form.get('patientName')
+        patient_email = request.form.get('patientEmailId')
+        patient_password = request.form.get('patientPassword')
+        contact_num = request.form.get('patientContactNum')
+        address = request.form.get('patientAddress')
+        p_city = request.form.get('patientCity')
+
+        # Check if the email already exists
+        existing_user = PatientUser.find_one({'email': patient_email})
+        if existing_user:
+            return render_template('AlreadyExistPatient.html')
+
+        # Generate a random verification token
+        verification_token = secrets.token_urlsafe(16)
+
+        # Create a new user document with email verification status
+        new_user = {
+            'patient_name': patient_name,
+            'email': patient_email,
+            'password': patient_password,
+            'contact_num': contact_num,
+            'address': address,
+            'p_city': p_city,
+            'email_verified': False,
+            'verification_token': verification_token
+        }
+
+        # Insert the new user into the MongoDB collection
+        PatientUser.insert_one(new_user)
+
+        # Send email verification
+        send_email_verification(patient_email, verification_token)
+
+        return render_template('VerifyEmailPatient.html', email=patient_email)
+
+    return render_template('PatientSignUp.html')
+
+
+def send_email_verification(email, token):
+    subject = 'Email Verification'
+    body = f'To verify your email, please click the following link: <a href="{url_for("verify_email_patient", token=token, _external=True)}">Verify Email</a>'
+    message = MIMEMultipart()
+    message['From'] = EMAIL_FROM
+    message['To'] = email
+    message['Subject'] = subject
+    message.attach(MIMEText(body, 'html'))
+
+    server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+    server.starttls()
+    server.login(EMAIL_FROM, EMAIL_PASSWORD)
+    server.sendmail(EMAIL_FROM, email, message.as_string())
+    server.quit()
+
+
+@app.route('/verify_email_patient/<token>', methods=['GET'])
+def verify_email_patient(token):
+    user = PatientUser.find_one({'verification_token': token})
+    if user:
+        # Mark email as verified
+        PatientUser.update_one({'verification_token': token}, {'$set': {'email_verified': True}})
+        return render_template('EmailVerifiedPatient.html')
+    else:
+        return render_template('InvalidTokenPatient.html')
+
+
+@app.route('/Patientsignup', methods=['POST'])
+# def Psignup():
+#     if request.method == 'POST':
+#         # Get user input from the signup form
+#         patient_name = request.form.get('patientName')
+#         patient_email = request.form.get('patientEmailId')
+#         patient_password = request.form.get('patientPassword')
+#         contact_num = request.form.get('patientContactNum')
+#         address = request.form.get('patientAddress')
+#         p_city = request.form.get('patientCity')
+
+#         # Check if the email already exists
+#         existing_user = PatientUser.find_one({'email': patient_email})
+#         if existing_user:
+#             return render_template('AlreadyExistPatient.html')
+
+#         # Create a new user document
+#         new_user = {
+#             'patient_name': patient_name,
+#             'email': patient_email,
+#             'password': patient_password,
+#             'contact_num': contact_num,
+#             'address': address,
+#             'p_city': p_city
+#         }
+
+#         # Insert the new user into the MongoDB collection
+#         PatientUser.insert_one(new_user)
+
+#         return render_template('PatientDashboard.html')
+
+
 
 
 
@@ -373,37 +555,6 @@ def BBsignup():
 
     return render_template('BB_verification.html')
 
-
-@app.route('/Patientsignup', methods=['POST'])
-def Psignup():
-    if request.method == 'POST':
-        # Get user input from the signup form
-        patient_name = request.form.get('patientName')
-        patient_email = request.form.get('patientEmailId')
-        patient_password = request.form.get('patientPassword')
-        contact_num = request.form.get('patientContactNum')
-        address = request.form.get('patientAddress')
-        p_city = request.form.get('patientCity')
-
-        # Check if the email already exists
-        existing_user = PatientUser.find_one({'email': patient_email})
-        if existing_user:
-            return render_template('AlreadyExistPatient.html')
-
-        # Create a new user document
-        new_user = {
-            'patient_name': patient_name,
-            'email': patient_email,
-            'password': patient_password,
-            'contact_num': contact_num,
-            'address': address,
-            'p_city': p_city
-        }
-
-        # Insert the new user into the MongoDB collection
-        PatientUser.insert_one(new_user)
-
-        return render_template('PatientDashboard.html')
 
 
 
