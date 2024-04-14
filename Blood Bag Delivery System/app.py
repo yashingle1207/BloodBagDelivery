@@ -522,8 +522,6 @@ def verify_email_patient(token):
 
 
 
-
-
 @app.route('/BBSignUp', methods=['POST'])
 def BBsignup():
     if request.method == 'POST':
