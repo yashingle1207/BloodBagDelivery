@@ -70,15 +70,28 @@ def base64_encode(input_dict):
     # Perform Base64 encoding and return the result as a string
     return base64.b64encode(data_bytes).decode('utf-8')
 
+
 @app.route("/make_payment", methods=['POST'])
 def pay():
+    # Calculate total amount
+    total_amt = session.get("quantity") * session.get("blood_product_price")
 
-    total_amt = session.get("quantity")*session.get('blood_product_price')
+    # Determine the merchantUserId based on which user is logged in
+    patient_reg_no = session.get('_id')
+    hosp_reg_no = session.get('hosp_reg_no')
+    
+    if patient_reg_no:
+        merchantUserId = patient_reg_no
+    elif hosp_reg_no:
+        merchantUserId = hosp_reg_no
+    else:
+        raise ValueError("No user is logged in")
 
+    # Define the MAINPAYLOAD with the correct merchantUserId
     MAINPAYLOAD = {
         "merchantId": "M22S8FP278KQA",
         "merchantTransactionId": shortuuid.uuid(),
-        "merchantUserId": "MUID123",
+        "merchantUserId": merchantUserId,
         "amount": total_amt,
         "redirectUrl": "https://www.transfusiotrack.com/payment_response",
         "redirectMode": "POST",
@@ -89,26 +102,42 @@ def pay():
         }
     }
 
+    # API endpoint and details
     INDEX = "1"
     ENDPOINT = "/pg/v1/pay"
     SALTKEY = "cfaaec9b-b797-4e15-b14b-ac8cd11ac8f2"
 
-    base64String = base64_encode(MAINPAYLOAD)
-    mainString = base64String + ENDPOINT + SALTKEY;
-    sha256Val = calculate_sha256_string(mainString)
-    checkSum = sha256Val + '###' + INDEX;
+    # Convert MAINPAYLOAD to base64 string
+    base64String = base64.b64encode(json.dumps(MAINPAYLOAD).encode()).decode()
 
+    # Calculate checksum
+    mainString = base64String + ENDPOINT + SALTKEY
+    sha256Val = hashlib.sha256(mainString.encode()).hexdigest()
+    checkSum = sha256Val + '###' + INDEX
+
+    # Define headers
     headers = {
         'Content-Type': 'application/json',
         'X-VERIFY': checkSum,
         'accept': 'application/json',
     }
+
+    # Define request payload
     json_data = {
         'request': base64String,
     }
-    response = requests.post('https://api.phonepe.com/apis/hermes/pg/v1/pay', headers=headers, json=json_data)
-    responseData = response.json();
-    return redirect(responseData['data']['instrumentResponse']['redirectInfo']['url'])
+
+    # Make the API request
+    response = requests.post('https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay', headers=headers, json=json_data)
+    response_data = response.json()
+
+    # Redirect the user to the payment URL
+    if 'data' in response_data and 'instrumentResponse' in response_data['data'] and 'redirectInfo' in response_data['data']['instrumentResponse']:
+        redirect_url = response_data['data']['instrumentResponse']['redirectInfo']['url']
+        return redirect(redirect_url)
+    else:
+        # Handle unexpected API response
+        return "Unexpected API response", 500
 
 
 @app.route("/payment_response", methods=['POST'])
@@ -211,10 +240,10 @@ def payment_invoice():
 
         # Check if the user is a patient or hospital
         patient_reg_no = session.get('_id')
-        hosp_reg_no = session.get('hosp_reg_no')
+        _no = session.get('_no')
 
-        if hosp_reg_no:
-            return render_template('payment_details.html', hosp_reg_no=hosp_reg_no)
+        if _no:
+            return render_template('payment_details.html', _no=_no)
         elif patient_reg_no:
             return render_template('payment_details.html', patient_reg_no=patient_reg_no)
 
@@ -252,14 +281,14 @@ def HospsignIn():
 
         existing_user = HospUser.find_one({'email': hosp_email, 'password': hosp_password})
         if existing_user:
-            hosp_reg_no = existing_user.get('reg_num')
+            _no = existing_user.get('reg_num')
 
             # Set the registration number in the session
-            session['hosp_reg_no'] = hosp_reg_no
+            session['_no'] = _no
 
             # Redirect to the hospital dashboard
             # return redirect(url_for('HospDashboard'))
-            return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
+            return render_template('HospitalDashboard.html', _no=_no)
 
         else:
             return render_template('LoginUnsuccessful.html')
@@ -751,7 +780,7 @@ def Blood_bag_inProgress():
 @app.route('/Hosp_Pending_Req', methods=['GET'])
 def Hosp_Blood_bag_inProgress():
     # Query MongoDB to get all orders
-    orders = Order.find({'User_ID':session.get('hosp_reg_no'),'status': 'undelivered'})
+    orders = Order.find({'User_ID':session.get('_no'),'status': 'undelivered'})
 
     # Prepare the results to be displayed
     order_list = []
@@ -901,8 +930,8 @@ from flask import session
 #         blood_component = request.form.get('comptype')
 #         quantity = int(request.form.get('quantity'))
 
-#         # Retrieve hosp_reg_no from the session
-#         hosp_reg_no = session.get('hosp_reg_no')
+#         # Retrieve _no from the session
+#         _no = session.get('_no')
 
 #         # Query MongoDB to find matching blood bags
 #         blood_bags = Searchbb.find({
@@ -931,8 +960,8 @@ from flask import session
 #         session['blood_component'] = blood_component
 #         session['quantity'] = quantity
 
-#         # Return the results to the template along with hosp_reg_no
-#         return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no)
+#         # Return the results to the template along with _no
+#         return render_template('SearchResults.html', results=results, _no=_no)
 
 #     return render_template('SearchResults.html')
 
@@ -945,8 +974,8 @@ def search_blood_bag():
         blood_component = request.form.get('comptype')
         quantity = int(request.form.get('quantity'))
 
-        # Retrieve hosp_reg_no from the session
-        hosp_reg_no = session.get('hosp_reg_no')
+        # Retrieve _no from the session
+        _no = session.get('_no')
 
         # Query MongoDB to find matching blood bags
         blood_bags = Searchbb.find({
@@ -975,10 +1004,10 @@ def search_blood_bag():
         session['blood_component_code'] = blood_component
         session['quantity'] = quantity
 
-        # Return the results to the template along with hosp_reg_no
-        return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no)
+        # Return the results to the template along with _no
+        return render_template('SearchResults.html', results=results, _no=_no)
 
-    return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no)
+    return render_template('SearchResults.html', results=results, _no=_no)
 
 
 
@@ -1038,7 +1067,7 @@ def set_selected_blood_bank():
         blood_product_price = get_blood_product_price(selected_blood_product)
 
         # Check if a hospital or patient is logged in
-        if 'hosp_reg_no' in session:
+        if '_no' in session:
             # Set the selected blood bank reg_num and blood product price in the session for a hospital
             session['bb_reg_no'] = selected_blood_bank_reg_num
             session['blood_product_price'] = blood_product_price
@@ -1138,11 +1167,11 @@ def remove_blood_bag():
 @app.route('/HospDashboard')
 def HospDashboard():
     # Retrieve the registration number from the session
-    hosp_reg_no = session.get('hosp_reg_no')
+    _no = session.get('_no')
 
     # Check if the user is logged in
-    if hosp_reg_no:
-        return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
+    if _no:
+        return render_template('HospitalDashboard.html', _no=_no)
     else:
         # Redirect to the login page if not logged in
          return render_template('HospSignup.html')
