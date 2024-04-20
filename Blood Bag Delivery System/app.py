@@ -233,13 +233,17 @@ def payment_response():
                 }
 
                 # Insert order data into MongoDB
-                Order.insert_one(order_data)
+                inserted_order = Order.insert_one(order_data)
+
+                # Get the inserted order ID
+                order_id = inserted_order.inserted_id
 
                 # Redirect to the success page
                 return render_template(template_name, 
+                                       order_id=order_id,
                                        phonepe_transaction_id=phonepe_transaction_id,
                                        total_amt=total_amt,
-                                       timestamp=order_data['timestamp'])  # Pass the timestamp from order data
+                                       timestamp=order_data['timestamp'])
 
             else:
                 # Payment failed, log and redirect to payment failure page
