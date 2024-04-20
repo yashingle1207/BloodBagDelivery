@@ -1157,6 +1157,7 @@ def set_selected_blood_bank():
     # Redirect to a default page or handle the case where the user type is not identified
     return render_template('error.html', message='User type not identified.')
 
+
 def get_blood_product_price(blood_product_name):
     # Query the MongoDB collection 'pricing' to fetch the price of the given blood product
     blood_product = pricing_collection.find_one({'code': blood_product_name})
