@@ -59,9 +59,9 @@ p {
 
         <a href="/" class="logo">Transfusio<span>Track</span></a>
 
-        <div id="menu" class="fas fa-bars"></div>
+        <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
 
-        <nav class="navbar">
+        <nav class="navbar" id="navbar">
              <a href="/">Home</a>
             <a href="/HospSign">Hospital Login</a>
             <a href="/BBSign">BloodBank Login</a>
@@ -71,6 +71,18 @@ p {
 
         </nav>
     </header>
+ 
+
+ <script>
+        function toggleNavbar() {
+            var navbar = document.getElementById("navbar");
+            if (navbar.classList.contains("active")) {
+                navbar.classList.remove("active");
+            } else {
+                navbar.classList.add("active");
+            }
+        }
+        </script>
 
     <h1 class="heading">OPPS!! Login In failed</h1>
 
