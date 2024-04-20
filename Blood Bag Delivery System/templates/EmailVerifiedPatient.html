@@ -15,8 +15,8 @@
     <div class="container">
         <header>
             <a href="/" class="logo">Transfusio<span>Track</span></a>
-            <div id="menu" class="fas fa-bars"></div>
-            <nav class="navbar">
+            <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
+            <nav class="navbar" id="navbar">
                 <a href="/">Home</a>
                 <a href="/aboutus">About Us</a>
                 <a href="/contact">Contact Us</a>
@@ -24,6 +24,18 @@
                 <a href="/guide">Explore Guide</a>
             </nav>
         </header>
+       
+
+ <script>
+        function toggleNavbar() {
+            var navbar = document.getElementById("navbar");
+            if (navbar.classList.contains("active")) {
+                navbar.classList.remove("active");
+            } else {
+                navbar.classList.add("active");
+            }
+        }
+        </script>
         <section class="home">
             <div class="content">
                 <h3>Email Verified</h3>
