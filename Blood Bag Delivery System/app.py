@@ -220,6 +220,18 @@ def payment_response():
     transaction_id = request.form.get('transactionId')
 
     if transaction_id:
+        # Determine user ID based on the session
+        if 'hosp_reg_no' in session:
+            # Hospital user is logged in
+            user_id = session['hosp_reg_no']
+        elif '_id' in session:
+            # Patient user is logged in
+            user_id = session['_id']
+        else:
+            # Neither hospital user nor patient user is logged in
+            print("No user logged in.")
+            return render_template('error.html', message='No user logged in')
+
         # Construct the request URL
         request_url = f'https://api.phonepe.com/apis/hermes/pg/v1/status/M22S8FP278KQA/{transaction_id}'
 
@@ -263,7 +275,6 @@ def payment_response():
                 blood_group = session.get('blood_group')
                 blood_component = session.get('blood_component')
                 requested_quantity = session.get('quantity')
-                user_id = session.get('_id')
                 blood_bank_id = session.get('bb_reg_no')
 
                 # Create order data
