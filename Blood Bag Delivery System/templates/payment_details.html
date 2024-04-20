@@ -52,9 +52,9 @@
 
         <header>
             <a href="/" class="logo">Transfusio<span>Track</span></a>
-            <div id="menu" class="fas fa-bars"></div>
+            <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
 
-        <nav class="navbar">
+        <nav class="navbar" id="navbar">
              {% if patient_reg_no %}
                 <a>User ID: {{ patient_reg_no }}</a>
                  <a href="/PDashboard">Patient Dashboard</a>
@@ -69,6 +69,21 @@
 
         </nav>
         </header>
+
+ 
+
+
+
+ <script>
+        function toggleNavbar() {
+            var navbar = document.getElementById("navbar");
+            if (navbar.classList.contains("active")) {
+                navbar.classList.remove("active");
+            } else {
+                navbar.classList.add("active");
+            }
+        }
+        </script>
 
         <section class="payment-details">
             <div class="content">
