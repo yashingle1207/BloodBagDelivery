@@ -135,6 +135,8 @@ def pay():
 
 from datetime import datetime
 
+from datetime import datetime
+
 @app.route("/payment_response", methods=['POST'])
 def payment_response():
     # Constants
@@ -238,6 +240,28 @@ def payment_response():
                 # Get the inserted order ID
                 order_id = inserted_order.inserted_id
 
+                # Update the quantity of the blood bag in the database
+                blood_bag_query = {
+                    'BloodBank_Id': blood_bank_id,
+                    'BloodGrp': blood_group,
+                    'BloodComp': blood_component
+                }
+
+                blood_bag = BloodStockAdd.find_one(blood_bag_query)
+
+                if blood_bag:
+                    available_quantity = blood_bag.get('quantity', 0)
+                    if available_quantity >= requested_quantity:
+                        new_quantity = available_quantity - requested_quantity
+                        # Update the quantity in the database
+                        BloodStockAdd.update_one(
+                            {'_id': blood_bag['_id']},
+                            {'$set': {'quantity': new_quantity}}
+                        )
+                    else:
+                        # Handle insufficient quantity error
+                        return render_template('error.html', message='Insufficient quantity of blood bags.')
+
                 # Redirect to the success page
                 return render_template(template_name, 
                                        order_id=order_id,
@@ -258,6 +282,7 @@ def payment_response():
     # Handle case where transaction ID is missing or invalid
     print("Missing or invalid transaction ID.")
     return render_template('error.html', message='Transaction ID missing or invalid')
+
 
 
 
