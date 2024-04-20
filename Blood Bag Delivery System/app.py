@@ -133,6 +133,8 @@ def pay():
     return redirect(responseData['data']['instrumentResponse']['redirectInfo']['url'])
 
 
+from datetime import datetime
+
 @app.route("/payment_response", methods=['POST'])
 def payment_response():
     # Constants
@@ -224,7 +226,7 @@ def payment_response():
                     'ward': ward,
                     'bedno': bedno,
                     'gender': gender,
-                    'timestamp': datetime.now(),
+                    'timestamp': datetime.now(),  # Use current timestamp
                     'status': 'undelivered',
                     'phonepe_transaction_id': phonepe_transaction_id,  # Add PhonePe transaction ID
                     'total_amount': total_amt  # Add total amount paid
@@ -232,14 +234,12 @@ def payment_response():
 
                 # Insert order data into MongoDB
                 Order.insert_one(order_data)
-                
-       
 
                 # Redirect to the success page
                 return render_template(template_name, 
                                        phonepe_transaction_id=phonepe_transaction_id,
                                        total_amt=total_amt,
-                                       timestamp=timestamp)
+                                       timestamp=order_data['timestamp'])  # Pass the timestamp from order data
 
             else:
                 # Payment failed, log and redirect to payment failure page
