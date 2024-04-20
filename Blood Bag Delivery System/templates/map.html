@@ -43,6 +43,26 @@
         </p>
     </div>
 
+    <h1>Transaction Details</h1>
+    <p>Your payment has been successfully received with the following details. Please note your transaction reference number for any queries related to this request.</p>
+
+    <h2>Payment/Transaction ID: {{ form_data.transactionId }}</h2>
+    <h2>Transaction Status: Success</h2>
+    <h2>Transaction Amount: {{ total_amount }}</h2>
+    <h2>Transaction Currency: INR</h2>
+    <h2>Payment Mode: PhonePe</h2>
+
+    <h2>Other Details</h2>
+    <ul>
+        <li>Bank: PhonePe</li>
+        <li>Transaction Date: {{ transaction_date }}</li>
+        <li>Transaction Country: IND</li>
+        <li>Order ID: {{ order_id }}</li>
+    </ul>
+
+    <p>Thanking You,</p>
+    <p>TransfusioTrack</p>
+
 
         <div class="image">
         <img src="{{ url_for('static', filename='images/h2.gif') }}" alt="">
