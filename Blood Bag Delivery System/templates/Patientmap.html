@@ -117,44 +117,38 @@
                 <h3>Transaction Details</h3>
                 <p>Your payment has been successfully received with the following details. Please note your transaction ID for any queries related to this request.</p>
 
-                <table>
-<!--                    <tr style="height: 50px;"> &lt;!&ndash; Adjust the height as needed &ndash;&gt;-->
-<!--                        <th colspan="2" style="text-align: center;">-->
-<!--                          Transaction Details-->
-<!--                        </th>-->
-<!--                    </tr>-->
+                 <table>
+                <tr>
+                    <th>Payment OrderID</th>
+                    <td>{{ order_id }}</td>
+                </tr>
+                <tr>
+                    <th>Transaction ID</th>
+                    <td>{{ phonepe_transaction_id }}</td>
+                </tr>
+                <tr>
+                    <th>Transaction Status</th>
+                    <td>Success</td>
+                </tr>
+                <tr>
+                    <th>Transaction Amount</th>
+                    <td>{{ total_amt }}</td>
+                </tr>
+                <tr>
+                    <th>Transaction Currency</th>
+                    <td>INR</td>
+                </tr>
+            
+                <tr>
+                    <th>Transaction Date</th>
+                    <td>{{ timestamp }}</td>
+                </tr>
+                <tr>
+                    <th>Transaction Country</th>
+                    <td>IND</td>
+                </tr>
+               </table>
 
-                    <tr>
-                        <th>Payment/Transaction ID</th>
-                        <td>Success</td>
-
-                    </tr>
-                    <tr>
-                        <th>Transaction Status</th>
-                        <td>Success</td>
-                    </tr>
-                    <tr>
-                        <th>Transaction Amount</th>
-                        <td>{{ total_amount }}</td>
-                    </tr>
-                    <tr>
-                        <th>Transaction Currency</th>
-                        <td>INR</td>
-                    </tr>
-                    <tr>
-                        <th>Payment Mode</th>
-                        <td>PhonePe</td>
-                    </tr>
-
-                      <tr>
-                        <th>Transaction Date </th>
-                        <td>{{ transaction_date }}</td>
-                    </tr>
-                       <tr>
-                        <th>Transaction Country</th>
-                        <td>IND</td>
-                    </tr>
-                </table>
 
 
 
