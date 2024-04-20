@@ -134,6 +134,7 @@ def pay():
 
 
 
+
 @app.route("/payment_response", methods=['POST'])
 def payment_response():
     # Constants
@@ -252,20 +253,13 @@ def payment_response():
                                        order_id=order_id,
                                        phonepe_transaction_id=phonepe_transaction_id,
                                        total_amt=total_amt,
-                                       timestamp=ist_timestamp
-                                      )
+                                       timestamp=ist_timestamp)
 
             else:
                 # Payment failed, log and redirect to payment failure page
                 print("Payment failed. Response:", response_data)
-                return render_template('payment_failed.html', 
-                                       form_data=form_data_dict, 
-                                       message=response_data.get('message', 'Unknown error occurred during payment initiation'), 
-                                       order_id=order_id,
-                                       phonepe_transaction_id=phonepe_transaction_id,
-                                       total_amt=total_amt,
-                                       timestamp=ist_timestamp
-                                      )
+                return render_template('payment_failed.html', form_data=form_data_dict, message=response_data.get('message', 'Unknown error occurred during payment initiation'))
+
         else:
             # Log and handle unexpected status code
             print("Unexpected response status code:", response.status_code)
@@ -274,6 +268,7 @@ def payment_response():
     # Handle case where transaction ID is missing or invalid
     print("Missing or invalid transaction ID.")
     return render_template('error.html', message='Transaction ID missing or invalid')
+
 
 
 
