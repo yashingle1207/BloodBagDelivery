@@ -246,22 +246,26 @@ def payment_response():
                     {'BloodBank_Id': blood_bank_id, 'BloodGrp': blood_group, 'BloodComp': blood_component},
                     {'$inc': {'quantity': -requested_quantity}}
                 )
-                return render_template(template_name, 
-                       order_id=order_id,
-                       phonepe_transaction_id=phonepe_transaction_id,
-                       total_amt=total_amt,
-                       timestamp=ist_timestamp)
 
-                else:
-                    # Payment failed, log and redirect to payment failure page
-                    print("Payment failed. Response:", response_data)
-                    return render_template('payment_failed.html', 
-                                           form_data=form_data_dict, 
-                                           message=response_data.get('message', 'Unknown error occurred during payment initiation'), 
-                                           order_id=order_id,
-                                           phonepe_transaction_id=phonepe_transaction_id,
-                                           total_amt=total_amt,
-                                           timestamp=ist_timestamp)
+                # Redirect to the success page
+                return render_template(template_name, 
+                                       order_id=order_id,
+                                       phonepe_transaction_id=phonepe_transaction_id,
+                                       total_amt=total_amt,
+                                       timestamp=ist_timestamp
+                                      )
+
+            else:
+                # Payment failed, log and redirect to payment failure page
+                print("Payment failed. Response:", response_data)
+                return render_template('payment_failed.html', 
+                                       form_data=form_data_dict, 
+                                       message=response_data.get('message', 'Unknown error occurred during payment initiation'), 
+                                       order_id=order_id,
+                                       phonepe_transaction_id=phonepe_transaction_id,
+                                       total_amt=total_amt,
+                                       timestamp=ist_timestamp
+                                      )
         else:
             # Log and handle unexpected status code
             print("Unexpected response status code:", response.status_code)
@@ -270,6 +274,7 @@ def payment_response():
     # Handle case where transaction ID is missing or invalid
     print("Missing or invalid transaction ID.")
     return render_template('error.html', message='Transaction ID missing or invalid')
+
 
 
 
