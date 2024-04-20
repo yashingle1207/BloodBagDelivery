@@ -23,13 +23,14 @@
 
     <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
 
-    <nav class="navbar" id="navbar">
-          {% if '_id' in session %}
-            <a>User ID: {{ session['_id'] }}</a>
-        {% endif %}
-        <a href="/PatientDashboard">Patient Dashboard</a>
-          <a href="/">Logout</a>
-    </nav>
+            <nav class="navbar"  id="navbar">
+            {% if '_id' in session %}
+                <a>User ID: {{ session['_id'] }}</a>
+                <a href="/PatientDashboard">Patient Dashboard</a>
+            {% endif %}
+            <a href="/">Logout</a>
+        </nav>
+
 
 </header>
 
