@@ -132,8 +132,6 @@ def pay():
     responseData = response.json();
     return redirect(responseData['data']['instrumentResponse']['redirectInfo']['url'])
 
-  
-
 
 @app.route("/payment_response", methods=['POST'])
 def payment_response():
@@ -153,9 +151,11 @@ def payment_response():
         if 'hosp_reg_no' in session:
             # Hospital user is logged in
             user_id = session['hosp_reg_no']
+            template_name = 'map.html'
         elif '_id' in session:
             # Patient user is logged in
             user_id = session['_id']
+            template_name = 'Patientmap.html'
         else:
             # Neither hospital user nor patient user is logged in
             print("No user logged in.")
@@ -234,7 +234,11 @@ def payment_response():
                 Order.insert_one(order_data)
 
                 # Redirect to the success page
-                return render_template('map.html', form_data=form_data_dict)
+                return render_template(template_name, 
+                                       order_id=order_id,
+                                       phonepe_transaction_id=phonepe_transaction_id,
+                                       total_amt=total_amt,
+                                       timestamp=timestamp)
 
             else:
                 # Payment failed, log and redirect to payment failure page
@@ -249,6 +253,7 @@ def payment_response():
     # Handle case where transaction ID is missing or invalid
     print("Missing or invalid transaction ID.")
     return render_template('error.html', message='Transaction ID missing or invalid')
+
 
 
 
