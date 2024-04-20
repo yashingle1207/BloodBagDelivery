@@ -237,7 +237,7 @@ def payment_response():
                 }
 
                 # Insert order data into MongoDB
-                inserted_order = db['orders'].insert_one(order_data)
+                inserted_order = Order.insert_one(order_data)
 
                 # Get the inserted order ID
                 order_id = inserted_order.inserted_id
