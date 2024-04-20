@@ -56,19 +56,22 @@
         text-decoration: underline;
     }
 
-    table {
-        border-collapse: collapse;
-        width: 100%;
-        max-width: 90%;
-        margin: 10px auto;
-    }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 90%;
+    margin: 10px auto;
+    margin-left: 0; /* Adjust margin-left to 0 to align the table to the left */
+}
+
     th, td {
         border: 1px solid #dddddd;
         text-align: left;
-        padding: 8px;
-        font-size: 16px;
+        padding: 10px;
+        font-size: 18px;
         white-space: normal; /* Allow text to wrap */
         word-wrap: break-word; /* Wrap text in data cells */
+        width: 60%;
     }
     th {
         background-color: #f2f2f2;
@@ -106,23 +109,23 @@
 
         <section class="home">
             <div class="content">
-                 <h3>Order Placed Successfully</h3>
-         <p>
-            <a href="/Hosp_Pending_Req" style="text-decoration: none; color: inherit;">Click Here To Track Your Blood Bag</a>
-        </p>
-    </div>
+                 <h3 align="center">Order Placed Successfully</h3>
 
 
-        <div class="image">
-        <img src="{{ url_for('static', filename='images/h2.gif') }}" alt="">
-        </div>
                 <h3>Transaction Details</h3>
-                <p>Your payment has been successfully received with the following details. Please note your transaction reference number for any queries related to this request.</p>
+                <p>Your payment has been successfully received with the following details. Please note your transaction ID for any queries related to this request.</p>
 
                 <table>
+<!--                    <tr style="height: 50px;"> &lt;!&ndash; Adjust the height as needed &ndash;&gt;-->
+<!--                        <th colspan="2" style="text-align: center;">-->
+<!--                          Transaction Details-->
+<!--                        </th>-->
+<!--                    </tr>-->
+
                     <tr>
                         <th>Payment/Transaction ID</th>
-                        <td>{{ form_data.transactionId }}</td>
+                        <td>Success</td>
+
                     </tr>
                     <tr>
                         <th>Transaction Status</th>
@@ -140,31 +143,27 @@
                         <th>Payment Mode</th>
                         <td>PhonePe</td>
                     </tr>
-                </table>
 
-                <h2>Other Details</h2>
-                <table>
-                    <tr>
-                        <th>Bank</th>
-                        <td>PhonePe</td>
-                    </tr>
-                    <tr>
-                        <th>Transaction Date</th>
+                      <tr>
+                        <th>Transaction Date </th>
                         <td>{{ transaction_date }}</td>
                     </tr>
-                    <tr>
+                       <tr>
                         <th>Transaction Country</th>
                         <td>IND</td>
                     </tr>
-                    <tr>
-                        <th>Order ID</th>
-                        <td>{{ order_id }}</td>
-                    </tr>
                 </table>
 
-                <p>Thanking You,</p>
-                <p>TransfusioTrack</p>
-            </div>
+
+
+                <br><br>
+               <h3>Thank You for Choosing TransfusioTrack!</h3>
+                <p>We appreciate your trust in us for your blood bag needs. Your order has been received successfully.<br> Wishing you a swift recovery and good health. Get well soon!</p>
+                <p>Best Regards,<br> TransfusioTrack Team</p>
+
+
+
+    </div>
         </section>
 
         <!-- Footer Section -->
