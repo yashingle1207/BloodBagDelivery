@@ -114,7 +114,10 @@
 
 
                 <h3>Transaction Details</h3>
-                <p>Your payment has been successfully received with the following details. Please note your transaction ID for any queries related to this request.</p>
+                <p>Your payment has been successfully received. Sit back and relax while our delivery executive gets your order. Once the blood is cross-matched, it will be dispatched to you.</p>
+                <p>
+                    <a href="{% if 'hosp_reg_no' in session %}/Hosp_Pending_Req{% else %}/Patient_Pending_Req{% endif %}" style="text-decoration: none; color: inherit;">Click Here To Track Your Blood Bag</a>
+                </p>
 
                 <table>
                 <tr>
