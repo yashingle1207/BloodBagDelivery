@@ -116,8 +116,11 @@
                 <h3>Transaction Details</h3>
                 <p>Your payment has been successfully received with the following details. Please note your transaction ID for any queries related to this request.</p>
 
-               <table>
-              
+                <table>
+                <tr>
+                    <th>Order ID</th>
+                    <td>{{ order_id }}</td>
+                </tr>
                 <tr>
                     <th>Transaction ID</th>
                     <td>{{ phonepe_transaction_id }}</td>
@@ -134,16 +137,15 @@
                     <th>Transaction Currency</th>
                     <td>INR</td>
                 </tr>
-            
                 <tr>
                     <th>Transaction Date</th>
-                    <td>{{ timestamp }}</td>
+                    <td>{{ timestamp.strftime("%Y-%m-%d %H:%M:%S") }}</td>
                 </tr>
                 <tr>
                     <th>Transaction Country</th>
                     <td>IND</td>
                 </tr>
-               </table>
+            </table>
 
 
 
