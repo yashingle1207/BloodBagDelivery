@@ -133,10 +133,6 @@ def pay():
     return redirect(responseData['data']['instrumentResponse']['redirectInfo']['url'])
 
 
-from datetime import datetime
-
-from datetime import datetime
-
 @app.route("/payment_response", methods=['POST'])
 def payment_response():
     # Constants
@@ -261,6 +257,9 @@ def payment_response():
                     else:
                         # Handle insufficient quantity error
                         return render_template('error.html', message='Insufficient quantity of blood bags.')
+                else:
+                    # Handle case where the blood bag is not found
+                    return render_template('error.html', message='Blood bag not found in the database.')
 
                 # Redirect to the success page
                 return render_template(template_name, 
@@ -282,11 +281,6 @@ def payment_response():
     # Handle case where transaction ID is missing or invalid
     print("Missing or invalid transaction ID.")
     return render_template('error.html', message='Transaction ID missing or invalid')
-
-
-
-
-
 
 
 
