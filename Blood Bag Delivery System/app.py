@@ -242,10 +242,11 @@ def payment_response():
                 # Get the inserted order ID
                 order_id = inserted_order.inserted_id
 
-                # Update blood bag quantity in the database
+              # Update blood bag quantity in the database
+                blood_stock_collection = db['BloodStock']  # Collection for storing blood stock
                 blood_stock_collection.update_one(
                     {'BloodBank_Id': blood_bank_id, 'BloodGrp': blood_group, 'BloodComp': blood_component},
-                    {'$inc': {'quantity': -requested_quantity}}
+                    {'$inc': {'BloodQuantity': -requested_quantity}}
                 )
 
                 # Redirect to the success page
