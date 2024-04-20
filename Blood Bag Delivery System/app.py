@@ -232,10 +232,11 @@ def payment_response():
 
                 # Insert order data into MongoDB
                 Order.insert_one(order_data)
+                
+       
 
                 # Redirect to the success page
                 return render_template(template_name, 
-                                       order_id=order_id,
                                        phonepe_transaction_id=phonepe_transaction_id,
                                        total_amt=total_amt,
                                        timestamp=timestamp)
