@@ -133,78 +133,7 @@ def pay():
     return redirect(responseData['data']['instrumentResponse']['redirectInfo']['url'])
 
   
-# @app.route("/payment_response", methods=['POST'])
-# def payment_response():
-#     INDEX = "1"
-#     SALTKEY = "cfaaec9b-b797-4e15-b14b-ac8cd11ac8f2"
 
-#     form_data = request.form
-#     form_data_dict = dict(form_data)
-
-#     if request.form.get('transactionId'):
-#         request_url = 'https://api.phonepe.com/apis/hermes/pg/v1/status/M22S8FP278KQA/' + request.form.get(
-#             'transactionId')
-#         sha256_Pay_load_String = '/pg/v1/status/M22S8FP278KQA/' + request.form.get('transactionId') + SALTKEY
-#         sha256_val = calculate_sha256_string(sha256_Pay_load_String)
-#         checksum = sha256_val + '###' + INDEX
-
-#         headers = {
-#             'Content-Type': 'application/json',
-#             'X-VERIFY': checksum,
-#             'X-MERCHANT-ID': request.form.get('transactionId'),
-#             'accept': 'application/json',
-#         }
-
-#         response = requests.get(request_url, headers=headers)
-
-#         # Check if payment was successful
-#         if response.status_code == 200:
-#             # Extract order details from session
-#             req_type = session.get('req_type')
-#             fname = session.get('fname')
-#             mname = session.get('mname')
-#             lname = session.get('lname')
-#             age = session.get('age')
-#             ward = session.get('ward')
-#             bedno = session.get('bedno')
-#             gender = session.get('gender')
-#             blood_group = session.get('blood_group')
-#             blood_component = session.get('blood_component')
-#             requested_quantity = session.get('quantity')
-#             user_id = session.get('_id')
-#             blood_bank_id = session.get('bb_reg_no')
-
-#             # Create order data
-#             order_data = {
-#                 'User_ID': user_id,
-#                 'BloodBank_Id': blood_bank_id,
-#                 'BloodGrp': blood_group,
-#                 'BloodComp': blood_component,
-#                 'BloodQuantity': requested_quantity,
-#                 'req_type': req_type,
-#                 'fname': fname,
-#                 'mname': mname,
-#                 'lname': lname,
-#                 'age': age,
-#                 'ward': ward,
-#                 'bedno': bedno,
-#                 'gender': gender,
-#                 'timestamp': datetime.now(),
-#                 'status': 'undelivered'
-#             }
-
-#             # Insert order data into MongoDB
-#             Order.insert_one(order_data)
-
-#             # Redirect to success page
-#             return render_template('map.html', form_data=form_data_dict)
-
-#         else:
-#             # Payment failed, redirect to payment failure page
-#             return render_template('payment_failed.html', form_data=form_data_dict)
-
-#     # Handle case where transaction ID is missing or request fails
-#     return render_template('error.html', message='Transaction ID missing or invalid')
 
 @app.route("/payment_response", methods=['POST'])
 def payment_response():
@@ -277,6 +206,9 @@ def payment_response():
                 requested_quantity = session.get('quantity')
                 blood_bank_id = session.get('bb_reg_no')
 
+                # Calculate total amount
+                total_amt = session.get("quantity") * session.get("blood_product_price")
+
                 # Create order data
                 order_data = {
                     'User_ID': user_id,
@@ -294,7 +226,8 @@ def payment_response():
                     'gender': gender,
                     'timestamp': datetime.now(),
                     'status': 'undelivered',
-                    'phonepe_transaction_id': phonepe_transaction_id  # Add PhonePe transaction ID
+                    'phonepe_transaction_id': phonepe_transaction_id,  # Add PhonePe transaction ID
+                    'total_amount': total_amt  # Add total amount paid
                 }
 
                 # Insert order data into MongoDB
