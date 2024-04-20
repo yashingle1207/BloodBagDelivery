@@ -133,6 +133,7 @@ def pay():
     return redirect(responseData['data']['instrumentResponse']['redirectInfo']['url'])
 
 
+
 @app.route("/payment_response", methods=['POST'])
 def payment_response():
     # Constants
@@ -209,6 +210,10 @@ def payment_response():
                 # Calculate total amount
                 total_amt = session.get("quantity") * session.get("blood_product_price")
 
+                # Convert timestamp to Indian Standard Time (IST)
+                ist_timezone = pytz.timezone('Asia/Kolkata')
+                ist_timestamp = datetime.now(pytz.utc).astimezone(ist_timezone)
+
                 # Create order data
                 order_data = {
                     'User_ID': user_id,
@@ -224,30 +229,39 @@ def payment_response():
                     'ward': ward,
                     'bedno': bedno,
                     'gender': gender,
-                    'timestamp': datetime.now(),  # Use current timestamp
+                    'timestamp': ist_timestamp,  # IST timestamp
                     'status': 'undelivered',
                     'phonepe_transaction_id': phonepe_transaction_id,  # Add PhonePe transaction ID
                     'total_amount': total_amt  # Add total amount paid
                 }
 
                 # Insert order data into MongoDB
-                inserted_order = Order.insert_one(order_data)
+                inserted_order = db['orders'].insert_one(order_data)
 
                 # Get the inserted order ID
                 order_id = inserted_order.inserted_id
 
-                # Redirect to the success page
+                # Update blood bag quantity in the database
+                blood_stock_collection.update_one(
+                    {'BloodBank_Id': blood_bank_id, 'BloodGrp': blood_group, 'BloodComp': blood_component},
+                    {'$inc': {'quantity': -requested_quantity}}
+                )
                 return render_template(template_name, 
-                                       order_id=order_id,
-                                       phonepe_transaction_id=phonepe_transaction_id,
-                                       total_amt=total_amt,
-                                       timestamp=order_data['timestamp'])
+                       order_id=order_id,
+                       phonepe_transaction_id=phonepe_transaction_id,
+                       total_amt=total_amt,
+                       timestamp=ist_timestamp)
 
-            else:
-                # Payment failed, log and redirect to payment failure page
-                print("Payment failed. Response:", response_data)
-                return render_template('payment_failed.html', form_data=form_data_dict, message=response_data.get('message', 'Unknown error occurred during payment initiation'))
-
+                else:
+                    # Payment failed, log and redirect to payment failure page
+                    print("Payment failed. Response:", response_data)
+                    return render_template('payment_failed.html', 
+                                           form_data=form_data_dict, 
+                                           message=response_data.get('message', 'Unknown error occurred during payment initiation'), 
+                                           order_id=order_id,
+                                           phonepe_transaction_id=phonepe_transaction_id,
+                                           total_amt=total_amt,
+                                           timestamp=ist_timestamp)
         else:
             # Log and handle unexpected status code
             print("Unexpected response status code:", response.status_code)
@@ -256,6 +270,7 @@ def payment_response():
     # Handle case where transaction ID is missing or invalid
     print("Missing or invalid transaction ID.")
     return render_template('error.html', message='Transaction ID missing or invalid')
+
 
 
 @app.route('/payment_invoice', methods=['POST'])
