@@ -68,8 +68,8 @@
 
 <header>
     <a href="/" class="logo">Transfusio<span>Track</span></a>
-    <div id="menu" class="fas fa-bars"></div>
-    <nav class="navbar">
+    <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
+    <nav class="navbar" id="navbar">
           {% if 'bb_reg_no' in session %}
             <a>Blood Bank ID: {{ session['bb_reg_no'] }}</a>
          {% endif %}
@@ -78,6 +78,18 @@
         <a href="/">Logout</a>
     </nav>
 </header>
+
+  
+ <script>
+        function toggleNavbar() {
+            var navbar = document.getElementById("navbar");
+            if (navbar.classList.contains("active")) {
+                navbar.classList.remove("active");
+            } else {
+                navbar.classList.add("active");
+            }
+        }
+        </script>
 
 <form action="/initiate_delivery" method="POST" onsubmit="return validateForm()">
     <h1 class="heading">Blood Bag (In progress)</h1>
