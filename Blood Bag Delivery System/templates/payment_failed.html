@@ -3,24 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error</title>
+    <title>Transaction Status</title>
 
     <!-- Font Awesome CDN link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <!-- Custom CSS file link -->
     <link rel="stylesheet" href="static/style.css">
-      <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
 
-    <style>
-        .error-container {
+   <style>
+
+    h1{
+    margin-top:50px;}
+
+    p {
+        margin-bottom: 15px;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 20px; /* Adjust as needed */
+    }
+
+    li {
+        margin-bottom: 15px;
+        position: relative;
+        color: #333; /* Set your preferred text color */
+        font-size: 20px;
+    }
+
+    li:before {
+        content: '\2022'; /* Unicode character for bullet point */
+        color: red; /* Set your preferred bullet point color */
+        font-weight: bold;
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em;
+        position: absolute;
+        left: 0;
+    }
+
+    strong {
+        color: black;
+    }
+
+    a {
+        color: #007BFF; /* Set your preferred link color */
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 90%;
+    margin: 10px auto;
+    margin-left: 0; /* Adjust margin-left to 0 to align the table to the left */
+}
+
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 10px;
+        font-size: 18px;
+        white-space: normal; /* Allow text to wrap */
+        word-wrap: break-word; /* Wrap text in data cells */
+        width: 60%;
+    }
+    th {
+        background-color: #f2f2f2;
+        width: 30%;
+    }
+
+           .error-container {
             text-align: center;
-            margin-top: 50px;
+            margin-top: -10px;
         }
 
         .error-icon {
             font-size: 100px;
             color: #FF0000; /* Red color for error */
+
         }
 
         .error-message {
@@ -39,6 +107,7 @@
             margin-top: 30px;
         }
     </style>
+
 </head>
 <body>
 
@@ -47,12 +116,16 @@
     <header>
         <a href="/" class="logo">Transfusio<span>Track</span></a>
         <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
-        <nav class="navbar" id="navbar">
-           <a href="/">Logout</a>
+        <nav class="navbar"  id="navbar">
+            <a href="/">Home</a>
+            <a href="/privacy">Privacy Policy</a>
+            <a href="/terms">Terms & Conditions</a>
+            <a href="/pricing">Pricing Policy</a>
+            <a href="/aboutus">About Us</a>
+            <a href="/contact">Contact Us</a>
         </nav>
     </header>
-
-   <script>
+    <script>
         function toggleNavbar() {
             var navbar = document.getElementById("navbar");
             if (navbar.classList.contains("active")) {
@@ -61,29 +134,75 @@
                 navbar.classList.add("active");
             }
         }
-        </script>
+    </script>
 
-    <div class="error-container">
-        <div class="error-icon">
-            <i class="fas fa-exclamation-circle"></i>
-        </div>
-      <div class="error-message">
-          <p>OOPPSS!!! Payment Failed. Please try again.</p>
-        </div>
-        <div class="error-description">
-            <p>Unfortunately, we were unable to process your payment.</p> <br>
-            <p>Please double-check your payment details and try again. If the problem persists, feel free to contact our support team for assistance.</p>
-</div>
-        <div class="try-again-btn">
-            <a href="/" class="btn">Try Again</a>
-        </div>
-    </div>
+    <section class="home">
+        <div class="content">
+            <h3 align="center">Transaction Status</h3>
 
+            <div class="error-container">
+                <div class="error-icon">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="error-message">
+                    <h3>OOPPSS!!! Payment Failed. Please try again.</h3>
+                    <p>Unfortunately, we were unable to process your payment.</p>
+                </div>
+                <div class="try-again-btn">
+                    <a href="/" class="btn">Try Again</a>
+                </div>
+            </div>
+
+            <h3>Transaction Details</h3>
+
+          <table class="payment-table">
+    <tr>
+        <th>Order ID</th>
+        <td>N/A</td>
+    </tr>
+    <tr>
+        <th>Transaction ID</th>
+        <td>N/A</td>
+    </tr>
+    <tr>
+        <th>Transaction Status</th>
+        <td style="color: red;">Payment Unsuccessful</td>
+    </tr>
+    <tr>
+        <th>Transaction Amount</th>
+        <td>{{ total_amt }}</td>
+    </tr>
+    <tr>
+        <th>Transaction Currency</th>
+        <td>INR</td>
+    </tr>
+    <tr>
+        <th>Transaction Date</th>
+        <td>{{ timestamp.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+
+    </tr>
+    <tr>
+        <th>Transaction Country</th>
+        <td>IND</td>
+    </tr>
+</table>
+
+
+            <h3>Thank You for Choosing TransfusioTrack!</h3>
+            <p>We appreciate your trust in us for your blood bag needs.</p>
+            <p>Best Regards,<br> TransfusioTrack Team</p>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
     <section class="footer">
-        <div class="credit">Created by <span>Team Transfusio</span> | All rights reserved to TransfusioTrack</div>
+        <div class="credit">Created by <span> Team Transfusio </span> | All rights reserved to Ingle Laboratory</div>
     </section>
 
 </div>
+
+<!-- JavaScript file link -->
+<script src="js/script.js"></script>
 
 </body>
 </html>
