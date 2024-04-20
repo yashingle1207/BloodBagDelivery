@@ -3,36 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OrderTrack</title>
+    <title>Transaction Successful</title>
 
-    <!-- font awesome cdn link  -->
+    <!-- Font Awesome CDN link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-    <!-- custom css file link  -->
+    <!-- Custom CSS file link -->
     <link rel="stylesheet" href="static/style.css">
-      <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+
+    <style>
+
+
+    p {
+        margin-bottom: 15px;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 20px; /* Adjust as needed */
+    }
+
+    li {
+        margin-bottom: 15px;
+        position: relative;
+        color: #333; /* Set your preferred text color */
+        font-size: 20px;
+    }
+
+    li:before {
+        content: '\2022'; /* Unicode character for bullet point */
+        color: red; /* Set your preferred bullet point color */
+        font-weight: bold;
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em;
+        position: absolute;
+        left: 0;
+    }
+
+    strong {
+        color: black;
+    }
+
+    a {
+        color: #007BFF; /* Set your preferred link color */
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        max-width: 90%;
+        margin: 10px auto;
+    }
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+        font-size: 16px;
+        white-space: normal; /* Allow text to wrap */
+        word-wrap: break-word; /* Wrap text in data cells */
+    }
+    th {
+        background-color: #f2f2f2;
+        width: 30%;
+    }
+    </style>
 
 </head>
 <body>
-    
-<div class="container">
 
-<header>
+    <div class="container">
 
-      <a href="/" class="logo">Transfusio<span>Track</span></a>
-
-    <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
-
-<nav class="navbar" id="navbar">
-    {% if 'hosp_reg_no' in session %}
-        <a href="/HospDashboard">Hospital Dashboard</a>
-    {% endif %}
-    <a href="/">Logout</a>
-</nav>
-
-</header>
-
- <script>
+        <header>
+            <a href="/" class="logo">Transfusio<span>Track</span></a>
+            <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
+            <nav class="navbar"  id="navbar">
+                <a href="/">Home</a>
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/terms">Terms & Conditions</a>
+                <a href="/pricing">Pricing Policy</a>
+                <a href="/aboutus">About Us</a>
+                <a href="/contact">Contact Us</a>
+            </nav>
+        </header>
+         <script>
         function toggleNavbar() {
             var navbar = document.getElementById("navbar");
             if (navbar.classList.contains("active")) {
@@ -43,53 +104,78 @@
         }
         </script>
 
-<section class="home">
-
-    <div class="content">
-        <h3>Order Placed Successfully</h3>
+        <section class="home">
+            <div class="content">
+                 <h3>Order Placed Successfully</h3>
          <p>
             <a href="/Hosp_Pending_Req" style="text-decoration: none; color: inherit;">Click Here To Track Your Blood Bag</a>
         </p>
     </div>
-    
-    <div class="image">
+
+
+        <div class="image">
         <img src="{{ url_for('static', filename='images/h2.gif') }}" alt="">
         </div>
+                <h3>Transaction Details</h3>
+                <p>Your payment has been successfully received with the following details. Please note your transaction reference number for any queries related to this request.</p>
 
+                <table>
+                    <tr>
+                        <th>Payment/Transaction ID</th>
+                        <td>{{ form_data.transactionId }}</td>
+                    </tr>
+                    <tr>
+                        <th>Transaction Status</th>
+                        <td>Success</td>
+                    </tr>
+                    <tr>
+                        <th>Transaction Amount</th>
+                        <td>{{ total_amount }}</td>
+                    </tr>
+                    <tr>
+                        <th>Transaction Currency</th>
+                        <td>INR</td>
+                    </tr>
+                    <tr>
+                        <th>Payment Mode</th>
+                        <td>PhonePe</td>
+                    </tr>
+                </table>
 
-    <h1>Transaction Details</h1>
-    <p>Your payment has been successfully received with the following details. Please note your transaction reference number for any queries related to this request.</p>
+                <h2>Other Details</h2>
+                <table>
+                    <tr>
+                        <th>Bank</th>
+                        <td>PhonePe</td>
+                    </tr>
+                    <tr>
+                        <th>Transaction Date</th>
+                        <td>{{ transaction_date }}</td>
+                    </tr>
+                    <tr>
+                        <th>Transaction Country</th>
+                        <td>IND</td>
+                    </tr>
+                    <tr>
+                        <th>Order ID</th>
+                        <td>{{ order_id }}</td>
+                    </tr>
+                </table>
 
-    <h2>Payment/Transaction ID: {{ form_data.transactionId }}</h2>
-    <h2>Transaction Status: Success</h2>
-    <h2>Transaction Amount: {{ total_amount }}</h2>
-    <h2>Transaction Currency: INR</h2>
-    <h2>Payment Mode: PhonePe</h2>
+                <p>Thanking You,</p>
+                <p>TransfusioTrack</p>
+            </div>
+        </section>
 
-    <h2>Other Details</h2>
-    <ul>
-        <li>Bank: PhonePe</li>
-        <li>Transaction Date: {{ transaction_date }}</li>
-        <li>Transaction Country: IND</li>
-        <li>Order ID: {{ order_id }}</li>
-    </ul>
+        <!-- Footer Section -->
+        <section class="footer">
+            <div class="credit">Created by <span> Team Transfusio </span> | All rights reserved to Ingle Laboratory</div>
+        </section>
 
-    <p>Thanking You,</p>
-    <p>TransfusioTrack</p>
-
-
-        
-</section>
-
-
-   <section class="footer">
-
-
-
-    <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to TransfusioTrack
     </div>
 
-</section>
+    <!-- JavaScript file link -->
+    <script src="js/script.js"></script>
 
 </body>
 </html>
