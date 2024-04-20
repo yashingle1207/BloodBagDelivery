@@ -40,8 +40,8 @@
     <a href="/" class="logo">Transfusio<span>Track</span></a>
 
 
-    <div id="menu" class="fas fa-bars"></div>
-      <nav class="navbar">
+    <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
+      <nav class="navbar" id="navbar">
            {% if 'bb_reg_no' in session %}
             <a>Blood Bank ID: {{ session['bb_reg_no'] }}</a>
          {% endif %}
@@ -52,6 +52,18 @@
 
 
 </header>
+
+
+ <script>
+        function toggleNavbar() {
+            var navbar = document.getElementById("navbar");
+            if (navbar.classList.contains("active")) {
+                navbar.classList.remove("active");
+            } else {
+                navbar.classList.add("active");
+            }
+        }
+        </script>
 
 
 <h1 class="heading">Blood Stock Added Successfully </h1>
