@@ -250,7 +250,7 @@ def payment_response():
                 print("Blood Component:", blood_component)
                 print("Requested Quantity:", requested_quantity)
 
-                blood_bags = Searchbb.find({'reg_num': blood_bank_id),
+                blood_bags = Searchbb.find({'reg_num': blood_bank_id,
                                  'blood_group': blood_group,
                                  'blood_component': blood_component})
 
