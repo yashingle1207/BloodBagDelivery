@@ -249,13 +249,22 @@ def payment_response():
                 print("Blood Group:", blood_group)
                 print("Blood Component:", blood_component)
                 print("Requested Quantity:", requested_quantity)
-                
-                Searchbb.update_one(
-                    {'reg_num': blood_bank_id, 'blood_group': blood_group, 'blood_component': blood_component},
-                    {'$inc': {'quantity': -requested_quantity}}
-                )
-                
-                print("Blood bag quantity updated successfully.")
+
+                blood_bags = Searchbb.find({'reg_num': blood_bank_id),
+                                 'blood_group': blood_group,
+                                 'blood_component': blood_component})
+
+                # Update the quantity of each blood bag
+                for blood_bag in blood_bags:
+                    available_quantity = blood_bag.get('quantity', 0)
+                    new_quantity = available_quantity - requested_quantity
+                        # Update the quantity in the database
+                    Searchbb.update_one(
+                        {'_id': blood_bag['_id']},
+                        {'$set': {'quantity': new_quantity}}
+                    )
+                    print("Blood bag quantity updated successfully.")
+                  
 
                 # Redirect to the success page
                 return render_template(template_name, 
