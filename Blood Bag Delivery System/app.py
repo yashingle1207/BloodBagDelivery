@@ -211,6 +211,8 @@ def payment_response():
                 # Calculate total amount
                 total_amt = session.get("quantity") * session.get("blood_product_price")
 
+                bb_price = session.get("blood_product_price")
+
                 # Convert timestamp to Indian Standard Time (IST)
                 ist_timezone = pytz.timezone('Asia/Kolkata')
                 ist_timestamp = datetime.now(pytz.utc).astimezone(ist_timezone)
@@ -274,7 +276,7 @@ def payment_response():
                                        blood_group=blood_group,
                                        blood_component=blood_component,
                                        requested_quantity=requested_quantity,
-                                       blood_product_price=blood_product_price)
+                                       bb_price=bb_price)
 
             else:
                 # Payment failed, log and redirect to payment failure page
