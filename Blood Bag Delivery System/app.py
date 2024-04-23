@@ -256,6 +256,7 @@ def payment_response():
 
                 # Update the quantity of each blood bag
                 for blood_bag in blood_bags:
+                    print("inside the for loop")
                     available_quantity = blood_bag.get('quantity', 0)
                     new_quantity = available_quantity - requested_quantity
                         # Update the quantity in the database
