@@ -242,8 +242,7 @@ def payment_response():
                 # Get the inserted order ID
                 order_id = inserted_order.inserted_id
 
-              # Update blood bag quantity in the database
-            
+                # Update blood bag quantity in the database
                 print("Updating blood bag quantity...")
                 print("Blood Bank ID:", blood_bank_id)
                 print("Blood Group:", blood_group)
@@ -251,34 +250,31 @@ def payment_response():
                 print("Requested Quantity:", requested_quantity)
 
                 blood_bags = Searchbb.find({'reg_num': blood_bank_id,
-                                 'blood_group': blood_group,
-                                 'blood_component': blood_component})
+                                            'blood_group': blood_group,
+                                            'blood_component': blood_component})
 
                 # Update the quantity of each blood bag
                 for blood_bag in blood_bags:
                     print("inside the for loop")
                     available_quantity = blood_bag.get('quantity', 0)
                     new_quantity = available_quantity - requested_quantity
-                        # Update the quantity in the database
+                    # Update the quantity in the database
                     Searchbb.update_one(
                         {'_id': blood_bag['_id']},
                         {'$set': {'quantity': new_quantity}}
                     )
                     print("Blood bag quantity updated successfully.")
-                  
 
                 # Redirect to the success page
-            return render_template(template_name, 
-                       order_id=order_id,
-                       phonepe_transaction_id=phonepe_transaction_id,
-                       total_amt=total_amt,
-                       timestamp=ist_timestamp,
-                       blood_group=blood_group,
-                       blood_component=blood_component,
-                       requested_quantity=requested_quantity,
-                       blood_product_price=blood_product_price)
-
-
+                return render_template(template_name,
+                                       order_id=order_id,
+                                       phonepe_transaction_id=phonepe_transaction_id,
+                                       total_amt=total_amt,
+                                       timestamp=ist_timestamp,
+                                       blood_group=blood_group,
+                                       blood_component=blood_component,
+                                       requested_quantity=requested_quantity,
+                                       blood_product_price=blood_product_price)
 
             else:
                 # Payment failed, log and redirect to payment failure page
