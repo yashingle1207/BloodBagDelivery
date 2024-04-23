@@ -119,7 +119,7 @@
                     <a href="{% if 'hosp_reg_no' in session %}/Hosp_Pending_Req{% else %}/Patient_Pending_Req{% endif %}" style="text-decoration: none; color: inherit;">Click Here To Track Your Blood Bag</a>
                 </p>
 
-                <table>
+               <table>
                 <tr>
                     <th>Order ID</th>
                     <td>{{ order_id }}</td>
@@ -148,8 +148,20 @@
                     <th>Transaction Country</th>
                     <td>IND</td>
                 </tr>
+                <!-- New rows for blood group, component, and quantity -->
+                <tr>
+                    <th>Blood Group</th>
+                    <td>{{ blood_group }}</td>
+                </tr>
+                <tr>
+                    <th>Blood Component</th>
+                    <td>{{ blood_component }}</td>
+                </tr>
+                <tr>
+                    <th>Blood Quantity</th>
+                    <td>{{ requested_quantity }}</td>
+                </tr>
             </table>
-
 
 
 
