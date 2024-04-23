@@ -279,6 +279,7 @@ def payment_response():
                        blood_product_price=blood_product_price)
 
 
+
             else:
                 # Payment failed, log and redirect to payment failure page
                 print("Payment failed. Response:", response_data)
