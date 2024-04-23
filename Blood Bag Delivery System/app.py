@@ -204,7 +204,7 @@ def payment_response():
                 bedno = session.get('bedno')
                 gender = session.get('gender')
                 blood_group = session.get('blood_group')
-                blood_component = session.get('blood_component')
+                blood_component = session.get('blood_component_code')
                 requested_quantity = session.get('quantity')
                 blood_bank_id = session.get('bb_reg_no')
 
