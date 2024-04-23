@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="static/style.css">
     <link rel="icon" type="image/png" href="static/images/LogoTT.png">
 
-    <style>
+     <style>
 
 
     p {
@@ -81,47 +81,29 @@
 </head>
 <body>
 
-    <div class="container">
+<div class="container">
+    <header>
+        <a href="/" class="logo">Transfusio<span>Track</span></a>
+        <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
+           <nav class="navbar">
+              {% if '_id' in session %}
+            <a>User ID: {{ session['_id'] }}</a>
+        {% endif %}
 
-        <header>
-            <a href="/" class="logo">Transfusio<span>Track</span></a>
-            <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
+            <a href="/PatientDashboard">Patient Dashboard</a>
+            <a href="/">Logout</a>
+        </nav>
+    </header>
 
-            <nav class="navbar"  id="navbar">
-                {% if '_id' in session %}
-                    <a>User ID: {{ session['_id'] }}</a>
-                    <a href="/PatientDashboard">Patient Dashboard</a>
-                {% endif %}
-                <a href="/">Logout</a>
-            </nav>
+    <section class="home">
+        <div class="content">
+            <h3 align="center">Order Placed Successfully</h3>
 
+            <h3>Transaction Details</h3>
+            <p>Your payment has been successfully received. Sit back and relax while our delivery executive gets your order. Once the blood is cross-matched, it will be dispatched to you.</p>
+            <p><a href="{% if 'hosp_reg_no' in session %}/Hosp_Pending_Req{% else %}/Patient_Pending_Req{% endif %}" style="text-decoration: none; color: inherit;">Click Here To Track Your Blood Bag</a></p>
 
-        </header>
-         <script>
-        function toggleNavbar() {
-            var navbar = document.getElementById("navbar");
-            if (navbar.classList.contains("active")) {
-                navbar.classList.remove("active");
-            } else {
-                navbar.classList.add("active");
-            }
-        }
-        </script>
-
-        <section class="home">
-            <div class="content">
-                 <h3 align="center">Order Placed Successfully</h3>
-
-
-
-                <h3>Transaction Details</h3>
-                <p>Your payment has been successfully received. Sit back and relax while our delivery executive gets your order. Once the blood is cross-matched, it will be dispatched to you.</p>
-                <p>
-                    <a href="{% if 'hosp_reg_no' in session %}/Hosp_Pending_Req{% else %}/Patient_Pending_Req{% endif %}" style="text-decoration: none; color: inherit;">Click Here To Track Your Blood Bag</a>
-                </p>
-                
-           
-                <table>
+            <table>
                 <tr>
                     <th>Order ID</th>
                     <td>{{ order_id }}</td>
@@ -133,6 +115,22 @@
                 <tr>
                     <th>Transaction Status</th>
                     <td>Success</td>
+                </tr>
+                <tr>
+                    <th>Blood Bag Price</th>
+                    <td>{{ bb_price }}</td>
+                </tr>
+                <tr>
+                    <th>Blood Group</th>
+                    <td>{{ blood_group }}</td>
+                </tr>
+                <tr>
+                    <th>Blood Component</th>
+                    <td>{{ blood_component }}</td>
+                </tr>
+                <tr>
+                    <th>Blood Quantity</th>
+                    <td>{{ requested_quantity }}</td>
                 </tr>
                 <tr>
                     <th>Transaction Amount</th>
@@ -152,28 +150,21 @@
                 </tr>
             </table>
 
+            <br><br>
+            <h3>Thank You for Choosing TransfusioTrack!</h3>
+            <p>We appreciate your trust in us for your blood bag needs. Your order has been received successfully.<br> Wishing you a swift recovery and good health. Get well soon!</p>
+            <p>Best Regards,<br> TransfusioTrack Team</p>
+        </div>
+    </section>
 
+    <!-- Footer Section -->
+    <section class="footer">
+        <div class="credit">Created by <span> Team Transfusio </span> | All rights reserved to Ingle Laboratory</div>
+    </section>
+</div>
 
-
-                <br><br>
-               <h3>Thank You for Choosing TransfusioTrack!</h3>
-                <p>We appreciate your trust in us for your blood bag needs. Your order has been received successfully.<br> Wishing you a swift recovery and good health. Get well soon!</p>
-                <p>Best Regards,<br> TransfusioTrack Team</p>
-
-
-
-    </div>
-        </section>
-
-        <!-- Footer Section -->
-        <section class="footer">
-            <div class="credit">Created by <span> Team Transfusio </span> | All rights reserved to Ingle Laboratory</div>
-        </section>
-
-    </div>
-
-    <!-- JavaScript file link -->
-    <script src="js/script.js"></script>
+<!-- JavaScript file link -->
+<script src="js/script.js"></script>
 
 </body>
 </html>
