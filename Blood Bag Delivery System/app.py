@@ -269,10 +269,13 @@ def payment_response():
 
                 # Redirect to the success page
                 return render_template(template_name, 
-                                       order_id=order_id,
-                                       phonepe_transaction_id=phonepe_transaction_id,
-                                       total_amt=total_amt,
-                                       timestamp=ist_timestamp)
+                       order_id=order_id,
+                       phonepe_transaction_id=phonepe_transaction_id,
+                       total_amt=total_amt,
+                       timestamp=ist_timestamp,
+                       blood_group=blood_group,
+                       blood_component=blood_component,
+                       requested_quantity=requested_quantity)
 
             else:
                 # Payment failed, log and redirect to payment failure page
