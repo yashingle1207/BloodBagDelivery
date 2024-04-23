@@ -496,14 +496,14 @@ def Hospsignup():
         HospUser.insert_one(new_user)
 
         # Send email verification
-        send_email_verification(facility_email, verification_token)
+        send_hosp_email_verification(facility_email, verification_token)
 
         return render_template('VerifyEmail.html', email=facility_email)
 
     return render_template('HospitalSignUp.html')
 
 
-def send_email_verification(email, token):
+def send_hosp_email_verification(email, token):
     subject = 'Email Verification'
     body = f'To verify your email, please click the following link: <a href="{url_for("verify_email", token=token, _external=True)}">Verify Email</a>'
     message = MIMEMultipart()
@@ -565,14 +565,14 @@ def Psignup():
         PatientUser.insert_one(new_user)
 
         # Send email verification
-        send_email_verification(patient_email, verification_token)
+        send_paitent_email_verification(patient_email, verification_token)
 
         return render_template('VerifyEmailPatient.html', email=patient_email)
 
     return render_template('PatientSignUp.html')
 
 
-def send_email_verification(email, token):
+def send_paitent_email_verification(email, token):
     subject = 'Email Verification'
     body = f'To verify your email, please click the following link: <a href="{url_for("verify_email_patient", token=token, _external=True)}">Verify Email</a>'
     message = MIMEMultipart()
