@@ -12,8 +12,71 @@
     <link rel="stylesheet" href="static/style.css">
     <link rel="icon" type="image/png" href="static/images/LogoTT.png">
 
-    <style>
-        /* Your custom CSS styles here */
+     <style>
+
+
+    p {
+        margin-bottom: 15px;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        margin-top: 20px; /* Adjust as needed */
+    }
+
+    li {
+        margin-bottom: 15px;
+        position: relative;
+        color: #333; /* Set your preferred text color */
+        font-size: 20px;
+    }
+
+    li:before {
+        content: '\2022'; /* Unicode character for bullet point */
+        color: red; /* Set your preferred bullet point color */
+        font-weight: bold;
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em;
+        position: absolute;
+        left: 0;
+    }
+
+    strong {
+        color: black;
+    }
+
+    a {
+        color: #007BFF; /* Set your preferred link color */
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 90%;
+    margin: 10px auto;
+    margin-left: 0; /* Adjust margin-left to 0 to align the table to the left */
+}
+
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 10px;
+        font-size: 18px;
+        white-space: normal; /* Allow text to wrap */
+        word-wrap: break-word; /* Wrap text in data cells */
+        width: 60%;
+    }
+    th {
+        background-color: #f2f2f2;
+        width: 30%;
+    }
     </style>
 </head>
 <body>
