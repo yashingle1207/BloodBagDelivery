@@ -244,10 +244,18 @@ def payment_response():
 
               # Update blood bag quantity in the database
             
-                BloodStockAdd.update_one(
+                print("Updating blood bag quantity...")
+                print("Blood Bank ID:", blood_bank_id)
+                print("Blood Group:", blood_group)
+                print("Blood Component:", blood_component)
+                print("Requested Quantity:", requested_quantity)
+                
+                Searchbb.update_one(
                     {'reg_num': blood_bank_id, 'blood_group': blood_group, 'blood_component': blood_component},
                     {'$inc': {'quantity': -requested_quantity}}
                 )
+                
+                print("Blood bag quantity updated successfully.")
 
                 # Redirect to the success page
                 return render_template(template_name, 
