@@ -1,5 +1,6 @@
 from datetime import datetime
 from bson import ObjectId
+from flask_mail import Mail, Message
 import os
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from pymongo import MongoClient
