@@ -142,9 +142,6 @@ def pay():
     return redirect(responseData['data']['instrumentResponse']['redirectInfo']['url'])
 
 
-
-
-
 @app.route("/payment_response", methods=['POST'])
 def payment_response():
     # Constants
@@ -164,16 +161,22 @@ def payment_response():
             # Hospital user is logged in
             user_id = session['hosp_reg_no']
             template_name = 'map.html'
-            recipient_email = session['hospital_email']  # Hospital email address
+            # Fetch hospital email from database
+            hospital_email = hosp_user_collection.find_one({'reg_hosp_no': user_id})['email']
         elif '_id' in session:
             # Patient user is logged in
             user_id = session['_id']
             template_name = 'Patientmap.html'
-            recipient_email = session['patient_email']  # Patient email address
+            # Fetch patient email from database
+            patient_email = patient_collection.find_one({'_id': user_id})['email']
         else:
             # Neither hospital user nor patient user is logged in
             print("No user logged in.")
             return render_template('error.html', message='No user logged in')
+
+        # Fetch blood bank email from database
+        blood_bank_id = session.get('bb_reg_no')
+        blood_bank_email = blood_bank_collection.find_one({'blood_bank_id': blood_bank_id})['email']
 
         # Construct the request URL
         request_url = f'https://api.phonepe.com/apis/hermes/pg/v1/status/M22S8FP278KQA/{transaction_id}'
@@ -280,7 +283,9 @@ def payment_response():
                     print("Blood bag quantity updated successfully.")
 
                 # Send email to hospital/patient
-                send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price)
+                send_email(hospital_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price)
+                send_email(patient_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price)
+                send_email(blood_bank_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price)
 
                 # Redirect to the success page
                 return render_template(template_name,
@@ -320,7 +325,6 @@ def send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, tim
 
     # Log email sent
     print(f"Email sent to {recipient_email}.")
-
 
 
 
