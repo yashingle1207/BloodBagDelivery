@@ -162,13 +162,13 @@ def payment_response():
             user_id = session['hosp_reg_no']
             template_name = 'map.html'
             # Fetch hospital email from database
-            hospital_email = hosp_user_collection.find_one({'reg_hosp_no': user_id})['email']
+            hospital_email = HospUser.find_one({'reg_num': user_id})['email']
         elif '_id' in session:
             # Patient user is logged in
             user_id = session['_id']
             template_name = 'Patientmap.html'
             # Fetch patient email from database
-            patient_email = patient_collection.find_one({'_id': user_id})['email']
+            patient_email = PatientUser.find_one({'_id': user_id})['email']
         else:
             # Neither hospital user nor patient user is logged in
             print("No user logged in.")
@@ -176,7 +176,7 @@ def payment_response():
 
         # Fetch blood bank email from database
         blood_bank_id = session.get('bb_reg_no')
-        blood_bank_email = blood_bank_collection.find_one({'blood_bank_id': blood_bank_id})['email']
+        blood_bank_email = BBUser.find_one({'reg_num': blood_bank_id})['email']
 
         # Construct the request URL
         request_url = f'https://api.phonepe.com/apis/hermes/pg/v1/status/M22S8FP278KQA/{transaction_id}'
