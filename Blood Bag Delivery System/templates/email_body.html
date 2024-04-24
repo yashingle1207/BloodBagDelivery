@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Transaction Successful</title>
+
+    <!-- Font Awesome CDN link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Custom CSS file link -->
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+
+    <style>
+        p {
+            margin-bottom: 15px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px; /* Adjust as needed */
+        }
+
+        li {
+            margin-bottom: 15px;
+            position: relative;
+            color: #333; /* Set your preferred text color */
+            font-size: 20px;
+        }
+
+        li:before {
+            content: '\2022'; /* Unicode character for bullet point */
+            color: red; /* Set your preferred bullet point color */
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+            position: absolute;
+            left: 0;
+        }
+
+        strong {
+            color: black;
+        }
+
+        a {
+            color: #007BFF; /* Set your preferred link color */
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 90%;
+            margin: 10px auto;
+            margin-left: 0; /* Adjust margin-left to 0 to align the table to the left */
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 10px;
+            font-size: 18px;
+            white-space: normal; /* Allow text to wrap */
+            word-wrap: break-word; /* Wrap text in data cells */
+            width: 60%;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            width: 30%;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <header>
+        <a href="/" class="logo">Transfusio<span>Track</span></a>
+        <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
+        <nav class="navbar" id="navbar">
+            {% if 'hosp_reg_no' in session %}
+            <a>User ID: {{ session['hosp_reg_no'] }}</a>
+            <a href="/HospDashboard">Hospital Dashboard</a>
+            {% endif %}
+            <a href="/">Logout</a>
+        </nav>
+    </header>
+
+    <section class="home">
+        <div class="content">
+            <h3 align="center">Order Placed Successfully</h3>
+
+            <h3>Transaction Details</h3>
+            <p>Your payment has been successfully received. Sit back and relax while our delivery executive gets your order. Once the blood is cross-matched, it will be dispatched to you.</p>
+            <p>
+                <a href="{% if 'hosp_reg_no' in session %}/Hosp_Pending_Req{% else %}/Patient_Pending_Req{% endif %}" style="text-decoration: none; color: inherit;">Click Here To Track Your Blood Bag</a>
+            </p>
+
+            <table>
+                <tr>
+                    <th>Order ID</th>
+                    <td>{{ order_id }}</td>
+                </tr>
+                <tr>
+                    <th>Transaction ID</th>
+                    <td>{{ phonepe_transaction_id }}</td>
+                </tr>
+                <tr>
+                    <th>Transaction Status</th>
+                    <td>Success</td>
+                </tr>
+                <tr>
+                    <th>Blood Bag Price</th>
+                    <td>{{ blood_product_price }}</td>
+                </tr>
+                <tr>
+                    <th>Blood Group</th>
+                    <td>{{ blood_group }}</td>
+                </tr>
+                <tr>
+                    <th>Blood Component</th>
+                    <td>{{ blood_component }}</td>
+                </tr>
+                <tr>
+                    <th>Blood Quantity</th>
+                    <td>{{ requested_quantity }}</td>
+                </tr>
+                <tr>
+                    <th>Transaction Amount</th>
+                    <td>{{ total_amt }}</td>
+                </tr>
+                <tr>
+                    <th>Transaction Currency</th>
+                    <td>INR</td>
+                </tr>
+                <tr>
+                    <th>Transaction Date</th>
+
+                </tr>
+                <tr>
+                    <th>Transaction Country</th>
+                    <td>IND</td>
+                </tr>
+
+            </table>
+
+            <br><br>
+            <h3>Thank You for Choosing TransfusioTrack!</h3>
+            <p>We appreciate your trust in us for your blood bag needs. Your order has been received successfully.<br> Wishing you a swift recovery and good health. Get well soon!</p>
+            <p>Best Regards,<br> TransfusioTrack Team</p>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <section class="footer">
+        <div class="credit">Created by <span> Team Transfusio </span> | All rights reserved to Ingle Laboratory</div>
+    </section>
+
+</div>
+
+<!-- JavaScript file link -->
+<script src="js/script.js"></script>
+
+</body>
+</html>
