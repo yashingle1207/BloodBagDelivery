@@ -43,11 +43,19 @@ PatientUser = db['PatientUsers']
 PatientSearchBB = db['BloodStock']
 pricing_collection = db['pricing']
 
+app.config['MAIL_SERVER'] = 'smtp.gamil.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'transfusiotrack@gmail.com'
+app.config['MAIL_PASSWORD'] = 'engv kjsl qjrn eroa '
+
 SMTP_SERVER = 'smtp.gmail.com'
 SMTP_PORT = 587
 EMAIL_FROM = 'transfusiotrack@gmail.com'
 EMAIL_PASSWORD = 'engv kjsl qjrn eroa '
 
+
+mail = Mail(app)
 
 
 ####################### Payment PhonePe #######################
@@ -135,6 +143,7 @@ def pay():
 
 
 
+
 @app.route("/payment_response", methods=['POST'])
 def payment_response():
     # Constants
@@ -154,10 +163,12 @@ def payment_response():
             # Hospital user is logged in
             user_id = session['hosp_reg_no']
             template_name = 'map.html'
+            recipient_email = session['hospital_email']  # Hospital email address
         elif '_id' in session:
             # Patient user is logged in
             user_id = session['_id']
             template_name = 'Patientmap.html'
+            recipient_email = session['patient_email']  # Patient email address
         else:
             # Neither hospital user nor patient user is logged in
             print("No user logged in.")
@@ -267,6 +278,9 @@ def payment_response():
                     )
                     print("Blood bag quantity updated successfully.")
 
+                # Send email to hospital/patient
+                send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price)
+
                 # Redirect to the success page
                 return render_template(template_name,
                                        order_id=order_id,
@@ -291,6 +305,20 @@ def payment_response():
     # Handle case where transaction ID is missing or invalid
     print("Missing or invalid transaction ID.")
     return render_template('error.html', message='Transaction ID missing or invalid')
+
+def send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, timestamp, blood_group, blood_component, requested_quantity, bb_price):
+    # Email subject
+    subject = "Blood Order Details"
+
+    # Email body
+    body = render_template('email_body.html', order_id=order_id, phonepe_transaction_id=phonepe_transaction_id, total_amt=total_amt, timestamp=timestamp, blood_group=blood_group, blood_component=blood_component, requested_quantity=requested_quantity, bb_price=bb_price)
+
+    # Send email
+    msg = Message(subject, recipients=[recipient_email], body=body)
+    mail.send(msg)
+
+    # Log email sent
+    print(f"Email sent to {recipient_email}.")
 
 
 
