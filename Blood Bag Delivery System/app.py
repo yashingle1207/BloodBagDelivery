@@ -304,7 +304,7 @@ def payment_response():
     print("Missing or invalid transaction ID.")
     return render_template('error.html', message='Transaction ID missing or invalid')
 
-def send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, timestamp, blood_group, blood_component, requested_quantity, bb_price):
+def send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, timestamp, blood_group, blood_component, requested_quantity, bb_price, recipient_type):
     # Email subject
     subject = "Blood Order Details"
 
@@ -328,7 +328,7 @@ def send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, tim
         server.login(EMAIL_FROM, EMAIL_PASSWORD)
 
         # Send the email
-        server.sendmail(EMAIL_FROM, recipient_email, msg)
+        server.sendmail(EMAIL_FROM, recipient_email, msg.as_string())  # Convert message to string
 
         # Close the connection
         server.quit()
@@ -339,6 +339,7 @@ def send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, tim
     except Exception as e:
         # Log error if email sending fails
         print(f"Error sending email: {e}")
+
 
 
 @app.route('/payment_invoice', methods=['POST'])
