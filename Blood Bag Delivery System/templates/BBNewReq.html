@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="static/style.css">
     <link rel="icon" type="image/png" href="static/images/LogoTT.png">
 
-       <style>
+    <style>
         /* General table styles */
         table {
             border-collapse: collapse;
@@ -70,26 +70,25 @@
     <a href="/" class="logo">Transfusio<span>Track</span></a>
     <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
     <nav class="navbar" id="navbar">
-          {% if 'bb_reg_no' in session %}
+        {% if 'bb_reg_no' in session %}
             <a>Blood Bank ID: {{ session['bb_reg_no'] }}</a>
-         {% endif %}
+        {% endif %}
 
         <a href="/BBDashboard">BloodBank Dashboard</a>
         <a href="/">Logout</a>
     </nav>
 </header>
 
-  
- <script>
-        function toggleNavbar() {
-            var navbar = document.getElementById("navbar");
-            if (navbar.classList.contains("active")) {
-                navbar.classList.remove("active");
-            } else {
-                navbar.classList.add("active");
-            }
+<script>
+    function toggleNavbar() {
+        var navbar = document.getElementById("navbar");
+        if (navbar.classList.contains("active")) {
+            navbar.classList.remove("active");
+        } else {
+            navbar.classList.add("active");
         }
-        </script>
+    }
+</script>
 
 <form action="/initiate_delivery" method="POST" onsubmit="return validateForm()">
     <h1 class="heading">Blood Bag (In progress)</h1>
@@ -98,6 +97,8 @@
         <tr>
             <th>Select</th>
             <th>User ID</th>
+            <th>User Name</th>
+            <th>User Address</th>
             <th>Blood Bank ID</th>
             <th>Blood Group</th>
             <th>Blood Component</th>
@@ -118,6 +119,8 @@
                     <input type="radio" name="selected_order" id="selected_order" value="{{ order._id }}">
                 </td>
                 <td>{{ order.User_ID }}</td>
+                <td>{{ order.user_name }}</td>
+                <td>{{ order.user_address }}</td>
                 <td>{{ order.BloodBank_Id}}</td>
                 <td>{{ order.BloodGrp }}</td>
                 <td>{{ order.BloodComp }}</td>
@@ -134,7 +137,7 @@
         {% endfor %}
 
         <tr>
-            <td colspan="14" style="text-align: center;">
+            <td colspan="16" style="text-align: center;">
                 <input class='btn' type="submit" value="Initiate Blood Bag Delivery">
             </td>
         </tr>
@@ -143,7 +146,6 @@
 
 <!-- footer section  -->
 <section class="footer">
-     
     <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to Ingle Laboratory
     </div>
 </section>
