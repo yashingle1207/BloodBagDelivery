@@ -878,33 +878,47 @@ def patient_received_orders():
 @app.route('/BBNewReq', methods=['GET'])
 def Blood_bag_inProgress():
     # Query MongoDB to get all orders
-    orders = Order.find({'BloodBank_Id':session.get('bb_reg_no'),'status': 'undelivered'})
+    orders = Order.find({'BloodBank_Id': session.get('bb_reg_no'), 'status': 'undelivered'})
 
     # Prepare the results to be displayed
     order_list = []
     for order in orders:
-        order_list.append({
+        user_id = order.get('User_ID')
+        user_details = None
 
-            '_id': order.get('_id'),
-            'User_ID': order.get('User_ID'),
-            'BloodBank_Id': order.get('BloodBank_Id') ,
-            'BloodGrp': order.get('BloodGrp'),
-            'BloodComp': order.get('BloodComp'),
-            'BloodQuantity': order.get('BloodQuantity'),
+        # Search for user details in the hospital collection
+        hospital_details = HospUser.find_one({'reg_num': user_id})
+        if hospital_details:
+            user_details = hospital_details
+        else:
+            # Search for user details in the patient collection
+            patient_details = PatientUser.find_one({'_id': user_id})
+            if patient_details:
+                user_details = patient_details
 
-
-            'req_type': order.get('req_type'),
-            'fname': order.get('fname'),
-            'mname': order.get('mname'),
-            'lname': order.get('lname'),
-            'age': order.get('age'),
-            'ward': order.get('ward'),
-            'bedno': order.get('bedno'),
-            'gender': order.get('gender'),
-            'timestamp': order.get('timestamp')
-        })
+        if user_details:
+            order_list.append({
+                '_id': order.get('_id'),
+                'User_ID': user_id,
+                'BloodBank_Id': order.get('BloodBank_Id'),
+                'BloodGrp': order.get('BloodGrp'),
+                'BloodComp': order.get('BloodComp'),
+                'BloodQuantity': order.get('BloodQuantity'),
+                'req_type': order.get('req_type'),
+                'fname': order.get('fname'),
+                'mname': order.get('mname'),
+                'lname': order.get('lname'),
+                'age': order.get('age'),
+                'ward': order.get('ward'),
+                'bedno': order.get('bedno'),
+                'gender': order.get('gender'),
+                'timestamp': order.get('timestamp'),
+                'user_name': user_details.get('facility_name') or user_details.get('patient_name'),
+                'user_address': user_details.get('address')
+            })
 
     return render_template('BBNewReq.html', orders=order_list)
+
 
 ##############################################
 
