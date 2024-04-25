@@ -1,6 +1,5 @@
 from datetime import datetime
 from bson import ObjectId
-from flask_mail import Mail, Message
 import os
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 from pymongo import MongoClient
@@ -44,19 +43,10 @@ PatientUser = db['PatientUsers']
 PatientSearchBB = db['BloodStock']
 pricing_collection = db['pricing']
 
-app.config['MAIL_SERVER'] = 'smtp.gamil.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'transfusiotrack@gmail.com'
-app.config['MAIL_PASSWORD'] = 'engv kjsl qjrn eroa '
-
 SMTP_SERVER = 'smtp.gmail.com'
 SMTP_PORT = 587
 EMAIL_FROM = 'transfusiotrack@gmail.com'
 EMAIL_PASSWORD = 'engv kjsl qjrn eroa '
-
-
-mail = Mail(app)
 
 
 ####################### Payment PhonePe #######################
@@ -319,14 +309,31 @@ def send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, tim
     # Email body
     body = render_template('email_body.html', order_id=order_id, phonepe_transaction_id=phonepe_transaction_id, total_amt=total_amt, timestamp=timestamp, blood_group=blood_group, blood_component=blood_component, requested_quantity=requested_quantity, bb_price=bb_price)
 
-    # Send email
-    msg = Message(subject, recipients=[recipient_email], body=body)
-    mail.send(msg)
+    # Prepare message
+    msg = f"Subject: {subject}\n\n{body}"
 
-    # Log email sent
-    print(f"Email sent to {recipient_email}.")
+    try:
+        # Connect to Gmail's SMTP server
+        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+        server.ehlo()
+        server.starttls()
+        server.ehlo()
 
+        # Login to the email account
+        server.login(EMAIL_FROM, EMAIL_PASSWORD)
 
+        # Send the email
+        server.sendmail(EMAIL_FROM, recipient_email, msg)
+
+        # Close the connection
+        server.quit()
+
+        # Log email sent
+        print(f"Email sent to {recipient_email}.")
+
+    except Exception as e:
+        # Log error if email sending fails
+        print(f"Error sending email: {e}")
 
 
 @app.route('/payment_invoice', methods=['POST'])
