@@ -131,7 +131,7 @@ def pay():
     responseData = response.json();
     return redirect(responseData['data']['instrumentResponse']['redirectInfo']['url'])
 
-
+request_by = ''
 @app.route("/payment_response", methods=['POST'])
 def payment_response():
     # Constants
@@ -274,8 +274,10 @@ def payment_response():
 
                 # Send email to hospital/patient
                 if 'hosp_reg_no' in session:
+                    request_by = HospUser.find_one({'reg_num': user_id})['facility_name']
                     send_email(hospital_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'user')
                 elif '_id' in session:
+                    request_by = PatientUser.find_one({'_id': user_id})['patient_name']
                     send_email(patient_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'user')
                 send_email(blood_bank_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'bloodbank')
 
@@ -310,7 +312,7 @@ def send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, tim
     if request_type == 'user':
         body = render_template('email_body.html', order_id=order_id, phonepe_transaction_id=phonepe_transaction_id, total_amt=total_amt, timestamp=timestamp, blood_group=blood_group, blood_component=blood_component, requested_quantity=requested_quantity, bb_price=bb_price)
     elif request_type == 'bloodbank':
-        body = render_template('email_bodybb.html', order_id=order_id, phonepe_transaction_id=phonepe_transaction_id, total_amt=total_amt, timestamp=timestamp, blood_group=blood_group, blood_component=blood_component, requested_quantity=requested_quantity, bb_price=bb_price)
+        body = render_template('email_bodybb.html', order_id=order_id, phonepe_transaction_id=phonepe_transaction_id, total_amt=total_amt, timestamp=timestamp, blood_group=blood_group, blood_component=blood_component, requested_quantity=requested_quantity, bb_price=bb_price,request_by=request_by)
 
     # Prepare message
     msg = MIMEText(body, 'html')  # Specify content type as HTML
