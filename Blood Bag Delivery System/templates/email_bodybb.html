@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Order Received</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <section class="order-details">
+            <h3>New Order Received</h3>
+            <p>You have received a new order for blood bags. Details are as follows:</p>
+
+            <table>
+                <tr>
+                    <th>Order ID</th>
+                    <td>{{ order_id }}</td>
+                </tr>
+                <tr>
+                    <th>Transaction ID</th>
+                    <td>{{ phonepe_transaction_id }}</td>
+                </tr>
+                <tr>
+                    <th>Blood Group</th>
+                    <td>{{ blood_group }}</td>
+                </tr>
+                <tr>
+                    <th>Blood Component</th>
+                    <td>{{ blood_component }}</td>
+                </tr>
+                <tr>
+                    <th>Quantity</th>
+                    <td>{{ requested_quantity }}</td>
+                </tr>
+                <tr>
+                    <th>Requested By</th>
+                    <td>{{ requested_by }}</td>
+                </tr>
+                <tr>
+                    <th>Requested At</th>
+                    <td>{{ requested_at }}</td>
+                </tr>
+            </table>
+
+            <p>Please proceed with processing the order and preparing the blood bags accordingly.</p>
+            <p>Thank you for using TransfusioTrack!</p>
+            <p>Best Regards, TransfusioTrack Team</p>
+        </section>
+    </div>
+</body>
+</html>
