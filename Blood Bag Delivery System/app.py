@@ -131,7 +131,6 @@ def pay():
     responseData = response.json();
     return redirect(responseData['data']['instrumentResponse']['redirectInfo']['url'])
 
-request_by = ''
 @app.route("/payment_response", methods=['POST'])
 def payment_response():
     # Constants
@@ -275,10 +274,10 @@ def payment_response():
                 # Send email to hospital/patient
                 if 'hosp_reg_no' in session:
                     request_by = HospUser.find_one({'reg_num': user_id})['facility_name']
-                    send_email(hospital_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'user')
+                    send_email(hospital_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'user',request_by)
                 elif '_id' in session:
                     request_by = PatientUser.find_one({'_id': user_id})['patient_name']
-                    send_email(patient_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'user')
+                    send_email(patient_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'user',request_by)
                 send_email(blood_bank_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'bloodbank')
 
                 # Redirect to the success page
@@ -306,7 +305,7 @@ def payment_response():
     print("Missing or invalid transaction ID.")
     return render_template('error.html', message='Transaction ID missing or invalid')
 
-def send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, timestamp, blood_group, blood_component, requested_quantity, bb_price,request_type):
+def send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, timestamp, blood_group, blood_component, requested_quantity, bb_price,request_type,request_by):
     # Email subject
     subject = "Blood Order Details"
     if request_type == 'user':
