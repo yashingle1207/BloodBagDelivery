@@ -273,8 +273,10 @@ def payment_response():
                     print("Blood bag quantity updated successfully.")
 
                 # Send email to hospital/patient
-                send_email(hospital_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price)
-                send_email(patient_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price)
+                if 'hosp_reg_no' in session:
+                    send_email(hospital_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price)
+                elif '_id' in session:
+                    send_email(patient_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price)
                 send_email(blood_bank_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price)
 
                 # Redirect to the success page
@@ -310,7 +312,10 @@ def send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, tim
     body = render_template('email_body.html', order_id=order_id, phonepe_transaction_id=phonepe_transaction_id, total_amt=total_amt, timestamp=timestamp, blood_group=blood_group, blood_component=blood_component, requested_quantity=requested_quantity, bb_price=bb_price)
 
     # Prepare message
-    msg = f"Subject: {subject}\n\n{body}"
+    msg = MIMEText(body, 'html')  # Specify content type as HTML
+    msg['Subject'] = subject
+    msg['From'] = EMAIL_FROM
+    msg['To'] = recipient_email
 
     try:
         # Connect to Gmail's SMTP server
