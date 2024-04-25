@@ -73,7 +73,7 @@ def base64_encode(input_dict):
 @app.route("/make_payment", methods=['POST'])
 def pay():
     # Calculate total amount
-    total_amt = session.get("quantity") * session.get("blood_product_price")*0.10
+    total_amt = session.get("quantity") * session.get("blood_product_price")*0.010
 
     # Determine the merchantUserId based on which user is logged in
     patient_reg_no1 = session.get('_id')
@@ -274,10 +274,10 @@ def payment_response():
 
                 # Send email to hospital/patient
                 if 'hosp_reg_no' in session:
-                    send_email(hospital_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price)
+                    send_email(hospital_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,user)
                 elif '_id' in session:
-                    send_email(patient_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price)
-                send_email(blood_bank_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price)
+                    send_email(patient_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,user)
+                send_email(blood_bank_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,bloodbank)
 
                 # Redirect to the success page
                 return render_template(template_name,
@@ -304,12 +304,13 @@ def payment_response():
     print("Missing or invalid transaction ID.")
     return render_template('error.html', message='Transaction ID missing or invalid')
 
-def send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, timestamp, blood_group, blood_component, requested_quantity, bb_price):
+def send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, timestamp, blood_group, blood_component, requested_quantity, bb_price,request_type):
     # Email subject
     subject = "Blood Order Details"
-
-    # Email body
-    body = render_template('email_body.html', order_id=order_id, phonepe_transaction_id=phonepe_transaction_id, total_amt=total_amt, timestamp=timestamp, blood_group=blood_group, blood_component=blood_component, requested_quantity=requested_quantity, bb_price=bb_price)
+    if request_type == 'user':
+        body = render_template('email_body.html', order_id=order_id, phonepe_transaction_id=phonepe_transaction_id, total_amt=total_amt, timestamp=timestamp, blood_group=blood_group, blood_component=blood_component, requested_quantity=requested_quantity, bb_price=bb_price)
+    elif request_type == 'bloodbank':
+        body = render_template('email_bodybb.html', order_id=order_id, phonepe_transaction_id=phonepe_transaction_id, total_amt=total_amt, timestamp=timestamp, blood_group=blood_group, blood_component=blood_component, requested_quantity=requested_quantity, bb_price=bb_price)
 
     # Prepare message
     msg = MIMEText(body, 'html')  # Specify content type as HTML
