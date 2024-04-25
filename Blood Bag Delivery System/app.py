@@ -274,10 +274,10 @@ def payment_response():
 
                 # Send email to hospital/patient
                 if 'hosp_reg_no' in session:
-                    send_email(hospital_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,user)
+                    send_email(hospital_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'user')
                 elif '_id' in session:
-                    send_email(patient_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,user)
-                send_email(blood_bank_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,bloodbank)
+                    send_email(patient_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'user')
+                send_email(blood_bank_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'bloodbank')
 
                 # Redirect to the success page
                 return render_template(template_name,
