@@ -278,7 +278,7 @@ def payment_response():
                 elif '_id' in session:
                     request_by = PatientUser.find_one({'_id': user_id})['patient_name']
                     send_email(patient_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'user',request_by)
-                send_email(blood_bank_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'bloodbank')
+                send_email(blood_bank_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'bloodbank',' ')
 
                 # Redirect to the success page
                 return render_template(template_name,
