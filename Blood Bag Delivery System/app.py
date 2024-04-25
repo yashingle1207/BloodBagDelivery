@@ -304,7 +304,7 @@ def payment_response():
     print("Missing or invalid transaction ID.")
     return render_template('error.html', message='Transaction ID missing or invalid')
 
-def send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, timestamp, blood_group, blood_component, requested_quantity, bb_price, recipient_type):
+def send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, timestamp, blood_group, blood_component, requested_quantity, bb_price):
     # Email subject
     subject = "Blood Order Details"
 
