@@ -3,7 +3,6 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Received Blood Bags</title>
 
@@ -49,7 +48,7 @@
 <body>
     <div class="container">
         <header>
-           <a href="/" class="logo">Transfusio<span>Track</span></a>
+            <a href="/" class="logo">Transfusio<span>Track</span></a>
             <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
             <nav class="navbar" id="navbar">
                 {% if 'hosp_reg_no' in session %}
@@ -75,13 +74,13 @@
 
         <table>
             <tr>
-                <th>User Name</th>
-                <th>User Address</th>
-                <th>User Contact No.</th>
+                <th>BloodBank Name</th>
+                <th>BloodBank Address</th>
+                <th>BloodBank Contact No.</th>
                 <th>Blood Group</th>
                 <th>Blood Component</th>
                 <th>Blood Quantity</th>
-                <th data-hide="true">Request Type</th>
+                <th>Request Type</th>
                 <th>First Name</th>
                 <th data-hide="true">Middle Name</th>
                 <th>Last Name</th>
@@ -89,7 +88,6 @@
                 <th data-hide="true">Ward</th>
                 <th data-hide="true">Bed Number</th>
                 <th>Gender</th>
-                <th data-hide="true">Time of Dispatch</th>
             </tr>
 
             {% for order in orders %}
@@ -100,7 +98,7 @@
                 <td>{{ order.BloodGrp }}</td>
                 <td>{{ order.BloodComp }}</td>
                 <td>{{ order.BloodQuantity }}</td>
-                <td data-hide="true">{{ order.req_type }}</td>
+                <td>{{ order.req_type }}</td>
                 <td>{{ order.fname }}</td>
                 <td data-hide="true">{{ order.mname }}</td>
                 <td>{{ order.lname }}</td>
@@ -108,7 +106,6 @@
                 <td data-hide="true">{{ order.ward }}</td>
                 <td data-hide="true">{{ order.bedno }}</td>
                 <td>{{ order.gender }}</td>
-                <td data-hide="true">{{ order.timestamp }}</td>
             </tr>
             {% endfor %}
         </table>
