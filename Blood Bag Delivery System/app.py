@@ -914,7 +914,7 @@ def Blood_bag_inProgress():
                 'gender': order.get('gender'),
                 'timestamp': order.get('timestamp'),
                 'user_name': user_details.get('facility_name') or user_details.get('patient_name'),
-                'user_address': user_details.get('address')
+                'user_address': user_details.get('address'),
                 'phone_number':user_details.get('contact_num')
             })
 
