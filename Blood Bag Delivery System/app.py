@@ -998,7 +998,7 @@ def Hosp_Blood_bag_inProgress():
                 'bedno': order.get('bedno'),
                 'gender': order.get('gender'),
                 'timestamp': order.get('timestamp'),
-                'user_name': blood_bank_details.get('blood_bank_name'),
+                'user_name': blood_bank_details.get('bb_name'),
                 'user_address': blood_bank_details.get('address'),
                 'phone_number': blood_bank_details.get('contact_num')
             })
