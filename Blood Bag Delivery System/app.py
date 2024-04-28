@@ -938,38 +938,72 @@ def Blood_bag_inProgress():
 
 ##############################################
 
+# @app.route('/Hosp_Pending_Req', methods=['GET'])
+# def Hosp_Blood_bag_inProgress():
+#     # Query MongoDB to get all orders
+#     orders = Order.find({'User_ID':session.get('hosp_reg_no'),'status': 'undelivered'})
+
+#     # Prepare the results to be displayed
+#     order_list = []
+#     for order in orders:
+#         order_list.append({
+
+        
+#             '_id': order.get('_id'),
+#             'User_ID': order.get('User_ID'),
+#             'BloodBank_Id': order.get('BloodBank_Id') ,
+#             'BloodGrp': order.get('BloodGrp'),
+#             'BloodComp': order.get('BloodComp'),
+#             'BloodQuantity': order.get('BloodQuantity'),
+
+
+#             'req_type': order.get('req_type'),
+#             'fname': order.get('fname'),
+#             'mname': order.get('mname'),
+#             'lname': order.get('lname'),
+#             'age': order.get('age'),
+#             'ward': order.get('ward'),
+#             'bedno': order.get('bedno'),
+#             'gender': order.get('gender'),
+#             'timestamp': order.get('timestamp')
+#         })
+
+#     return render_template('HospitalPendingReq.html', orders=order_list)
+
 @app.route('/Hosp_Pending_Req', methods=['GET'])
 def Hosp_Blood_bag_inProgress():
     # Query MongoDB to get all orders
-    orders = Order.find({'User_ID':session.get('hosp_reg_no'),'status': 'undelivered'})
+    orders = Order.find({'User_ID': session.get('hosp_reg_no'), 'status': 'undelivered'})
 
     # Prepare the results to be displayed
     order_list = []
     for order in orders:
-        order_list.append({
-
+        # Query blood bank details
+        blood_bank_details = BloodBankUser.find_one({'_id': order.get('BloodBank_Id')})
         
-            '_id': order.get('_id'),
-            'User_ID': order.get('User_ID'),
-            'BloodBank_Id': order.get('BloodBank_Id') ,
-            'BloodGrp': order.get('BloodGrp'),
-            'BloodComp': order.get('BloodComp'),
-            'BloodQuantity': order.get('BloodQuantity'),
-
-
-            'req_type': order.get('req_type'),
-            'fname': order.get('fname'),
-            'mname': order.get('mname'),
-            'lname': order.get('lname'),
-            'age': order.get('age'),
-            'ward': order.get('ward'),
-            'bedno': order.get('bedno'),
-            'gender': order.get('gender'),
-            'timestamp': order.get('timestamp')
-        })
+        if blood_bank_details:
+            order_list.append({
+                '_id': order.get('_id'),
+                'User_ID': order.get('User_ID'),
+                'BloodBank_Id': order.get('BloodBank_Id'),
+                'BloodGrp': order.get('BloodGrp'),
+                'BloodComp': order.get('BloodComp'),
+                'BloodQuantity': order.get('BloodQuantity'),
+                'req_type': order.get('req_type'),
+                'fname': order.get('fname'),
+                'mname': order.get('mname'),
+                'lname': order.get('lname'),
+                'age': order.get('age'),
+                'ward': order.get('ward'),
+                'bedno': order.get('bedno'),
+                'gender': order.get('gender'),
+                'timestamp': order.get('timestamp'),
+                'user_name': blood_bank_details.get('blood_bank_name'),
+                'user_address': blood_bank_details.get('address'),
+                'phone_number': blood_bank_details.get('contact_num')
+            })
 
     return render_template('HospitalPendingReq.html', orders=order_list)
-
 
 
 #########
