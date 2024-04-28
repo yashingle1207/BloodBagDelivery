@@ -15,7 +15,6 @@
         table {
             border-collapse: collapse;
             width: 100%;
-            max-width: 90%;
             margin: 10px auto;
         }
 
@@ -31,7 +30,7 @@
 
         th {
             background-color: #f2f2f2;
-            width: 150px; /* Adjust the width as needed for larger screens */
+            width: auto; /* Allow the width to adjust based on content */
         }
 
         /* Media query for smaller screens */
@@ -88,6 +87,7 @@
                 <th data-hide="true">Ward</th>
                 <th data-hide="true">Bed Number</th>
                 <th>Gender</th>
+                <th>Timestamp</th> <!-- Added Timestamp column -->
             </tr>
 
             {% for order in orders %}
@@ -106,6 +106,7 @@
                 <td data-hide="true">{{ order.ward }}</td>
                 <td data-hide="true">{{ order.bedno }}</td>
                 <td>{{ order.gender }}</td>
+                <td>{{ order.timestamp }}</td> <!-- Display timestamp -->
             </tr>
             {% endfor %}
         </table>
