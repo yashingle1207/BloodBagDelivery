@@ -828,13 +828,26 @@ def hosp_received_orders():
     # Query MongoDB to get all orders
     orders = Order.find({'User_ID': 'Reg1234', 'status': 'delivered'})
 
-  
-
     # Prepare the results to be displayed
     order_list = []
     for order in orders:
-        order_list.append({
+        user_id = order.get('User_ID')
+        user_details = None
 
+        # Search for user details in the hospital collection
+        hospital_details = HospUser.find_one({'reg_num': user_id})
+        if hospital_details:
+            user_details = hospital_details
+        else:
+            # Search for user details in the patient collection
+            patient_details = PatientUser.find_one({'_id': user_id})
+            if patient_details:
+                user_details = patient_details
+  
+
+        # Prepare the results to be displayed
+        if user_details:
+            order_list.append({
             '_id': order.get('_id'),
             'User_ID': order.get('User_ID'),
             'BloodBank_Id': order.get('BloodBank_Id'),
@@ -851,7 +864,11 @@ def hosp_received_orders():
             'ward': order.get('ward'),
             'bedno': order.get('bedno'),
             'gender': order.get('gender'),
-            'timestamp': order.get('timestamp')
+            'timestamp': order.get('timestamp'),
+            'user_name': user_details.get('facility_name') or user_details.get('patient_name'),
+            'user_address': user_details.get('address'),
+            'phone_number':user_details.get('contact_num')
+
         })
 
     return render_template('Receivedbags.html', orders=order_list)
