@@ -932,14 +932,10 @@ def Hosp_Blood_bag_inProgress():
     for order in orders:
         order_list.append({
 
-             blood_bank_details = BBUser.find_one({'_id': order.get('BloodBank_Id')})
-
+        
             '_id': order.get('_id'),
             'User_ID': order.get('User_ID'),
             'BloodBank_Id': order.get('BloodBank_Id') ,
-            'blood_bank_name': blood_bank_details.get('bb_name'),
-            'blood_bank_address': blood_bank_details.get('address'),
-            'blood_bank_contact': blood_bank_details.get('contact_num')
             'BloodGrp': order.get('BloodGrp'),
             'BloodComp': order.get('BloodComp'),
             'BloodQuantity': order.get('BloodQuantity'),
