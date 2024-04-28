@@ -97,7 +97,9 @@
 
     <table>
         <tr>
-            <th>Blood Bank ID</th>
+            <th>BloodBank Name</th>
+            <th>BloodBank Address</th>
+            <th>BloodBank Contact No.</th>
             <th>Blood Group</th>
             <th>Blood Component</th>
             <th>Blood Quantity</th>
@@ -113,7 +115,9 @@
 
         {% for order in orders %}
             <tr>
-                <td>{{ order.BloodBank_Id}}</td>
+                <td>{{ order.user_name}}</td>
+                <td>{{ order.user_address}}</td>
+                <td>{{ order.phone_number}}</td>
                 <td>{{ order.BloodGrp }}</td>
                 <td>{{ order.BloodComp }}</td>
                 <td>{{ order.BloodQuantity }}</td>
