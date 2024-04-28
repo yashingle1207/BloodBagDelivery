@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="static/style.css">
     <link rel="icon" href="static/images/LogoTT.png" type="image/png">
 
-        <style>
+    <style>
         /* General table styles */
         table {
             border-collapse: collapse;
@@ -31,7 +31,7 @@
 
         th {
             background-color: #f2f2f2;
-            width: 150px; /* Adjust the width as needed for larger screens */
+            width: auto; /* Allow the width to adjust based on content */
         }
 
         /* Media query for smaller screens */
@@ -88,7 +88,7 @@
                 <th data-hide="true">Ward</th>
                 <th data-hide="true">Bed Number</th>
                 <th>Gender</th>
-                <th data-hide="true">Time of Dispatch</th>
+                <th>Time of Dispatch</th> <!-- Added Time of Dispatch column -->
             </tr>
 
             {% for order in orders %}
@@ -107,7 +107,7 @@
                 <td data-hide="true">{{ order.ward }}</td>
                 <td data-hide="true">{{ order.bedno }}</td>
                 <td>{{ order.gender }}</td>
-                <td data-hide="true">{{ order.timestamp }}</td>
+                <td>{{ order.timestamp }}</td> <!-- Display Time of Dispatch -->
             </tr>
             {% endfor %}
         </table>
@@ -120,3 +120,4 @@
 </body>
 
 </html>
+
