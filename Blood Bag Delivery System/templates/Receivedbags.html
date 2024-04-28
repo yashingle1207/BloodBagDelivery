@@ -19,7 +19,9 @@
             max-width: 90%;
             margin: 10px auto;
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
@@ -27,6 +29,7 @@
             white-space: normal; /* Allow text to wrap */
             word-wrap: break-word; /* Wrap text in data cells */
         }
+
         th {
             background-color: #f2f2f2;
             width: 150px; /* Adjust the width as needed for larger screens */
@@ -35,7 +38,8 @@
         /* Media query for smaller screens */
         @media (max-width: 768px) {
             /* Hide columns with data-hide="true" on smaller screens */
-            th[data-hide="true"], td[data-hide="true"] {
+            th[data-hide="true"],
+            td[data-hide="true"] {
                 display: none;
             }
         }
@@ -55,29 +59,28 @@
                 <a href="/">Logout</a>
             </nav>
         </header>
-        
 
- <script>
-        function toggleNavbar() {
-            var navbar = document.getElementById("navbar");
-            if (navbar.classList.contains("active")) {
-                navbar.classList.remove("active");
-            } else {
-                navbar.classList.add("active");
+        <script>
+            function toggleNavbar() {
+                var navbar = document.getElementById("navbar");
+                if (navbar.classList.contains("active")) {
+                    navbar.classList.remove("active");
+                } else {
+                    navbar.classList.add("active");
+                }
             }
-        }
         </script>
 
         <h1 class="heading">Received Blood Bags</h1>
 
-       <table>
+        <table>
             <tr>
                 <th>User Name</th>
                 <th>User Address</th>
                 <th>User Contact No.</th>
                 <th>Blood Group</th>
-                <th>Component</th>
-                <th>Quantity</th>
+                <th>Blood Component</th>
+                <th>Blood Quantity</th>
                 <th data-hide="true">Request Type</th>
                 <th>First Name</th>
                 <th data-hide="true">Middle Name</th>
@@ -107,16 +110,14 @@
                 <td>{{ order.gender }}</td>
                 <td data-hide="true">{{ order.timestamp }}</td>
             </tr>
-
-             
             {% endfor %}
         </table>
 
-
         <!-- Footer section -->
         <section class="footer">
-            <div class="credit">Created by <span>Team Transfusio</span> | All @rights reserved to Ingle Laboratory</div>
+            <div class="credit">Created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory</div>
         </section>
     </div>
 </body>
+
 </html>
