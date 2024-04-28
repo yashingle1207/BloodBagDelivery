@@ -73,7 +73,7 @@ def base64_encode(input_dict):
 @app.route("/make_payment", methods=['POST'])
 def pay():
     # Calculate total amount
-    total_amt = session.get("quantity") * session.get("blood_product_price")*0.010
+    total_amt = session.get("quantity") * session.get("blood_product_price")*0.10
 
     # Determine the merchantUserId based on which user is logged in
     patient_reg_no1 = session.get('_id')
