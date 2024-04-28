@@ -87,7 +87,7 @@
                 <th data-hide="true">Ward</th>
                 <th data-hide="true">Bed Number</th>
                 <th>Gender</th>
-                <th>Timestamp</th> <!-- Added Timestamp column -->
+                <th data-hide="true">Time of Dispatch</th>
             </tr>
 
             {% for order in orders %}
@@ -106,7 +106,7 @@
                 <td data-hide="true">{{ order.ward }}</td>
                 <td data-hide="true">{{ order.bedno }}</td>
                 <td>{{ order.gender }}</td>
-                <td>{{ order.timestamp }}</td> <!-- Display timestamp -->
+                <td data-hide="true">{{ order.timestamp }}</td>
             </tr>
             {% endfor %}
         </table>
