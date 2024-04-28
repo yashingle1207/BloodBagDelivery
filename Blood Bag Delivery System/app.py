@@ -979,7 +979,7 @@ def Hosp_Blood_bag_inProgress():
     order_list = []
     for order in orders:
         # Query blood bank details
-        blood_bank_details = BloodBankUser.find_one({'_id': order.get('BloodBank_Id')})
+        blood_bank_details = BBUser.find_one({'_id': order.get('BloodBank_Id')})
         
         if blood_bank_details:
             order_list.append({
