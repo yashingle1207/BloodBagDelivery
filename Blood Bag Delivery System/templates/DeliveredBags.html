@@ -77,9 +77,9 @@
 
         <table>
             <tr>
-                <th>User ID</th>
                 <th>User Name</th>
                 <th>User Address</th>
+                <th>User Contact No.</th>
                 <th>Blood Group</th>
                 <th>Component</th>
                 <th>Quantity</th>
@@ -96,7 +96,9 @@
 
             {% for order in orders %}
             <tr>
-                <td>{{ order.User_ID }}</td>
+                <td>{{ order.user_name }}</td>
+                <td>{{ order.user_address }}</td>
+                <td>{{ order.phone_number }}</td>
                 <td>{{ order.user_name }}</td>
                 <td>{{ order.user_address }}</td>
                 <td>{{ order.BloodGrp }}</td>
