@@ -15,7 +15,6 @@
         table {
             border-collapse: collapse;
             width: 100%;
-            max-width: 90%;
             margin: 10px auto;
         }
 
@@ -31,7 +30,25 @@
 
         th {
             background-color: #f2f2f2;
-            width: 140px; /* Allow the width to adjust based on content */
+        }
+
+        /* Set column widths dynamically */
+        .col-bank-name,
+        .col-bank-address,
+        .col-contact-no,
+        .col-blood-group,
+        .col-blood-component,
+        .col-blood-quantity,
+        .col-request-type,
+        .col-first-name,
+        .col-middle-name,
+        .col-last-name,
+        .col-age,
+        .col-ward,
+        .col-bed-number,
+        .col-gender,
+        .col-timestamp {
+            width: auto; /* Allow the width to adjust based on content */
         }
 
         /* Media query for smaller screens */
@@ -74,40 +91,40 @@
 
         <table>
             <tr>
-                <th>BloodBank Name</th>
-                <th>BloodBank Address</th>
-                <th>BloodBank Contact No.</th>
-                <th>Blood Group</th>
-                <th>Blood Component</th>
-                <th>Blood Quantity</th>
-                <th>Request Type</th>
-                <th>First Name</th>
-                <th data-hide="true">Middle Name</th>
-                <th>Last Name</th>
-                <th>Age</th>
-                <th data-hide="true">Ward</th>
-                <th data-hide="true">Bed Number</th>
-                <th>Gender</th>
-                <th>Time of Dispatch</th> <!-- Added Time of Dispatch column -->
+                <th class="col-bank-name">BloodBank Name</th>
+                <th class="col-bank-address">BloodBank Address</th>
+                <th class="col-contact-no">BloodBank Contact No.</th>
+                <th class="col-blood-group">Blood Group</th>
+                <th class="col-blood-component">Blood Component</th>
+                <th class="col-blood-quantity">Blood Quantity</th>
+                <th class="col-request-type">Request Type</th>
+                <th class="col-first-name">First Name</th>
+                <th class="col-middle-name" data-hide="true">Middle Name</th>
+                <th class="col-last-name">Last Name</th>
+                <th class="col-age">Age</th>
+                <th class="col-ward" data-hide="true">Ward</th>
+                <th class="col-bed-number" data-hide="true">Bed Number</th>
+                <th class="col-gender">Gender</th>
+                <th class="col-timestamp">Time of Dispatch</th> <!-- Added Time of Dispatch column -->
             </tr>
 
             {% for order in orders %}
             <tr>
-                <td>{{ order.user_name }}</td>
-                <td>{{ order.user_address }}</td>
-                <td>{{ order.phone_number }}</td>
-                <td>{{ order.BloodGrp }}</td>
-                <td>{{ order.BloodComp }}</td>
-                <td>{{ order.BloodQuantity }}</td>
-                <td>{{ order.req_type }}</td>
-                <td>{{ order.fname }}</td>
-                <td data-hide="true">{{ order.mname }}</td>
-                <td>{{ order.lname }}</td>
-                <td>{{ order.age }}</td>
-                <td data-hide="true">{{ order.ward }}</td>
-                <td data-hide="true">{{ order.bedno }}</td>
-                <td>{{ order.gender }}</td>
-                <td>{{ order.timestamp }}</td> <!-- Display Time of Dispatch -->
+                <td class="col-bank-name">{{ order.user_name }}</td>
+                <td class="col-bank-address">{{ order.user_address }}</td>
+                <td class="col-contact-no">{{ order.phone_number }}</td>
+                <td class="col-blood-group">{{ order.BloodGrp }}</td>
+                <td class="col-blood-component">{{ order.BloodComp }}</td>
+                <td class="col-blood-quantity">{{ order.BloodQuantity }}</td>
+                <td class="col-request-type">{{ order.req_type }}</td>
+                <td class="col-first-name">{{ order.fname }}</td>
+                <td class="col-middle-name" data-hide="true">{{ order.mname }}</td>
+                <td class="col-last-name">{{ order.lname }}</td>
+                <td class="col-age">{{ order.age }}</td>
+                <td class="col-ward" data-hide="true">{{ order.ward }}</td>
+                <td class="col-bed-number" data-hide="true">{{ order.bedno }}</td>
+                <td class="col-gender">{{ order.gender }}</td>
+                <td class="col-timestamp">{{ order.timestamp }}</td> <!-- Display Time of Dispatch -->
             </tr>
             {% endfor %}
         </table>
@@ -120,4 +137,3 @@
 </body>
 
 </html>
-
