@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Request</title>
+    <title>Pending Blood Bag Orders</title>
 
     <!-- font awesome cdn link  -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -130,10 +130,12 @@
                 <td data-hide="true">{{ order.bedno }}</td>
                 <td>{{ order.gender }}</td>
             </tr>
-        {% endfor %}
-
-
-    </table>
+            <tr>
+                <td colspan="14"><hr></td>
+            </tr>
+            {% endfor %}
+        </table>
+    
 
 
 
