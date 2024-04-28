@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Request</title>
 
-    <!-- font awesome cdn link  -->
+    <!-- Font Awesome CDN link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-    <!-- custom css file link  -->
+    <!-- Custom CSS file link -->
     <link rel="stylesheet" href="static/style.css">
     <link rel="icon" type="image/png" href="static/images/LogoTT.png">
 
@@ -20,6 +20,7 @@
             max-width: 90%;
             margin: 10px auto;
         }
+
         th, td {
             border: 1px solid #dddddd;
             text-align: left;
@@ -28,6 +29,7 @@
             white-space: normal; /* Allow text to wrap */
             word-wrap: break-word; /* Wrap text in data cells */
         }
+
         th {
             background-color: #f2f2f2;
             width: 150px; /* Adjust the width as needed for larger screens */
@@ -42,25 +44,6 @@
         }
     </style>
 
-    <script>
-        function validateForm() {
-            var radios = document.getElementsByName('selected_order');
-            var formValid = false;
-
-            for (var i = 0; i < radios.length; i++) {
-                if (radios[i].checked) {
-                    formValid = true;
-                    break;
-                }
-            }
-
-            if (!formValid) {
-                alert("Please select a Blood Bag order.");
-            }
-
-            return formValid;
-        }
-    </script>
 </head>
 <body>
 
@@ -87,6 +70,24 @@
         } else {
             navbar.classList.add("active");
         }
+    }
+
+    function validateForm() {
+        var radios = document.getElementsByName('selected_order');
+        var formValid = false;
+
+        for (var i = 0; i < radios.length; i++) {
+            if (radios[i].checked) {
+                formValid = true;
+                break;
+            }
+        }
+
+        if (!formValid) {
+            alert("Please select a Blood Bag order.");
+        }
+
+        return formValid;
     }
 </script>
 
@@ -144,11 +145,12 @@
     </table>
 </form>
 
-<!-- footer section  -->
+<!-- Footer section -->
 <section class="footer">
-    <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to Ingle Laboratory
-    </div>
+    <div class="credit">created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory</div>
 </section>
+
+</div>
 
 </body>
 </html>
