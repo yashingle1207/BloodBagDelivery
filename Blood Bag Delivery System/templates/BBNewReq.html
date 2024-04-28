@@ -96,9 +96,9 @@
     <table>
         <tr>
             <th>Select</th>
-            <th>User ID</th>
             <th>User Name</th>
             <th>User Address</th>
+            <th>User Contact No.</th>
             <th>Blood Bank ID</th>
             <th>Blood Group</th>
             <th>Blood Component</th>
@@ -118,9 +118,9 @@
                 <td>
                     <input type="radio" name="selected_order" id="selected_order" value="{{ order._id }}">
                 </td>
-                <td>{{ order.User_ID }}</td>
                 <td>{{ order.user_name }}</td>
                 <td>{{ order.user_address }}</td>
+                <td>{{ order.phone_number }}</td>
                 <td>{{ order.BloodBank_Id}}</td>
                 <td>{{ order.BloodGrp }}</td>
                 <td>{{ order.BloodComp }}</td>
