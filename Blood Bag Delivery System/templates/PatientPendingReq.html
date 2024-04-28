@@ -10,7 +10,7 @@
 
     <!-- custom css file link  -->
     <link rel="stylesheet" href="static/style.css">
-      <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
 
     <style>
         /* General table styles */
@@ -45,22 +45,13 @@
     </style>
 
     <script>
-        function validateForm() {
-            var radios = document.getElementsByName('selected_order');
-            var formValid = false;
-
-            for (var i = 0; i < radios.length; i++) {
-                if (radios[i].checked) {
-                    formValid = true;
-                    break;
-                }
+        function toggleNavbar() {
+            var navbar = document.getElementById("navbar");
+            if (navbar.classList.contains("active")) {
+                navbar.classList.remove("active");
+            } else {
+                navbar.classList.add("active");
             }
-
-            if (!formValid) {
-                alert("Please select a Blood Bag order.");
-            }
-
-            return formValid;
         }
     </script>
 </head>
@@ -80,65 +71,55 @@
     </nav>
 </header>
 
- <script>
-        function toggleNavbar() {
-            var navbar = document.getElementById("navbar");
-            if (navbar.classList.contains("active")) {
-                navbar.classList.remove("active");
-            } else {
-                navbar.classList.add("active");
-            }
-        }
-        </script>
+<h1 class="heading">Blood Bag (In progress)</h1>
 
+<table>
+    <tr>
+        <th>User Name</th>
+        <th>User Address</th>
+        <th>User Contact No.</th>
+        <th>Blood Group</th>
+        <th>Component</th>
+        <th>Quantity</th>
+        <th data-hide="true">Request Type</th>
+        <th>First Name</th>
+        <th data-hide="true">Middle Name</th>
+        <th>Last Name</th>
+        <th>Age</th>
+        <th data-hide="true">Ward</th>
+        <th data-hide="true">Bed Number</th>
+        <th>Gender</th>
+        <th data-hide="true">Time of Dispatch</th>
+    </tr>
 
-    <h1 class="heading">Blood Bag (In progress)</h1>
-
-        <table>
-            <tr>
-                <th>User Name</th>
-                <th>User Address</th>
-                <th>User Contact No.</th>
-                <th>Blood Group</th>
-                <th>Component</th>
-                <th>Quantity</th>
-                <th data-hide="true">Request Type</th>
-                <th>First Name</th>
-                <th data-hide="true">Middle Name</th>
-                <th>Last Name</th>
-                <th>Age</th>
-                <th data-hide="true">Ward</th>
-                <th data-hide="true">Bed Number</th>
-                <th>Gender</th>
-                <th data-hide="true">Time of Dispatch</th>
-            </tr>
-
-            {% for order in orders %}
-            <tr>
-                <td>{{ order.user_name }}</td>
-                <td>{{ order.user_address }}</td>
-                <td>{{ order.phone_number }}</td>
-                <td>{{ order.BloodGrp }}</td>
-                <td>{{ order.BloodComp }}</td>
-                <td>{{ order.BloodQuantity }}</td>
-                <td data-hide="true">{{ order.req_type }}</td>
-                <td>{{ order.fname }}</td>
-                <td data-hide="true">{{ order.mname }}</td>
-                <td>{{ order.lname }}</td>
-                <td>{{ order.age }}</td>
-                <td data-hide="true">{{ order.ward }}</td>
-                <td data-hide="true">{{ order.bedno }}</td>
-                <td>{{ order.gender }}</td>
-                <td data-hide="true">{{ order.timestamp }}</td>
-            </tr>
-
-        </table>
+    {% for order in orders %}
+    <tr>
+        <td>{{ order.user_name }}</td>
+        <td>{{ order.user_address }}</td>
+        <td>{{ order.phone_number }}</td>
+        <td>{{ order.BloodGrp }}</td>
+        <td>{{ order.BloodComp }}</td>
+        <td>{{ order.BloodQuantity }}</td>
+        <td data-hide="true">{{ order.req_type }}</td>
+        <td>{{ order.fname }}</td>
+        <td data-hide="true">{{ order.mname }}</td>
+        <td>{{ order.lname }}</td>
+        <td>{{ order.age }}</td>
+        <td data-hide="true">{{ order.ward }}</td>
+        <td data-hide="true">{{ order.bedno }}</td>
+        <td>{{ order.gender }}</td>
+        <td data-hide="true">{{ order.timestamp }}</td>
+    </tr>
+    {% endfor %}
+</table>
 
 <!-- footer section  -->
 <section class="footer">
- <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to Ingle Laboratory
+    <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to Ingle Laboratory
     </div>
 </section>
+
+</div>
 
 </body>
 </html>
