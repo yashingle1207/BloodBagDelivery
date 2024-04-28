@@ -23,7 +23,8 @@
             margin: 10px auto;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
@@ -40,7 +41,8 @@
         /* Media query for smaller screens */
         @media (max-width: 768px) {
             /* Hide columns with data-hide="true" on smaller screens */
-            th[data-hide="true"], td[data-hide="true"] {
+            th[data-hide="true"],
+            td[data-hide="true"] {
                 display: none;
             }
         }
@@ -61,16 +63,16 @@
             </nav>
         </header>
 
-     
- <script>
-        function toggleNavbar() {
-            var navbar = document.getElementById("navbar");
-            if (navbar.classList.contains("active")) {
-                navbar.classList.remove("active");
-            } else {
-                navbar.classList.add("active");
+
+        <script>
+            function toggleNavbar() {
+                var navbar = document.getElementById("navbar");
+                if (navbar.classList.contains("active")) {
+                    navbar.classList.remove("active");
+                } else {
+                    navbar.classList.add("active");
+                }
             }
-        }
         </script>
 
         <h1 class="heading">Delivered Blood Bags</h1>
@@ -112,12 +114,7 @@
                 <td>{{ order.gender }}</td>
                 <td data-hide="true">{{ order.timestamp }}</td>
             </tr>
-      
-
-            <tr>
-                <td colspan="15"  style="text-align: center;>  <hr></td>
-            </tr>
-           {% endfor %}
+            {% endfor %}
         </table>
 
         <!-- Footer section -->
