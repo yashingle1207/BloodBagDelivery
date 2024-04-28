@@ -798,10 +798,8 @@ def bloodbank_completed_orders():
 
 
     # Prepare the results to be displayed
-    order_list = []
-    for order in orders:
-        order_list.append({
-
+    if user_details:
+            order_list.append({
             '_id': order.get('_id'),
             'User_ID': order.get('User_ID'),
             'BloodBank_Id': order.get('BloodBank_Id'),
