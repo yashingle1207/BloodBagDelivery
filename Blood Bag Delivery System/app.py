@@ -915,6 +915,7 @@ def Blood_bag_inProgress():
                 'timestamp': order.get('timestamp'),
                 'user_name': user_details.get('facility_name') or user_details.get('patient_name'),
                 'user_address': user_details.get('address')
+                'phone_number':user_details.get('contact_num')
             })
 
     return render_template('BBNewReq.html', orders=order_list)
