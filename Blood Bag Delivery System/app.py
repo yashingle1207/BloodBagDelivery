@@ -797,7 +797,6 @@ def bloodbank_completed_orders():
                 user_details = patient_details
 
 
-
    
         if user_details:
             order_list.append({
@@ -816,9 +815,9 @@ def bloodbank_completed_orders():
                 'bedno': order.get('bedno'),
                 'gender': order.get('gender'),
                 'timestamp': order.get('timestamp'),
-                'user_name': blood_bank_details.get('bb_name'),
-                'user_address': blood_bank_details.get('address'),
-                'phone_number': blood_bank_details.get('contact_num')
+                'user_name': user_details.get('facility_name') or user_details.get('patient_name'),
+                'user_address': user_details.get('address'),
+                'phone_number':user_details.get('contact_num')
             })
 
     return render_template('DeliveredBags.html', orders=order_list)
