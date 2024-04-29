@@ -783,10 +783,23 @@ def bloodbank_completed_orders():
     # Prepare the results to be displayed
     order_list = []
     for order in orders:
-        # Query blood bank details
-        blood_bank_details = BBUser.find_one({'reg_num': order.get('BloodBank_Id')})
-        
-        if blood_bank_details:
+        user_id = order.get('User_ID')
+        user_details = None
+
+        # Search for user details in the hospital collection
+        hospital_details = HospUser.find_one({'reg_num': user_id})
+        if hospital_details:
+            user_details = hospital_details
+        else:
+            # Search for user details in the patient collection
+            patient_details = PatientUser.find_one({'_id': user_id})
+            if patient_details:
+                user_details = patient_details
+
+
+
+   
+        if user_details:
             order_list.append({
                 '_id': order.get('_id'),
                 'User_ID': order.get('User_ID'),
