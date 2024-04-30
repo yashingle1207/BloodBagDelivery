@@ -78,21 +78,21 @@
 
         <table>
             <tr>
-                <th>BloodBank Name</th>
-                <th>BloodBank Address</th>
-                <th>BloodBank Contact No.</th>
-                <th>Blood Group</th>
-                <th>Blood Component</th>
-                <th>Blood Quantity</th>
-                <th>Request Type</th>
-                <th>First Name</th>
-                <th data-hide="true">Middle Name</th>
-                <th>Last Name</th>
-                <th>Age</th>
-                <th data-hide="true">Ward</th>
-                <th data-hide="true">Bed Number</th>
-                <th>Gender</th>
-                <th data-hide="true>Time of Dispatch</th> <!-- Added Time of Dispatch column -->
+                <th style="width: 150px;">User Name</th>
+                <th style="width: 150px;">User Address</th>
+                <th style="width: 150px;">User Contact No.</th>
+                <th style="width: 150px;">Blood Group</th>
+                <th style="width: 150px;">Component</th>
+                <th style="width: 150px;">Quantity</th>
+                <th style="width: 150px;" data-hide="true">Request Type</th>
+                <th style="width: 150px;">First Name</th>
+                <th style="width: 150px;" data-hide="true">Middle Name</th>
+                <th style="width: 150px;">Last Name</th>
+                <th style="width: 150px;">Age</th>
+                <th style="width: 150px;" data-hide="true">Ward</th>
+                <th style="width: 150px;" data-hide="true">Bed Number</th>
+                <th style="width: 150px;">Gender</th>
+                <th style="width: 150px;" data-hide="true">Time of Dispatch</th>
             </tr>
 
             {% for order in orders %}
@@ -111,7 +111,7 @@
                 <td data-hide="true">{{ order.ward }}</td>
                 <td data-hide="true">{{ order.bedno }}</td>
                 <td>{{ order.gender }}</td>
-                <td>{{ order.timestamp }}</td> <!-- Display Time of Dispatch -->
+                <td>{{ order.timestamp }}</td> 
             </tr>
             {% endfor %}
            
