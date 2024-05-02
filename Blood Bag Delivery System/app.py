@@ -912,7 +912,7 @@ def Blood_bag_inProgress():
             user_details = hospital_details
         else:
             # Search for user details in the patient collection
-            patient_details = PatientUser.find_one({'_id': user_id})
+            patient_details = PatientUser.find_one({'email': user_id})
             if patient_details:
                 user_details = patient_details
 
