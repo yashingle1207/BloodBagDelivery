@@ -13,6 +13,7 @@ import shortuuid
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.backends import default_backend
 import secrets
+import random
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -720,12 +721,61 @@ def BBsignup():
 
 
 def update_delivery_status(order_id):
-    # Update the status to 'delivered'
+    # Generate 4-digit OTP
+    otp = ''.join(random.choices('0123456789', k=4))
+
+    # Update the status to 'delivered' and add timestamp for time of dispatch and store OTP
     current_datetime = datetime.now()
     Order.update_one(
         {'_id': ObjectId(order_id)},
-        {'$set': {'status': 'delivered', 'timestamp': current_datetime}}
+        {'$set': {'status': 'delivered', 'timeofdispatch': current_datetime, 'otp': otp}}
     )
+
+    user_id = Order.find_one({'_id': ObjectId(order_id)})['User_ID']
+    
+    # Find user email in HospitalUser collection
+    hospital_user = HospUser.find_one({'reg_num': user_id})
+    if hospital_user:
+        send_dispatch_email(hospital_user['email'], otp)
+        return
+
+    # Find user email in PatientUser collection
+    patient_user = PatientUser.find_one({'_id': user_id})
+    if patient_user:
+        send_dispatch_email(patient_user['email'], otp)
+        return
+
+    # Send email notification to the user
+    send_dispatch_email(user_email, otp)
+
+
+def send_dispatch_email(recipient_email, otp):
+    # Construct email content
+    subject = "Blood Bag Dispatched"
+    body = f"Your blood bag has been dispatched. Please expect delivery soon.\n\nKindly share the OTP ({otp}) with the delivery person to receive the blood bag."
+
+    # Prepare message
+    msg = MIMEText(body)
+    msg['Subject'] = subject
+    msg['From'] = EMAIL_FROM
+    msg['To'] = recipient_email
+
+    try:
+        # Connect to SMTP server and send email
+        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+        server.ehlo()
+        server.starttls()
+        server.ehlo()
+        server.login(EMAIL_FROM, EMAIL_PASSWORD)
+        server.sendmail(EMAIL_FROM, recipient_email, msg.as_string())
+        server.quit()
+
+        # Log email sent
+        print(f"Dispatch email sent to {recipient_email} with OTP: {otp}")
+
+    except Exception as e:
+        # Log error if email sending fails
+        print(f"Error sending dispatch email: {e}")
 
 
 @app.route('/initiate_delivery', methods=['POST'])
