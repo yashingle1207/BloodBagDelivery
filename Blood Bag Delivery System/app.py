@@ -724,11 +724,14 @@ def update_delivery_status(order_id):
     # Generate 4-digit OTP
     otp = ''.join(random.choices('0123456789', k=4))
 
-    # Update the status to 'delivered' and add timestamp for time of dispatch and store OTP
-    current_datetime = datetime.now()
+    # Convert current time to IST
+    ist_timezone = pytz.timezone('Asia/Kolkata')
+    current_datetime_ist = datetime.now(ist_timezone)
+
+    # Update the status to 'delivered', add timestamp for time of dispatch (in IST), and store OTP
     Order.update_one(
         {'_id': ObjectId(order_id)},
-        {'$set': {'status': 'delivered', 'timeofdispatch': current_datetime, 'otp': otp}}
+        {'$set': {'status': 'dispatched', 'timeofdispatch': current_datetime_ist, 'otp': otp}}
     )
 
     user_id = Order.find_one({'_id': ObjectId(order_id)})['User_ID']
