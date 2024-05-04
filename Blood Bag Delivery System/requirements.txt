@@ -9,4 +9,3 @@ shortuuid
 cryptography
 pytz
 Flask-Mail==0.9.1
-random
