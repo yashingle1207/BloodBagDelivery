@@ -719,6 +719,7 @@ def BBsignup():
 
 ########################################### payment end#############################
 ############################################ Otp Validation ############################################
+@app.route('/verify_otp', methods=['POST'])
 def verify_otp():
     if request.method == 'POST':
         # Get the entered OTP from the form
