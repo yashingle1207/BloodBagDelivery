@@ -748,10 +748,10 @@ def verify_otp():
                 )
 
                 # Render a success template with the appropriate message
-                return render_template('success.html', message="Blood bag delivered successfully.")
+                return render_template('otpsuccess.html', message="Blood bag delivered successfully.")
             else:
                 # Render an error template with the appropriate message
-                return render_template('error.html', message="Invalid OTP. Please try again.")
+                return render_template('otperror.html', message="Invalid OTP. Please try again.")
         else:
             # Render an error template with the appropriate message
             return render_template('error.html', message="Order not found.")
