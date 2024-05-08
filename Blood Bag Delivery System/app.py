@@ -718,7 +718,50 @@ def BBsignup():
 
 
 ########################################### payment end#############################
+############################################ Otp Validation ############################################
+def verify_otp():
+    if request.method == 'POST':
+        # Get the entered OTP from the form
+        entered_otp = request.form.get('otp')
 
+        # Retrieve the order ID from the request or session, assuming it's stored as 'order_id'
+        order_id = request.form.get('order_id')
+
+        # Retrieve the order details from the backend MongoDB collection
+        order = Order.find_one({'_id': ObjectId(order_id)})
+
+        if order:
+            # Retrieve the stored OTP from the order details
+            stored_otp = order.get('otp')
+
+            # Check if the entered OTP matches the stored OTP
+            if entered_otp == stored_otp:
+                # Convert current time to Kolkata timezone
+                ist_timezone = pytz.timezone('Asia/Kolkata')
+                current_datetime = datetime.now(pytz.utc).astimezone(ist_timezone)
+
+                # Update the order with timeofdelivery and status delivered
+                Order.update_one(
+                    {'_id': ObjectId(order_id)},
+                    {'$set': {'status': 'delivered', 'timeofdelivery': current_datetime}}
+                )
+
+                # Render a success template with the appropriate message
+                return render_template('success.html', message="Blood bag delivered successfully.")
+            else:
+                # Render an error template with the appropriate message
+                return render_template('error.html', message="Invalid OTP. Please try again.")
+        else:
+            # Render an error template with the appropriate message
+            return render_template('error.html', message="Order not found.")
+
+
+@app.route('/otp_verification', methods=['GET', 'POST'])
+def otp_verification():
+    if request.method == 'GET':
+        order_id = request.args.get('order_id')
+        return render_template('delivery_otp_verification.html', order_id=order_id)
+    
 
 def update_delivery_status(order_id):
     # Generate 4-digit OTP
@@ -750,6 +793,44 @@ def update_delivery_status(order_id):
 
     # Send email notification to the user
     send_dispatch_email(user_email, otp)
+    
+    blood_bank_id = Order.find_one({'_id': ObjectId(order_id)})['BloodBank_Id']
+    blood_bank_email = BBUser.find_one({'reg_num': blood_bank_id})['email']
+    send_otp_verification_email(blood_bank_email, order_id)
+
+
+def send_otp_verification_email(recipient_email, order_id):
+    # Construct the OTP verification link
+    otp_verification_link = f"http://www.transfusiotrack.com/otp_verification?order_id={order_id}"
+
+    # Construct email content
+    subject = "Blood Bag Dispatched"
+    body = f"To confirm receipt and verify delivery, please click the following link and enter the OTP provided by the delivery person:\n"\
+           f"<a href='{otp_verification_link}'>Verify Delivery</a>"
+
+    # Prepare message
+    msg = MIMEText(body, 'html')
+    msg['Subject'] = subject
+    msg['From'] = EMAIL_FROM
+    msg['To'] = recipient_email
+
+    try:
+        # Connect to SMTP server and send email
+        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+        server.ehlo()
+        server.starttls()
+        server.ehlo()
+        server.login(EMAIL_FROM, EMAIL_PASSWORD)
+        server.sendmail(EMAIL_FROM, recipient_email, msg.as_string())
+        server.quit()
+
+        # Log email sent
+        print(f"Dispatch email sent to {recipient_email} for Order ID: {order_id}")
+
+    except Exception as e:
+        # Log error if email sending fails
+        print(f"Error sending dispatch email: {e}")
+
 
 
 def send_dispatch_email(recipient_email, otp):
