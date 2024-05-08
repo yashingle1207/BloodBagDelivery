@@ -856,6 +856,7 @@ def send_dispatch_email(recipient_email, otp):
 
         # Log email sent
         print(f"Dispatch email sent to {recipient_email} with OTP: {otp}")
+        return
 
     except Exception as e:
         # Log error if email sending fails
