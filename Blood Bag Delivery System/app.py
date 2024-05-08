@@ -771,7 +771,7 @@ def update_delivery_status(order_id):
     ist_timezone = pytz.timezone('Asia/Kolkata')
     current_datetime_ist = datetime.now(ist_timezone)
 
-    # Update the status to 'delivered', add timestamp for time of dispatch (in IST), and store OTP
+    # Update the status to 'dispatched', add timestamp for time of dispatch (in IST), and store OTP
     Order.update_one(
         {'_id': ObjectId(order_id)},
         {'$set': {'status': 'dispatched', 'timeofdispatch': current_datetime_ist, 'otp': otp}}
@@ -779,24 +779,20 @@ def update_delivery_status(order_id):
 
     user_id = Order.find_one({'_id': ObjectId(order_id)})['User_ID']
     
-    # Find user email in HospitalUser collection
-    hospital_user = HospUser.find_one({'reg_num': user_id})
-    if hospital_user:
-        send_dispatch_email(hospital_user['email'], otp)
-        return
-
-    # Find user email in PatientUser collection
-    patient_user = PatientUser.find_one({'_id': user_id})
-    if patient_user:
-        send_dispatch_email(patient_user['email'], otp)
-        return
-
-    # Send email notification to the user
-    send_dispatch_email(user_email, otp)
+    # Find user email
+    if 'hosp_reg_no' in session:
+        user_email = HospUser.find_one({'reg_num': user_id})['email']
+    else:
+        user_email = PatientUser.find_one({'_id': user_id})['email']
     
-    blood_bank_id = Order.find_one({'_id': ObjectId(order_id)})['BloodBank_Id']
-    blood_bank_email = BBUser.find_one({'reg_num': blood_bank_id})['email']
-    send_otp_verification_email(blood_bank_email, order_id)
+    # Define a callback function to be called after sending dispatch email
+    def callback():
+        blood_bank_id = Order.find_one({'_id': ObjectId(order_id)})['BloodBank_Id']
+        blood_bank_email = BBUser.find_one({'reg_num': blood_bank_id})['email']
+        send_otp_verification_email(blood_bank_email, order_id)
+    
+    # Send email notification to the user and pass the callback function
+    send_dispatch_email(user_email, otp, callback)
 
 
 def send_otp_verification_email(recipient_email, order_id):
@@ -833,7 +829,7 @@ def send_otp_verification_email(recipient_email, order_id):
 
 
 
-def send_dispatch_email(recipient_email, otp):
+def send_dispatch_email(recipient_email, otp, callback=None):
     # Construct email content
     subject = "Blood Bag Dispatched"
     body = f"Your blood bag has been dispatched. Please expect delivery soon.\n\nKindly share the OTP ({otp}) with the delivery person to receive the blood bag."
@@ -856,7 +852,10 @@ def send_dispatch_email(recipient_email, otp):
 
         # Log email sent
         print(f"Dispatch email sent to {recipient_email} with OTP: {otp}")
-        return
+
+        # Execute callback function if provided
+        if callback:
+            callback()
 
     except Exception as e:
         # Log error if email sending fails
