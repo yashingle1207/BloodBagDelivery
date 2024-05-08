@@ -778,22 +778,25 @@ def update_delivery_status(order_id):
     )
 
     user_id = Order.find_one({'_id': ObjectId(order_id)})['User_ID']
-    
-    # Find user email
-    if 'hosp_reg_no' in session:
-        user_email = HospUser.find_one({'reg_num': user_id})['email']
-    else:
-        user_email = PatientUser.find_one({'_id': user_id})['email']
-    
+
     # Define a callback function to be called after sending dispatch email
     def callback():
         blood_bank_id = Order.find_one({'_id': ObjectId(order_id)})['BloodBank_Id']
         blood_bank_email = BBUser.find_one({'reg_num': blood_bank_id})['email']
         send_otp_verification_email(blood_bank_email, order_id)
-    
-    # Send email notification to the user and pass the callback function
-    send_dispatch_email(user_email, otp, callback)
+        
+    # Find user email
+    hospital_user = HospUser.find_one({'reg_num': user_id})
+    if hospital_user:
+        send_dispatch_email(hospital_user['email'], otp,callback)
+        return
 
+    # Find user email in PatientUser collection
+    patient_user = PatientUser.find_one({'_id': user_id})
+    if patient_user:
+        send_dispatch_email(patient_user['email'], otp,callback)
+        return    
+    
 
 def send_otp_verification_email(recipient_email, order_id):
     # Construct the OTP verification link
