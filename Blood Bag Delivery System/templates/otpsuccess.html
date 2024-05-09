@@ -6,6 +6,65 @@
     <title>Success</title>
     <link rel="stylesheet" href="static/style.css">
     <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+    <style>
+        /* Your existing styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 30px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .success-message h1 {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 30px;
+            color: green; /* Changed color to green */
+        }
+
+        .success-message .tick {
+            margin-right: 5px; /* Adjusted spacing between the tick and text */
+        }
+
+
+        h3 {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 30px;
+            color: #333;
+        }
+
+
+
+
+        .delivery-instructions {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        .delivery-instructions h2 {
+            color: #777;
+            margin: 10px;
+        }
+
+        .delivery-instructions p {
+            font-size: 16px;
+            margin-top:5px;
+            margin-left:10px;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
 
@@ -16,10 +75,22 @@
 </header>
 
 <div class="success-message">
-    <h1>Success</h1>
+    <h1> OTP verified Successfully</h1>
+
     <p>{{ message }}</p>
-    <a href="/">Go back to home</a>
 </div>
+
+
+<div class="delivery-instructions">
+    <h2>Delivery Instructions:</h2>
+    <p>Kindly Handover the blood bag to the patient with the following details:</p>
+    <br>
+    <p>Name: [Middle Name] [Last Name]</p>
+    <p>Phone Number: [Patient's Phone Number]</p>
+</div>
+    <h3>Delivery Completed</h3>
+
+
 
 <!-- footer section  -->
 <section class="footer">
