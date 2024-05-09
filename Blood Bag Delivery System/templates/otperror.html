@@ -104,8 +104,10 @@
         <h2>Instructions:</h2>
         <p>OTP verification Failed for the Patient with the following details:</p>
         <br>
-        <p>Name: [Middle Name] [Last Name]</p>
-        <p>Phone Number: [Patient's Phone Number]</p>
+            <p>Name: {{ patient_fname }} {{ patient_lname }}</p>
+            <p>Blood Group: {{ blood_grp }}</p>
+            <p>Blood Component: {{ blood_comp }}</p>
+            <p>Blood Quantity: {{ blood_quantity }}</p>
         <br>
         <a href="/otp_verification"><h4>Kindly enter the correct OTP and check it once again </h4></a>
 
