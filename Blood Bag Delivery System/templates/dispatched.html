@@ -10,30 +10,30 @@
 
     <!-- custom css file link  -->
     <link rel="stylesheet" href="static/style.css">
-      <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
 
 </head>
 <body>
-    
+
 <div class="container">
 
-<header>
+    <header>
 
-      <a href="/" class="logo">Transfusio<span>Track</span></a>
+        <a href="/" class="logo">Transfusio<span>Track</span></a>
 
-    <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
+        <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
 
-    <nav class="navbar" id="navbar">
-        {% if 'bb_reg_no' in session %}
-            <a>Blood Bank ID: {{ session['bb_reg_no'] }}</a>
-        {% endif %}
-          <a href="/BBDashboard">BloodBank Dashboard</a>
-         <a href="/">Logout</a>
-    </nav>
+        <nav class="navbar" id="navbar">
+            {% if 'bb_reg_no' in session %}
+                <a>Blood Bank ID: {{ session['bb_reg_no'] }}</a>
+            {% endif %}
+            <a href="/BBDashboard">BloodBank Dashboard</a>
+            <a href="/">Logout</a>
+        </nav>
 
-</header>
+    </header>
 
- <script>
+    <script>
         function toggleNavbar() {
             var navbar = document.getElementById("navbar");
             if (navbar.classList.contains("active")) {
@@ -42,34 +42,39 @@
                 navbar.classList.add("active");
             }
         }
-        </script>
+    </script>
 
+    <section class="home">
 
-<section class="home">
-
-      <div class="content">
-        <h3>Blood Bag Dispatched Successfully!!</h3>
-        <p>
-            <a href="/delorder" style="text-decoration: none; color: inherit;">Click Here To View Delivered Blood Bag</a>
-        </p>
-    </div>
-
-        <div class="image">
-        <img src="{{ url_for('static', filename='images/h2.gif') }}" alt="">
+        <div class="content">
+            <h3>Blood Bag Dispatched Successfully!!</h3>
+            <p>
+                <a href="/delorder" style="text-decoration: none; color: inherit;">Click Here To View Delivered Blood Bag</a>
+            </p>
+            <div>
+                <h4>Patient Details:</h4>
+                <p>First Name: {{ patient_details.fname }}</p>
+                <p>Middle Name: {{ patient_details.mname }}</p>
+                <p>Last Name: {{ patient_details.lname }}</p>
+                <p>Age: {{ patient_details.age }}</p>
+                <p>Gender: {{ patient_details.gender }}</p>
+                <p>Blood Group: {{ patient_details.blood_group }}</p>
+                <p>Blood Component: {{ patient_details.blood_component }}</p>
+                <p>Requested Quantity: {{ patient_details.requested_quantity }}</p>
+            </div>
         </div>
 
-</section>
+        <div class="image">
+            <img src="{{ url_for('static', filename='images/h2.gif') }}" alt="">
+        </div>
 
+    </section>
 
+    <section class="footer">
+        <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to Ingle Laboratory</div>
+    </section>
 
-   <section class="footer">
-
-
-
-    <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to Ingle Laboratory
-    </div>
-
-</section>
+</div>
 
 </body>
 </html>
