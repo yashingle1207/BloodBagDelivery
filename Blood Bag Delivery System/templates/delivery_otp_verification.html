@@ -30,11 +30,13 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        label {
+            label {
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            font-weight: bold; /* Added missing colon and corrected property name */
             color: #333;
         }
+
 
         input[type="text"] {
             width: 100%;
@@ -73,12 +75,23 @@
 </head>
 <body>
     <h1>OTP Verification</h1>
+
     <form action="/verify_otp" method="POST">
+        <div class="delivery-instructions">
+        <h2>Delivery Instructions:</h2>
+        <p>Kindly Handover the blood bag to the patient only after successful OTP verification:</p>
+       
+        <p>Name: [Middle Name] [Last Name]</p>
+        <p>Phone Number: [Patient's Phone Number]</p><br>
+    </div>
         <label for="otp">Enter OTP:</label>
         <input type="hidden" name="order_id" value="{{ order_id }}">
         <input type="text" id="otp" name="otp" required>
         <input class="btn" type="submit" value="Verify OTP">
-        <p class="disclaimer">Please only handover the blood bag once the OTP is verified and provided by the patient. <br><br><span style="color: red;">Until and unless the OTP is not verified, do not delivery the Blood.</span></p>
+        <p class="disclaimer"><br><span style="color: red;">Until and unless the OTP is not verified, do not delivery the Blood Bag.</span></p>
+
     </form>
+
+
 </body>
-</html>s
+</html>
