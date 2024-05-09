@@ -1026,6 +1026,7 @@ def send_dispatch_email(recipient_email, otp, order_id, callback=None):
         return
 
     patient_name = f"{order_details['fname']} {order_details['mname']} {order_details['lname']}"
+    blood_bank_id = Order.find_one({'_id': ObjectId(order_id)})['BloodBank_Id']
     blood_bank_name = BBUser.find_one({'reg_num': blood_bank_id})['bb_name']
     blood_bank_address = BBUser.find_one({'reg_num': blood_bank_id})['address']
     blood_bank_contact = BBUser.find_one({'reg_num': blood_bank_id})['contact_num']
