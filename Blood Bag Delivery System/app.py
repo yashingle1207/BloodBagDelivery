@@ -812,11 +812,44 @@ def verify_otp():
 
 
 
+# @app.route('/otp_verification', methods=['GET', 'POST'])
+# def otp_verification():
+#     if request.method == 'GET':
+#         order_id = request.args.get('order_id')
+#         return render_template('delivery_otp_verification.html', order_id=order_id)
+
+
 @app.route('/otp_verification', methods=['GET', 'POST'])
 def otp_verification():
     if request.method == 'GET':
         order_id = request.args.get('order_id')
-        return render_template('delivery_otp_verification.html', order_id=order_id)
+        
+        # Check if order_id is provided
+        if order_id:
+            # Retrieve the order details from the backend MongoDB collection
+            order = Order.find_one({'_id': ObjectId(order_id)})
+            
+            if order:
+                # Fetch patient and order details
+                patient_fname = order.get('fname')
+                patient_lname = order.get('lname')
+                blood_grp = order.get('BloodGrp')
+                blood_comp = order.get('BloodComp')
+                blood_quantity = order.get('BloodQuantity')
+
+                return render_template('delivery_otp_verification.html', order_id=order_id,
+                                       patient_fname=patient_fname, patient_lname=patient_lname,
+                                       blood_grp=blood_grp, blood_comp=blood_comp, blood_quantity=blood_quantity)
+            else:
+                # Order not found
+                return render_template('error.html', message="Order not found.")
+        else:
+            # No order_id provided
+            return render_template('error.html', message="Invalid request. Please provide an order_id.")
+    
+    # Method is not GET
+    return render_template('error.html', message="Invalid request method.")
+
 
 
 # @app.route('/otp_verification', methods=['GET', 'POST'])
