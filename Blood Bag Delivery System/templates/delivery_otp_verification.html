@@ -81,8 +81,11 @@
         <h2>Delivery Instructions:</h2>
         <p>Kindly Handover the blood bag to the patient only after successful OTP verification:</p>
        
-        <p>Name: [Middle Name] [Last Name]</p>
-        <p>Phone Number: [Patient's Phone Number]</p><br>
+          <p>Name: {{ fname }} {{ lname }}</p>
+            <p>Blood Group: {{ blood_grp }}</p>
+            <p>Blood Component: {{ blood_comp }}</p>
+            <p>Blood Quantity: {{ blood_quantity }}</p>
+             <br>
     </div>
         <label for="otp">Enter OTP:</label>
         <input type="hidden" name="order_id" value="{{ order_id }}">
