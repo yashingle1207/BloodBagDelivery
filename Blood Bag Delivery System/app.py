@@ -937,7 +937,7 @@ def update_delivery_status(order_id):
 
 def send_otp_verification_email(recipient_email, order_id):
     # Fetch order details from the database using the order ID
-    order_details = Order.find_one({'_id': ObjectId(order_id)})
+    order_details = Order.find_one({'_id': order_id})
     if not order_details:
         print(f"Order with ID {order_id} not found.")
         return
@@ -1018,7 +1018,9 @@ def send_otp_verification_email(recipient_email, order_id):
 
 def send_dispatch_email(recipient_email, otp, order_id, callback=None):
     # Fetch order details from the database
-    order_details = Order.find_one({'_id': ObjectId(order_id)})
+    print("order_id type:", type(order_id))
+    print("order_id value:", order_id)
+    order_details = Order.find_one({'_id': order_id})
     if not order_details:
         print("Order details not found.")
         return
