@@ -1002,6 +1002,17 @@ def send_dispatch_email(recipient_email, otp, callback=None):
         print(f"Error sending dispatch email: {e}")
 
 
+# @app.route('/initiate_delivery', methods=['POST'])
+# def initiate_delivery():
+#     if request.method == 'POST':
+#         order_id = request.form.get('selected_order')
+
+#         # Assuming you have a function to update the status in your MongoDB collection
+#         update_delivery_status(order_id)
+
+#         return render_template('dispatched.html')
+
+
 @app.route('/initiate_delivery', methods=['POST'])
 def initiate_delivery():
     if request.method == 'POST':
@@ -1010,7 +1021,31 @@ def initiate_delivery():
         # Assuming you have a function to update the status in your MongoDB collection
         update_delivery_status(order_id)
 
-        return render_template('dispatched.html')
+        # Fetching details from the session
+        fname = session.get('fname')
+        mname = session.get('mname')
+        lname = session.get('lname')
+        age = session.get('age')
+        gender = session.get('gender')
+        blood_group = session.get('blood_group')
+        blood_component = session.get('blood_component_code')
+        requested_quantity = session.get('quantity')
+
+        # Create a dictionary with the details
+        patient_details = {
+            'fname': fname,
+            'mname': mname,
+            'lname': lname,
+            'age': age,
+            'gender': gender,
+            'blood_group': blood_group,
+            'blood_component': blood_component,
+            'requested_quantity': requested_quantity
+        }
+
+        # Return the details to the frontend page
+        return render_template('dispatched.html', order_id=order_id, patient_details=patient_details)
+
 
 ####################################################################################
 
