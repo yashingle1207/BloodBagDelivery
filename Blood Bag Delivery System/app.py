@@ -795,14 +795,14 @@ def verify_otp():
 
                 # Render a success template with the appropriate message and patient details
                 return render_template('otpsuccess.html', message="Blood bag delivered successfully.",
-                                       fname=patient_fname, mname=patient_mname,
-                                       lname=patient_lname, blood_grp=blood_grp,
+                                       patient_fname=patient_fname, patient_mname=patient_mname,
+                                       patient_lname=patient_lname, blood_grp=blood_grp,
                                        blood_comp=blood_comp, blood_quantity=blood_quantity)
             else:
                 # Render an error template with the appropriate message and patient details
                 return render_template('otperror.html', message="Invalid OTP. Please try again.",
-                                       fname=patient_fname, mname=patient_mname,
-                                       lname=patient_lname, blood_grp=blood_grp,
+                                       patient_fname=patient_fname, patient_mname=patient_mname,
+                                       patient_lname=patient_lname, blood_grp=blood_grp,
                                        blood_comp=blood_comp, blood_quantity=blood_quantity)
         else:
             # Render an error template with the appropriate message
