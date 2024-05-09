@@ -824,33 +824,43 @@ def otp_verification():
     if request.method == 'GET':
         order_id = request.args.get('order_id')
 
-        # Check the status of the order
-        order = Order.find_one({'_id': ObjectId(order_id), 'BloodBank_Id': session.get('bb_reg_no')})
-        status = order.get('status')
-                   
-            if status == 'delivered':
-                # Fetch patient details and time of delivery
-                patient_fname = order.get('fname')
-                patient_lname = order.get('lname')
-                time_of_delivery = order.get('timeofdelivery').strftime("%Y-%m-%d %H:%M:%S")
+        # Check if order_id is provided
+        if order_id:
+            # Check the status of the order
+            order = Order.find_one({'_id': ObjectId(order_id), 'BloodBank_Id': session.get('bb_reg_no')})
+            
+            if order:
+                status = order.get('status')
+                if status == 'delivered':
+                    # Fetch patient details and time of delivery
+                    patient_fname = order.get('fname')
+                    patient_lname = order.get('lname')
+                    time_of_delivery = order.get('timeofdelivery').strftime("%Y-%m-%d %H:%M:%S")
 
-                return render_template('BBalreadyDel.html', order_id=order_id,
-                                       patient_fname=patient_fname, patient_lname=patient_lname,
-                                       time_of_delivery=time_of_delivery)
-            elif status == 'dispatched':
-                # Fetch patient and order details
-                patient_fname = order.get('fname')
-                patient_lname = order.get('lname')
-                blood_grp = order.get('BloodGrp')
-                blood_comp = order.get('BloodComp')
-                blood_quantity = order.get('BloodQuantity')
+                    return render_template('BBalreadyDel.html', order_id=order_id,
+                                           patient_fname=patient_fname, patient_lname=patient_lname,
+                                           time_of_delivery=time_of_delivery)
+                elif status == 'dispatched':
+                    # Fetch patient and order details
+                    patient_fname = order.get('fname')
+                    patient_lname = order.get('lname')
+                    blood_grp = order.get('BloodGrp')
+                    blood_comp = order.get('BloodComp')
+                    blood_quantity = order.get('BloodQuantity')
 
-                return render_template('delivery_otp_verification.html', order_id=order_id,
-                                       patient_fname=patient_fname, patient_lname=patient_lname,
-                                       blood_grp=blood_grp, blood_comp=blood_comp, blood_quantity=blood_quantity)
+                    return render_template('delivery_otp_verification.html', order_id=order_id,
+                                           patient_fname=patient_fname, patient_lname=patient_lname,
+                                           blood_grp=blood_grp, blood_comp=blood_comp, blood_quantity=blood_quantity)
+            else:
+                # Order not found
+                return render_template('error.html', message="Order not found.")
+        else:
+            # No order_id provided
+            return render_template('error.html', message="Invalid request. Please provide an order_id.")
     
-    # If order not found or other conditions are not met, return an error response
-    return render_template('error.html', message="Order not found or invalid request.")
+    # Method is not GET
+    return render_template('error.html', message="Invalid request method.")
+
 
 
 
