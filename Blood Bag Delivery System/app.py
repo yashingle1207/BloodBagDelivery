@@ -1016,7 +1016,7 @@ def send_otp_verification_email(recipient_email, order_id):
 
 
 
-def send_dispatch_email(recipient_email, otp, callback=None, order_id):
+def send_dispatch_email(recipient_email, otp, order_id, callback=None):
     # Fetch order details from the database
     order_details = Order.find_one({'_id': ObjectId(order_id)})
     if not order_details:
