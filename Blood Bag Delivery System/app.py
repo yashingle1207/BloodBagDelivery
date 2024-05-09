@@ -826,9 +826,8 @@ def otp_verification():
 
         # Check the status of the order
         order = Order.find_one({'_id': ObjectId(order_id), 'BloodBank_Id': session.get('bb_reg_no')})
-        
-        if order:
-            status = order.get('status')
+        status = order.get('status')
+                   
             if status == 'delivered':
                 # Fetch patient details and time of delivery
                 patient_fname = order.get('fname')
