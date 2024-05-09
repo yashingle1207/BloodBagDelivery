@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OTP verification Failed - Error</title>
+    <title>Error</title>
     <link rel="stylesheet" href="static/style.css">
     <link rel="icon" type="image/png" href="static/images/LogoTT.png">
     <style>
@@ -15,12 +15,22 @@
             padding: 10px;
             box-sizing: border-box;
         }
+          h2 {
+              font-size: 20px;}
 
         h3 {
             text-align: center;
             margin-top: 10px;
             font-size: 20px;
             color: red;
+        }
+
+          h4 {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 18px;
+            color: green;
+            margin-top:10px;
         }
 
         h1 {
@@ -88,18 +98,21 @@
 
 <div class="error-message">
     <h1>OTP Verification Failed </h1>
+      <h3><a href="/otp_verification">Try Again</a></h3>
 
     <div class="delivery-instructions">
-        <h2>Delivery Instructions:</h2>
-        <p>Kindly enter the correct OTP and check it once again.</p>
+        <h2>Instructions:</h2>
+        <p>OTP verification Failed for the Patient with the following details:</p>
         <br>
         <p>Name: [Middle Name] [Last Name]</p>
         <p>Phone Number: [Patient's Phone Number]</p>
+        <br>
+        <a href="/otp_verification"><h4>Kindly enter the correct OTP and check it once again </h4></a>
 
     </div>
 
-    <h3>You have 3 attempts left</h3>
-    <h3><a href="/">Try Again</a></h3>
+    <h3>Few attempts left</h3>
+
 
 
 </div>
