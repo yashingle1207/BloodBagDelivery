@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OTP Verification</title>
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
     <style>
         /* General styles */
         body {
@@ -13,13 +14,13 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         h1 {
             text-align: center;
             margin-top: 50px;
             color: #333;
         }
-        
+
         form {
             max-width: 400px;
             margin: 0 auto;
@@ -28,13 +29,13 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        
+
         label {
             display: block;
             margin-bottom: 10px;
             color: #333;
         }
-        
+
         input[type="text"] {
             width: 100%;
             padding: 10px;
@@ -44,8 +45,8 @@
             box-sizing: border-box;
             font-size: 16px;
         }
-        
-        input[type="submit"] {
+
+        .btn {
             width: 100%;
             padding: 10px;
             background-color: #007bff;
@@ -54,10 +55,19 @@
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s ease;
         }
-        
-        input[type="submit"]:hover {
-            background-color: #0056b3;
+
+        .btn:hover {
+            background-color: #28a745; /* Changed hover color to green */
+        }
+
+        .disclaimer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
+            font-weight: bold; /* Added bold font weight */
         }
     </style>
 </head>
@@ -67,7 +77,8 @@
         <label for="otp">Enter OTP:</label>
         <input type="hidden" name="order_id" value="{{ order_id }}">
         <input type="text" id="otp" name="otp" required>
-        <input type="submit" value="Verify OTP">
+        <input class="btn" type="submit" value="Verify OTP">
+        <p class="disclaimer">Please only handover the blood bag once the OTP is verified and provided by the patient. <br><br><span style="color: red;">Until and unless the OTP is not verified, do not delivery the Blood.</span></p>
     </form>
 </body>
-</html>
+</html>s
