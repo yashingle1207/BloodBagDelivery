@@ -719,6 +719,43 @@ def BBsignup():
 
 ########################################### payment end#############################
 ############################################ Otp Validation ############################################
+# @app.route('/verify_otp', methods=['POST'])
+# def verify_otp():
+#     if request.method == 'POST':
+#         # Get the entered OTP from the form
+#         entered_otp = request.form.get('otp')
+
+#         # Retrieve the order ID from the request or session, assuming it's stored as 'order_id'
+#         order_id = request.form.get('order_id')
+
+#         # Retrieve the order details from the backend MongoDB collection
+#         order = Order.find_one({'_id': ObjectId(order_id)})
+
+#         if order:
+#             # Retrieve the stored OTP from the order details
+#             stored_otp = order.get('otp')
+
+#             # Check if the entered OTP matches the stored OTP
+#             if entered_otp == stored_otp:
+#                 # Convert current time to Kolkata timezone
+#                 ist_timezone = pytz.timezone('Asia/Kolkata')
+#                 current_datetime = datetime.now(pytz.utc).astimezone(ist_timezone)
+
+#                 # Update the order with timeofdelivery and status delivered
+#                 Order.update_one(
+#                     {'_id': ObjectId(order_id)},
+#                     {'$set': {'status': 'delivered', 'timeofdelivery': current_datetime}}
+#                 )
+
+#                 # Render a success template with the appropriate message
+#                 return render_template('otpsuccess.html', message="Blood bag delivered successfully.")
+#             else:
+#                 # Render an error template with the appropriate message
+#                 return render_template('otperror.html', message="Invalid OTP. Please try again.")
+#         else:
+#             # Render an error template with the appropriate message
+#             return render_template('error.html', message="Order not found.")
+
 @app.route('/verify_otp', methods=['POST'])
 def verify_otp():
     if request.method == 'POST':
@@ -735,7 +772,16 @@ def verify_otp():
             # Retrieve the stored OTP from the order details
             stored_otp = order.get('otp')
 
-            # Check if the entered OTP matches the stored OTP
+            # Get patient details
+            patient_fname = order.get('fname')
+            patient_mname = order.get('pmname')
+            patient_lname = order.get('lname')
+
+            # Get additional details
+            blood_grp = order.get('BloodGrp')
+            blood_comp = order.get('BloodComp')
+            blood_quantity = order.get('BloodQuantity')
+
             if entered_otp == stored_otp:
                 # Convert current time to Kolkata timezone
                 ist_timezone = pytz.timezone('Asia/Kolkata')
@@ -747,21 +793,56 @@ def verify_otp():
                     {'$set': {'status': 'delivered', 'timeofdelivery': current_datetime}}
                 )
 
-                # Render a success template with the appropriate message
-                return render_template('otpsuccess.html', message="Blood bag delivered successfully.")
+                # Render a success template with the appropriate message and patient details
+                return render_template('otpsuccess.html', message="Blood bag delivered successfully.",
+                                       fname=patient_fname, mname=patient_mname,
+                                       lname=patient_lname, blood_grp=BloodGrp,
+                                       blood_comp=BloodComp, blood_quantity=BloodQuantity)
             else:
-                # Render an error template with the appropriate message
-                return render_template('otperror.html', message="Invalid OTP. Please try again.")
+                # Render an error template with the appropriate message and patient details
+                return render_template('otperror.html', message="Invalid OTP. Please try again.",
+                                       fname=patient_fname, mname=patient_mname,
+                                       lname=patient_lname, blood_grp=BloodGrp,
+                                       blood_comp=BloodComp, blood_quantity=BloodQuantity)
         else:
             # Render an error template with the appropriate message
             return render_template('error.html', message="Order not found.")
+
+
+
+
+
+# @app.route('/otp_verification', methods=['GET', 'POST'])
+# def otp_verification():
+#     if request.method == 'GET':
+#         order_id = request.args.get('order_id')
+#         return render_template('delivery_otp_verification.html', order_id=order_id)
 
 
 @app.route('/otp_verification', methods=['GET', 'POST'])
 def otp_verification():
     if request.method == 'GET':
         order_id = request.args.get('order_id')
-        return render_template('delivery_otp_verification.html', order_id=order_id)
+
+        # Check the status of the order
+        order = Order.find_one({'_id': ObjectId(order_id), 'BloodBank_Id': session.get('bb_reg_no')})
+        
+        if order:
+            status = order.get('status')
+            if status == 'delivered':
+                # Fetch patient details and time of delivery
+                patient_fname = order.get('fname')
+                patient_lname = order.get('lname')
+                time_of_delivery = order.get('timeofdelivery').strftime("%Y-%m-%d %H:%M:%S")
+
+                return render_template('BBalreadyDel.html', order_id=order_id,
+                                       patient_fname=fname, patient_lname=lname,
+                                       time_of_delivery=timeofdelivery)
+            elif status == 'dispatched':
+                return render_template('delivery_otp_verification.html', order_id=order_id)
+
+
+
     
 
 def update_delivery_status(order_id):
