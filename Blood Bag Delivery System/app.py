@@ -941,7 +941,7 @@ def send_otp_verification_email(recipient_email, order_id):
 
     # Construct email content
     subject = "Blood Bag Dispatched"
-    body = f"To confirm receipt and verify delivery, please click the following link and enter the OTP provided by the delivery person:\n"\
+    body = f"To confirm receipt and verify delivery, please click the following link and enter the OTP provided by the patient - Blood Receiver\n"\
            f"<a href='{otp_verification_link}'>Verify Delivery</a>"
 
     # Prepare message
