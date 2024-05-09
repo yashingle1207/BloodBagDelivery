@@ -834,12 +834,17 @@ def otp_verification():
                 patient_fname = order.get('fname')
                 patient_lname = order.get('lname')
                 time_of_delivery = order.get('timeofdelivery').strftime("%Y-%m-%d %H:%M:%S")
+                blood_grp = order.get('BloodGrp')
+                blood_comp = order.get('BloodComp')
+                blood_quantity = order.get('BloodQuantity')
 
                 return render_template('BBalreadyDel.html', order_id=order_id,
                                        patient_fname=fname, patient_lname=lname,
                                        time_of_delivery=timeofdelivery)
             elif status == 'dispatched':
-                return render_template('delivery_otp_verification.html', order_id=order_id)
+                return render_template('delivery_otp_verification.html', order_id=order_id, patient_fname=fname, 
+                                       patient_lname=lname, blood_grp=BloodGrp,
+                                       blood_comp=BloodComp, blood_quantity=BloodQuantity)
 
 
 
