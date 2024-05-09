@@ -25,25 +25,25 @@
 
         .success-message .tick {
             margin-right: 5px; /* Adjusted spacing between the tick and text */
+            color: green; /* Set color to green */
         }
-
 
         h3 {
             text-align: center;
             margin-top: 10px;
-            font-size: 20px;
+            font-size: 22px;
             color: #333;
         }
 
+
+        h2 {
+              font-size: 20px;}
         h1 {
             text-align: center;
             margin-top: 50px;
             font-size: 30px;
             color: #333;
         }
-
-
-
 
         .delivery-instructions {
             background-color: #fff;
@@ -75,26 +75,23 @@
 </header>
 
 <div class="success-message">
-    <h1> OTP verified Successfully</h1>
-
+    <h1><span class="tick">&#10004;</span> OTP verified Successfully</h1>
     <p>{{ message }}</p>
 </div>
 
-
 <div class="delivery-instructions">
-    <h2>Delivery Instructions:</h2>
+    <h2> Delivery Instructions:</h2>
     <p>Kindly Handover the blood bag to the patient with the following details:</p>
     <br>
     <p>Name: [Middle Name] [Last Name]</p>
     <p>Phone Number: [Patient's Phone Number]</p>
 </div>
-    <h3>Delivery Completed</h3>
 
-
+<h3><span class="tick">&#10004;</span> Delivery Completed</h3>
 
 <!-- footer section  -->
 <section class="footer">
-   <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to Ingle Laboratory
+    <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to Ingle Laboratory
     </div>
 </section>
 
