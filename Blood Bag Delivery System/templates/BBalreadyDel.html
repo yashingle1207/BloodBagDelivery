@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Successful Verification</title>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+    <style>
+        /* Your existing styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 30px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .success-message h1 {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 30px;
+            color: green; /* Changed color to green */
+        }
+
+        .success-message .tick {
+            margin-right: 5px; /* Adjusted spacing between the tick and text */
+            color: green; /* Set color to green */
+        }
+
+        h3 {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 22px;
+            color: red;
+        }
+
+        h2 {
+            font-size: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 30px;
+            color: #333;
+        }
+
+        .delivery-instructions {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        .delivery-instructions h2 {
+            color: #777;
+            margin: 10px;
+        }
+
+        .delivery-instructions p {
+            font-size: 16px;
+            margin-top: 5px;
+            margin-left: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+<header>
+    <a href="/" class="logo">Transfusio<span>Track</span></a>
+</header>
+
+<div class="success-message">
+    <h1><span class="tick">&#10004;</span> Blood Bag is Already Delivered</h1>
+</div>
+
+<div class="delivery-instructions">
+    <h2>Details</h2>
+    <p>The blood bag with this order ID has already been delivered by the blood bank.</p>
+    <br>
+    <p>Name: {{ patient_fname }} {{ patient_lname }}</p>
+    <p>Time of Delivery: {{ time_of_delivery }}</p>
+</div>
+
+<h3>Please do not re-submit OTP for delivered bags.</h3>
+
+<!-- footer section  -->
+<section class="footer">
+    <div class="credit">Created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory</div>
+</section>
+
+</div>
+
+</body>
+</html>
