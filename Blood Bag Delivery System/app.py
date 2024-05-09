@@ -925,19 +925,19 @@ def update_delivery_status(order_id):
     # Find user email
     hospital_user = HospUser.find_one({'reg_num': user_id})
     if hospital_user:
-        send_dispatch_email(hospital_user['email'], otp,callback, order_id)
+        send_dispatch_email(hospital_user['email'], otp, order_id, callback)
         return
 
     # Find user email in PatientUser collection
     patient_user = PatientUser.find_one({'_id': user_id})
     if patient_user:
-        send_dispatch_email(patient_user['email'], otp,callback, order_id)
+        send_dispatch_email(patient_user['email'], otp, order_id, callback)
         return    
     
 
 def send_otp_verification_email(recipient_email, order_id):
     # Fetch order details from the database using the order ID
-    order_details = Order.find_one({'_id': order_id})
+    order_details = Order.find_one({'_id': ObjectId(order_id)})
     if not order_details:
         print(f"Order with ID {order_id} not found.")
         return
@@ -1020,7 +1020,7 @@ def send_dispatch_email(recipient_email, otp, order_id, callback=None):
     # Fetch order details from the database
     print("order_id type:", type(order_id))
     print("order_id value:", order_id)
-    order_details = Order.find_one({'_id': order_id})
+    order_details = Order.find_one({'_id': ObjectId(order_id)})
     if not order_details:
         print("Order details not found.")
         return
