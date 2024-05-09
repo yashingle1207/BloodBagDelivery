@@ -925,24 +925,71 @@ def update_delivery_status(order_id):
     # Find user email
     hospital_user = HospUser.find_one({'reg_num': user_id})
     if hospital_user:
-        send_dispatch_email(hospital_user['email'], otp,callback)
+        send_dispatch_email(hospital_user['email'], otp,callback, order_id)
         return
 
     # Find user email in PatientUser collection
     patient_user = PatientUser.find_one({'_id': user_id})
     if patient_user:
-        send_dispatch_email(patient_user['email'], otp,callback)
+        send_dispatch_email(patient_user['email'], otp,callback, order_id)
         return    
     
 
 def send_otp_verification_email(recipient_email, order_id):
+    # Fetch order details from the database using the order ID
+    order_details = Order.find_one({'_id': ObjectId(order_id)})
+    if not order_details:
+        print(f"Order with ID {order_id} not found.")
+        return
+
+    # Extract relevant order information
+    patient_name = f"{order_details['fname']} {order_details['mname']} {order_details['lname']}"
+    if 'hosp_reg_no' in order_details:
+        hospital_user = HospUser.find_one({'reg_num': order_details['User_ID']})
+        if hospital_user:
+            hospital_name = hospital_user['hospital_name']
+            hospital_address = hospital_user['hospital_address']
+            hospital_contact = hospital_user['hospital_contact']
+            patient_address = None
+            patient_contact = None
+    else:
+        hospital_name = None
+        hospital_address = None
+        hospital_contact = None
+        patient_user = PatientUser.find_one({'_id': order_details['User_ID']})
+        if patient_user:
+            patient_address = patient_user['address']
+            patient_contact = patient_user['contact_number']
+            hospital_name = None
+            hospital_address = None
+            hospital_contact = None
+
     # Construct the OTP verification link
     otp_verification_link = f"http://www.transfusiotrack.com/otp_verification?order_id={order_id}"
 
     # Construct email content
-    subject = "Blood Bag Dispatched"
-    body = f"To confirm receipt and verify delivery, please click the following link and enter the OTP provided by the patient - Blood Receiver\n"\
-           f"<a href='{otp_verification_link}'>Verify Delivery</a>"
+    subject = f"Blood Bag Dispatched - Patient: {patient_name}"
+    body = f"<p>To confirm receipt and verify delivery, please click the following link and enter the OTP provided by the patient - Blood Receiver:</p>"\
+           f"<p><a href='{otp_verification_link}'>Verify Delivery</a></p>"\
+           f"<br>"\
+           f"<h2>Order Details:</h2>"\
+           f"<table border='1'>"\
+           f"<tr><th>Attribute</th><th>Value</th></tr>"\
+           f"<tr><td>Order ID</td><td>{order_id}</td></tr>"\
+           f"<tr><td>Patient Name</td><td>{patient_name}</td></tr>"\
+           f"<tr><td>Blood Group</td><td>{order_details['BloodGrp']}</td></tr>"\
+           f"<tr><td>Blood Component</td><td>{order_details['BloodComp']}</td></tr>"\
+           f"<tr><td>Blood Quantity</td><td>{order_details['BloodQuantity']}</td></tr>"
+
+    if hospital_name is not None:
+        body += f"<tr><td>Hospital Name</td><td>{hospital_name}</td></tr>"\
+                f"<tr><td>Hospital Address</td><td>{hospital_address}</td></tr>"\
+                f"<tr><td>Hospital Contact No.</td><td>{hospital_contact}</td></tr>"
+    else:
+        body += f"<tr><td>Patient Address</td><td>{patient_address}</td></tr>"\
+                f"<tr><td>Patient Contact No.</td><td>{patient_contact}</td></tr>"
+
+    body += f"</table>"
 
     # Prepare message
     msg = MIMEText(body, 'html')
@@ -969,13 +1016,34 @@ def send_otp_verification_email(recipient_email, order_id):
 
 
 
-def send_dispatch_email(recipient_email, otp, callback=None):
+def send_dispatch_email(recipient_email, otp, callback=None, order_id):
+    # Fetch order details from the database
+    order_details = Order.find_one({'_id': ObjectId(order_id)})
+    if not order_details:
+        print("Order details not found.")
+        return
+
+    patient_name = f"{order_details['fname']} {order_details['mname']} {order_details['lname']}"
     # Construct email content
-    subject = "Blood Bag Dispatched"
-    body = f"Your blood bag has been dispatched. Please expect delivery soon.\n\nKindly share the OTP ({otp}) with the delivery person to receive the blood bag."
+    subject = f"Blood Bag Dispatched - Patient: {patient_name}"
+    body = f"<h2>Blood Bag Dispatched</h2>"\
+           f"<p>Your blood bag has been dispatched. Please expect delivery soon.</p>"\
+           f"<p>Kindly share the OTP ({otp}) with the delivery person to receive the blood bag.</p>"\
+           f"<h3>Order Details:</h3>"\
+           f"<table border='1'>"\
+           f"<tr><th>Attribute</th><th>Value</th></tr>"\
+           f"<tr><td>Order ID</td><td>{order_details['_id']}</td></tr>"\
+           f"<tr><td>Patient Name</td><td>{patient_name}</td></tr>"\
+           f"<tr><td>Blood Group</td><td>{order_details['BloodGrp']}</td></tr>"\
+           f"<tr><td>Blood Component</td><td>{order_details['BloodComp']}</td></tr>"\
+           f"<tr><td>Blood Quantity</td><td>{order_details['BloodQuantity']}</td></tr>"\
+           f"<tr><td>Blood Bank Name</td><td>{order_details['BloodBank_Name']}</td></tr>"\
+           f"<tr><td>Blood Bank Address</td><td>{order_details['BloodBank_Address']}</td></tr>"\
+           f"<tr><td>Blood Bank Contact No.</td><td>{order_details['BloodBank_Contact']}</td></tr>"\
+           f"</table>"
 
     # Prepare message
-    msg = MIMEText(body)
+    msg = MIMEText(body, 'html')
     msg['Subject'] = subject
     msg['From'] = EMAIL_FROM
     msg['To'] = recipient_email
