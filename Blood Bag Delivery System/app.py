@@ -947,9 +947,9 @@ def send_otp_verification_email(recipient_email, order_id):
     if 'hosp_reg_no' in order_details:
         hospital_user = HospUser.find_one({'reg_num': order_details['User_ID']})
         if hospital_user:
-            hospital_name = hospital_user['hospital_name']
-            hospital_address = hospital_user['hospital_address']
-            hospital_contact = hospital_user['hospital_contact']
+            hospital_name = hospital_user['facility_name']
+            hospital_address = hospital_user['address']
+            hospital_contact = hospital_user['contact_num']
             patient_address = None
             patient_contact = None
     else:
@@ -959,7 +959,7 @@ def send_otp_verification_email(recipient_email, order_id):
         patient_user = PatientUser.find_one({'_id': order_details['User_ID']})
         if patient_user:
             patient_address = patient_user['address']
-            patient_contact = patient_user['contact_number']
+            patient_contact = patient_user['contact_num']
             hospital_name = None
             hospital_address = None
             hospital_contact = None
@@ -1026,6 +1026,9 @@ def send_dispatch_email(recipient_email, otp, order_id, callback=None):
         return
 
     patient_name = f"{order_details['fname']} {order_details['mname']} {order_details['lname']}"
+    blood_bank_name = BBUser.find_one({'reg_num': blood_bank_id})['bb_name']
+    blood_bank_address = BBUser.find_one({'reg_num': blood_bank_id})['address']
+    blood_bank_contact = BBUser.find_one({'reg_num': blood_bank_id})['contact_num']
     # Construct email content
     subject = f"Blood Bag Dispatched - Patient: {patient_name}"
     body = f"<h2>Blood Bag Dispatched</h2>"\
@@ -1039,9 +1042,9 @@ def send_dispatch_email(recipient_email, otp, order_id, callback=None):
            f"<tr><td>Blood Group</td><td>{order_details['BloodGrp']}</td></tr>"\
            f"<tr><td>Blood Component</td><td>{order_details['BloodComp']}</td></tr>"\
            f"<tr><td>Blood Quantity</td><td>{order_details['BloodQuantity']}</td></tr>"\
-           f"<tr><td>Blood Bank Name</td><td>{order_details['BloodBank_Name']}</td></tr>"\
-           f"<tr><td>Blood Bank Address</td><td>{order_details['BloodBank_Address']}</td></tr>"\
-           f"<tr><td>Blood Bank Contact No.</td><td>{order_details['BloodBank_Contact']}</td></tr>"\
+           f"<tr><td>Blood Bank Name</td><td>{blood_bank_name}</td></tr>"\
+           f"<tr><td>Blood Bank Address</td><td>{blood_bank_address}</td></tr>"\
+           f"<tr><td>Blood Bank Contact No.</td><td>{blood_bank_contact}</td></tr>"\
            f"</table>"
 
     # Prepare message
