@@ -834,17 +834,25 @@ def otp_verification():
                 patient_fname = order.get('fname')
                 patient_lname = order.get('lname')
                 time_of_delivery = order.get('timeofdelivery').strftime("%Y-%m-%d %H:%M:%S")
+
+                return render_template('BBalreadyDel.html', order_id=order_id,
+                                       patient_fname=patient_fname, patient_lname=patient_lname,
+                                       time_of_delivery=time_of_delivery)
+            elif status == 'dispatched':
+                # Fetch patient and order details
+                patient_fname = order.get('fname')
+                patient_lname = order.get('lname')
                 blood_grp = order.get('BloodGrp')
                 blood_comp = order.get('BloodComp')
                 blood_quantity = order.get('BloodQuantity')
 
-                return render_template('BBalreadyDel.html', order_id=order_id,
-                                       patient_fname=fname, patient_lname=lname,
-                                       time_of_delivery=timeofdelivery)
-            elif status == 'dispatched':
-                return render_template('delivery_otp_verification.html', order_id=order_id, patient_fname=fname, 
-                                       patient_lname=lname, blood_grp=BloodGrp,
-                                       blood_comp=BloodComp, blood_quantity=BloodQuantity)
+                return render_template('delivery_otp_verification.html', order_id=order_id,
+                                       patient_fname=patient_fname, patient_lname=patient_lname,
+                                       blood_grp=blood_grp, blood_comp=blood_comp, blood_quantity=blood_quantity)
+    
+    # If order not found or other conditions are not met, return an error response
+    return render_template('error.html', message="Order not found or invalid request.")
+
 
 
 
