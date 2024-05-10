@@ -944,6 +944,11 @@ def send_otp_verification_email(recipient_email, order_id):
 
     # Extract relevant order information
     patient_name = f"{order_details['fname']} {order_details['mname']} {order_details['lname']}"
+    patient_address = ''
+    patient_contact = ''
+    hospital_name = ''
+    hospital_address = ''
+    hospital_contact = ''
     if 'hosp_reg_no' in order_details:
         hospital_user = HospUser.find_one({'reg_num': order_details['User_ID']})
         if hospital_user:
