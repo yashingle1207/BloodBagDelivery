@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dispatched Blood Bags</title>
+
+    <!-- Font Awesome CDN link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Custom CSS file link -->
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+
+    <style>
+        /* General table styles */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 90%;
+            margin: 10px auto;
+        }
+
+        th,
+        td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+            font-size: 16px;
+            white-space: normal; /* Allow text to wrap */
+            word-wrap: break-word; /* Wrap text in data cells */
+        }
+
+        th {
+            background-color: #f2f2f2;
+            width: 150px; /* Adjust the width as needed for larger screens */
+        }
+
+        /* Media query for smaller screens */
+        @media (max-width: 768px) {
+            /* Hide columns with data-hide="true" on smaller screens */
+            th[data-hide="true"],
+            td[data-hide="true"] {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <a href="/" class="logo">Transfusio<span>Track</span></a>
+            <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
+            <nav class="navbar" id="navbar">
+                {% if 'bb_reg_no' in session %}
+                <a>Blood Bank ID: {{ session['bb_reg_no'] }}</a>
+                {% endif %}
+                <a href="/BBDashboard">BloodBank Dashboard</a>
+                <a href="/">Logout</a>
+            </nav>
+        </header>
+
+
+        <script>
+            function toggleNavbar() {
+                var navbar = document.getElementById("navbar");
+                if (navbar.classList.contains("active")) {
+                    navbar.classList.remove("active");
+                } else {
+                    navbar.classList.add("active");
+                }
+            }
+        </script>
+
+        <h1 class="heading">Delivered Blood Bags</h1>
+
+        <table>
+            <tr>
+                <th style="width: 150px;">User Name</th>
+                <th style="width: 150px;">User Address</th>
+                <th style="width: 150px;">User Contact No.</th>
+                <th style="width: 150px;">Blood Group</th>
+                <th style="width: 150px;">Component</th>
+                <th style="width: 150px;">Quantity</th>
+                <th style="width: 150px;" data-hide="true">Request Type</th>
+                <th style="width: 150px;">First Name</th>
+                <th style="width: 150px;" data-hide="true">Middle Name</th>
+                <th style="width: 150px;">Last Name</th>
+                <th style="width: 150px;">Age</th>
+<!--                 <th style="width: 150px;" data-hide="true">Ward</th>
+                <th style="width: 150px;" data-hide="true">Bed Number</th> -->
+                <th style="width: 150px;">Gender</th>
+                <th style="width: 150px;" data-hide="true">Time of Placing Order</th>
+                  <th style="width: 150px;" data-hide="true">Time of Dispatch</th>
+
+            </tr>
+
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.user_name }}</td>
+                <td>{{ order.user_address }}</td>
+                <td>{{ order.phone_number }}</td>
+                <td>{{ order.BloodGrp }}</td>
+                <td>{{ order.BloodComp }}</td>
+                <td>{{ order.BloodQuantity }}</td>
+                <td data-hide="true">{{ order.req_type }}</td>
+                <td>{{ order.fname }}</td>
+                <td data-hide="true">{{ order.mname }}</td>
+                <td>{{ order.lname }}</td>
+                <td>{{ order.age }}</td>
+<!--                 <td data-hide="true">{{ order.ward }}</td>
+                <td data-hide="true">{{ order.bedno }}</td> -->
+                <td>{{ order.gender }}</td>
+                <td data-hide="true">{{ order.timestamp }}</td>
+                 <td data-hide="true">{{ order.timeofdispatch }}</td>
+
+            </tr>
+            {% endfor %}
+        </table>
+
+        <!-- Footer section -->
+        <section class="footer">
+            <div class="credit">created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory</div>
+        </section>
+    </div>
+</body>
+
+</html>
