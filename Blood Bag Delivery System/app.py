@@ -205,9 +205,8 @@ def payment_response():
                 mname = session.get('mname')
                 lname = session.get('lname')
                 age = session.get('age')
-                ward = session.get('ward')
-                bedno = session.get('bedno')
                 gender = session.get('gender')
+                docname =  session.get('docname')
                 blood_group = session.get('blood_group')
                 blood_component = session.get('blood_component_code')
                 requested_quantity = session.get('quantity')
@@ -234,9 +233,8 @@ def payment_response():
                     'mname': mname,
                     'lname': lname,
                     'age': age,
-                    'ward': ward,
-                    'bedno': bedno,
                     'gender': gender,
+                    'docname':docname,
                     'timestamp': ist_timestamp,  # IST timestamp
                     'status': 'undelivered',
                     'phonepe_transaction_id': phonepe_transaction_id,  # Add PhonePe transaction ID
@@ -357,8 +355,8 @@ def payment_invoice():
         lname = request.form.get('lname')
         gender = request.form.get('gender')
         age = request.form.get('age')
-        ward = request.form.get('ward')
-        bedno = request.form.get('bedno')
+        docname = request.form.get('docname')
+ 
 
         # Store form data in session
         session['req_type'] = req_type
@@ -367,8 +365,8 @@ def payment_invoice():
         session['lname'] = lname
         session['gender'] = gender
         session['age'] = age
-        session['ward'] = ward
-        session['bedno'] = bedno
+        session['docname'] = docname
+    
 
         # Check if the user is a patient or hospital
         patient_reg_no = session.get('_id')
