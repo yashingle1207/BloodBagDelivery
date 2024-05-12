@@ -10,10 +10,11 @@
 
     <!-- custom css file link  -->
     <link rel="stylesheet" href="static/style.css">
-      <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
 
 
-     <style>
+    <!-- Inline CSS -->
+    <style>
         /* General table styles */
         table {
             border-collapse: collapse;
@@ -41,27 +42,53 @@
                 display: none;
             }
         }
-    </style>
 
-    <script>
-        function validateForm() {
-            var radios = document.getElementsByName('selected_order');
-            var formValid = false;
-
-            for (var i = 0; i < radios.length; i++) {
-                if (radios[i].checked) {
-                    formValid = true;
-                    break;
-                }
-            }
-
-            if (!formValid) {
-                alert("Please select a Blood Bag order.");
-            }
-
-            return formValid;
+        /* Status animation styles */
+        .order-details {
+            display: none;
         }
-    </script>
+
+        .order-details.active {
+            display: table-row;
+        }
+
+        .status-icons-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Align items in a column */
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #ddd;
+        }
+
+        .status-icons {
+            display: flex;
+            align-items: center;
+        }
+
+        .status-icons i {
+            color: gray; /* Default color */
+            margin: 0 10px; /* Increased margin for better spacing */
+            font-size: 24px; /* Increased icon size */
+        }
+
+        .status-icons i.green {
+            color: green; /* Green color for completed status */
+        }
+
+        .line {
+            height: 5px; /* Adjust height as needed */
+            width: 350px; /* Adjust width as needed */
+            border-top: 2px solid gray; /* Solid border style */
+            margin: 0 10px; /* Adjust margin as needed */
+        }
+
+        .line.green {
+            border-top-color: green;
+        }
+
+    </style>
 </head>
 <body>
 
@@ -69,81 +96,104 @@
 
 <header>
     <a href="/" class="logo">Transfusio<span>Track</span></a>
-    <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"
-></div>
+    <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
     <nav class="navbar" id="navbar">
-         {% if 'hosp_reg_no' in session %}
+        {% if 'hosp_reg_no' in session %}
             <a>User ID: {{ session['hosp_reg_no'] }}</a>
         {% endif %}
-          <a href="/HospDashboard">Hospital Dashboard</a>
+        <a href="/HospDashboard">Hospital Dashboard</a>
         <a href="/">Logout</a>
     </nav>
 </header>
 
-
- <script>
-        function toggleNavbar() {
-            var navbar = document.getElementById("navbar");
-            if (navbar.classList.contains("active")) {
-                navbar.classList.remove("active");
-            } else {
-                navbar.classList.add("active");
-            }
+<script>
+    function toggleNavbar() {
+        var navbar = document.getElementById("navbar");
+        if (navbar.classList.contains("active")) {
+            navbar.classList.remove("active");
+        } else {
+            navbar.classList.add("active");
         }
-        </script>
+    }
+
+    function toggleOrderDetails(event) {
+        var orderDetails = event.currentTarget.parentElement.nextElementSibling;
+        orderDetails.classList.toggle('active');
+    }
+</script>
+
+<h1 class="heading">Blood Bag (In progress)</h1>
+
+<!-- Heading for order status -->
 
 
-   <h1 class="heading">Blood Bag (In progress)</h1>
+<table>
+    <tr>
+        <th>BloodBank Name</th>
+        <th>BloodBank Address</th>
+        <th>BloodBank Contact No.</th>
+        <th>Blood Group</th>
+        <th>Blood Component</th>
+        <th>Blood Quantity</th>
+        <th>Request Type</th>
+        <th>First Name</th>
+        <th data-hide="true">Middle Name</th>
+        <th>Last Name</th>
+        <th>Age</th>
+        <th>Gender</th>
+    </tr>
 
-    <table>
+    {% for order in orders %}
         <tr>
-            <th>BloodBank Name</th>
-            <th>BloodBank Address</th>
-            <th>BloodBank Contact No.</th>
-            <th>Blood Group</th>
-            <th>Blood Component</th>
-            <th>Blood Quantity</th>
-            <th>Request Type</th>
-            <th>First Name</th>
-            <th data-hide="true">Middle Name</th>
-            <th>Last Name</th>
-            <th>Age</th>
-<!--             <th data-hide="true">Ward</th>
-            <th data-hide="true">Bed Number</th> -->
-            <th>Gender</th>
+            <td onclick="toggleOrderDetails(event)">{{ order.user_name}}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.user_address}}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.phone_number}}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.BloodGrp }}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.BloodComp }}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.BloodQuantity }}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.req_type }}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.fname }}</td>
+            <td onclick="toggleOrderDetails(event)" data-hide="true">{{ order.mname }}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.lname }}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.age }}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.gender }}</td>
         </tr>
+        <tr class="order-details">
+            <td colspan="12">
+                <div class="status-icons-container">
+                    <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">Order Status</h2>
 
-        {% for order in orders %}
-            <tr>
-                <td>{{ order.user_name}}</td>
-                <td>{{ order.user_address}}</td>
-                <td>{{ order.phone_number}}</td>
-                <td>{{ order.BloodGrp }}</td>
-                <td>{{ order.BloodComp }}</td>
-                <td>{{ order.BloodQuantity }}</td>
-                <td>{{ order.req_type }}</td>
-                <td>{{ order.fname }}</td>
-                <td data-hide="true">{{ order.mname }}</td>
-                <td>{{ order.lname }}</td>
-                <td>{{ order.age }}</td>
-<!--                 <td data-hide="true">{{ order.ward }}</td>
-                <td data-hide="true">{{ order.bedno }}</td> -->
-                <td>{{ order.gender }}</td>
-            </tr>
-<!--             <tr>
-                <td colspan="14"><hr></td>
-            </tr> -->
-            {% endfor %}
-        </table>
-    
+                    <div class="status-icons">
+                        <i class="fas fa-check{% if order.status == 'undelivered' or order.status == 'dispatched' or order.status == 'delivered' %} green{% endif %}"></i>
+                        <i class="fas fa-minus line{% if order.status == 'dispatched' or order.status == 'delivered' %} green{% endif %}"></i>
+                        <i class="fas fa-truck{% if order.status == 'dispatched' or order.status == 'delivered' %} green{% endif %}"></i>
+                        <i class="fas fa-minus line{% if order.status == 'delivered' %} green{% endif %}"></i>
+                        <i class="fas fa-check-circle{% if order.status == 'delivered' %} green{% endif %}"></i>
+                    </div>
+                    <!-- Description for order status -->
+                    <div style="display: flex; justify-content: center;">
+                        <p style="margin: 5px; margin-right: 250px;  margin-left: 20px;">
+                            <span style="font-weight: bold;">Order Placed</span>
+                        </p>
+                        <p style="margin: 5px; margin-right: 280px; margin-left: 60px;">
+                            <span style="font-weight: bold;">Order Dispatched</span>
+                        </p>
+                        <p style="margin: 5px; ">
+                            <span style="font-weight: bold;">Order Delivered</span>
+                        </p>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
 
-
-
-<!-- footer section  -->
+<!-- Footer section -->
 <section class="footer">
-   <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to Ingle Laboratory
-    </div>
+    <div class="credit">Created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory</div>
 </section>
+
+</div>
 
 </body>
 </html>
