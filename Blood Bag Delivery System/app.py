@@ -1254,8 +1254,8 @@ def hosp_received_orders():
                 'mname': order.get('mname'),
                 'lname': order.get('lname'),
                 'age': order.get('age'),
-                'ward': order.get('ward'),
-                'bedno': order.get('bedno'),
+   
+                'docname': order.get('docname'),
                 'gender': order.get('gender'),
                 'timestamp': order.get('timestamp'),
                 'timeofdispatch': order.get('timeofdispatch'),
@@ -1378,8 +1378,8 @@ def Hosp_Blood_bag_inProgress():
                 'mname': order.get('mname'),
                 'lname': order.get('lname'),
                 'age': order.get('age'),
-                'ward': order.get('ward'),
-                'bedno': order.get('bedno'),
+             
+                'docname': order.get('docname'),
                 'gender': order.get('gender'),
                 'timestamp': order.get('timestamp'),
                 'user_name': blood_bank_details.get('bb_name'),
