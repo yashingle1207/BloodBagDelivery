@@ -1290,8 +1290,7 @@ def patient_received_orders():
                 'mname': order.get('mname'),
                 'lname': order.get('lname'),
                 'age': order.get('age'),
-                'ward': order.get('ward'),
-                'bedno': order.get('bedno'),
+                'docname': order.get('docname'),
                 'gender': order.get('gender'),
                 'timestamp': order.get('timestamp'),
                 'timeofdispatch': order.get('timeofdispatch'),
@@ -1416,8 +1415,7 @@ def Patient_Blood_bag_inProgress():
                 'mname': order.get('mname'),
                 'lname': order.get('lname'),
                 'age': order.get('age'),
-                'ward': order.get('ward'),
-                'bedno': order.get('bedno'),
+                'docname': order.get('docname'),
                 'gender': order.get('gender'),
                 'timestamp': order.get('timestamp'),
                 'user_name': blood_bank_details.get('bb_name'),
@@ -1429,68 +1427,6 @@ def Patient_Blood_bag_inProgress():
 
 
 
-# @app.route('/Psubmit_req', methods=['POST'])
-# def Patient_sr():
-#     if request.method == 'POST':
-#         # Get user input from the form
-#         req_type = session['req_type']
-#         fname = session['fname']
-#         mname = session['mname']
-#         lname = session['lname']
-#         age = session['age']
-#         ward = session['ward']
-#         bedno = session['bedno']
-#         gender = session['gender']
-#
-#
-#         # Decrease the quantity of blood bags in MongoDB
-#
-#         blood_group = session.get('blood_group')
-#         blood_component = session.get('blood_component')
-#         requested_quantity = int(session.get('quantity'))
-#
-#         # Create a dictionary with the form data
-#         form_data = {
-#             'User_ID': session.get('_id'),
-#             'BloodBank_Id': session.get('bb_reg_no'),
-#             'BloodGrp': blood_group,
-#             'BloodComp':blood_component,
-#             'BloodQuantity': requested_quantity,
-#             'req_type': req_type,
-#             'fname': fname,
-#             'mname': mname,
-#             'lname': lname,
-#             'age': age,
-#             'ward': ward,
-#             'bedno': bedno,
-#             'gender': gender,
-#             'timestamp': datetime.now(),
-#             'status': 'undelivered'
-#         }
-#
-#         # Insert the form data into the Order collection in MongoDB
-#         Order.insert_one(form_data)
-#
-#
-#
-#         # Find the relevant blood bags in the database
-#         blood_bags = BloodStockAdd.find({'reg_num':session.get('bb_reg_no'),'blood_group': blood_group, 'blood_component': blood_component})
-#
-#         # Update the quantity of each blood bag
-#         for blood_bag in blood_bags:
-#             available_quantity = blood_bag.get('quantity', 0)
-#             if available_quantity >= requested_quantity:
-#                 new_quantity = available_quantity - requested_quantity
-#                 # Update the quantity in the database
-#                 BloodStockAdd.update_one(
-#                     {'_id': blood_bag['_id']},
-#                     {'$set': {'quantity': new_quantity}}
-#                 )
-#             else:
-#                 # Handle insufficient quantity error
-#                 return render_template('error.html', message='Insufficient quantity of blood bags.')
-#
-#     return render_template('map.html')
 
 
 
