@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pending Request</title>
+    <title>Patient Order Status</title>
 
     <!-- font awesome cdn link  -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -42,6 +42,51 @@
                 display: none;
             }
         }
+
+          /* Status animation styles */
+        .order-details {
+            display: none;
+        }
+
+        .order-details.active {
+            display: table-row;
+        }
+
+        .status-icons-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Align items in a column */
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-top: 1px solid #ddd;
+        }
+
+        .status-icons {
+            display: flex;
+            align-items: center;
+        }
+
+        .status-icons i {
+            color: gray; /* Default color */
+            margin: 0 10px; /* Increased margin for better spacing */
+            font-size: 24px; /* Increased icon size */
+        }
+
+        .status-icons i.green {
+            color: green; /* Green color for completed status */
+        }
+
+        .line {
+            height: 5px; /* Adjust height as needed */
+            width: 350px; /* Adjust width as needed */
+            border-top: 2px solid gray; /* Solid border style */
+            margin: 0 10px; /* Adjust margin as needed */
+        }
+
+        .line.green {
+            border-top-color: green;
+        }
     </style>
 
     <script>
@@ -75,48 +120,69 @@
 
 <table>
     <tr>
-        <th>User Name</th>
-        <th>User Address</th>
-        <th>User Contact No.</th>
+        <th>BloodBank Name</th>
+        <th>BloodBank Address</th>
+        <th>BloodBank Contact No.</th>
         <th>Blood Group</th>
-        <th>Component</th>
-        <th>Quantity</th>
-        <th data-hide="true">Request Type</th>
+        <th>Blood Component</th>
+        <th>Blood Quantity</th>
+        <th>Request Type</th>
         <th>First Name</th>
         <th data-hide="true">Middle Name</th>
         <th>Last Name</th>
         <th>Age</th>
-<!--         <th data-hide="true">Ward</th>
-        <th data-hide="true">Bed Number</th> -->
         <th>Gender</th>
-        <th data-hide="true">Time of Dispatch</th>
     </tr>
 
-    {% for order in orders %}
-    <tr>
-        <td>{{ order.user_name }}</td>
-        <td>{{ order.user_address }}</td>
-        <td>{{ order.phone_number }}</td>
-        <td>{{ order.BloodGrp }}</td>
-        <td>{{ order.BloodComp }}</td>
-        <td>{{ order.BloodQuantity }}</td>
-        <td data-hide="true">{{ order.req_type }}</td>
-        <td>{{ order.fname }}</td>
-        <td data-hide="true">{{ order.mname }}</td>
-        <td>{{ order.lname }}</td>
-        <td>{{ order.age }}</td>
-<!--         <td data-hide="true">{{ order.ward }}</td>
-        <td data-hide="true">{{ order.bedno }}</td> -->
-        <td>{{ order.gender }}</td>
-        <td data-hide="true">{{ order.timestamp }}</td>
-    </tr>
+
+   {% for order in orders %}
+        <tr>
+            <td onclick="toggleOrderDetails(event)">{{ order.user_name}}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.user_address}}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.phone_number}}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.BloodGrp }}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.BloodComp }}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.BloodQuantity }}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.req_type }}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.fname }}</td>
+            <td onclick="toggleOrderDetails(event)" data-hide="true">{{ order.mname }}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.lname }}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.age }}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.gender }}</td>
+        </tr>
+        <tr class="order-details">
+            <td colspan="12">
+                <div class="status-icons-container">
+                    <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">Order Status</h2>
+
+                    <div class="status-icons">
+                        <i class="fas fa-check{% if order.status == 'undelivered' or order.status == 'dispatched' or order.status == 'delivered' %} green{% endif %}"></i>
+                        <i class="fas fa-minus line{% if order.status == 'dispatched' or order.status == 'delivered' %} green{% endif %}"></i>
+                        <i class="fas fa-truck{% if order.status == 'dispatched' or order.status == 'delivered' %} green{% endif %}"></i>
+                        <i class="fas fa-minus line{% if order.status == 'delivered' %} green{% endif %}"></i>
+                        <i class="fas fa-check-circle{% if order.status == 'delivered' %} green{% endif %}"></i>
+                    </div>
+                    <!-- Description for order status -->
+                    <div style="display: flex; justify-content: center;">
+                        <p style="margin: 5px; margin-right: 250px;  margin-left: 20px;">
+                            <span style="font-weight: bold;">Order Placed</span>
+                        </p>
+                        <p style="margin: 5px; margin-right: 280px; margin-left: 60px;">
+                            <span style="font-weight: bold;">Order Dispatched</span>
+                        </p>
+                        <p style="margin: 5px; ">
+                            <span style="font-weight: bold;">Order Delivered</span>
+                        </p>
+                    </div>
+                </div>
+            </td>
+        </tr>
     {% endfor %}
 </table>
 
-<!-- footer section  -->
+<!-- Footer section -->
 <section class="footer">
-    <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to Ingle Laboratory
-    </div>
+    <div class="credit">Created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory</div>
 </section>
 
 </div>
