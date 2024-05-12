@@ -142,6 +142,8 @@
         <th>Last Name</th>
         <th>Age</th>
         <th>Gender</th>
+         <th>Time of Placing order</th>
+        
     </tr>
 
     {% for order in orders %}
@@ -159,6 +161,7 @@
             <td onclick="toggleOrderDetails(event)">{{ order.lname }}</td>
             <td onclick="toggleOrderDetails(event)">{{ order.age }}</td>
             <td onclick="toggleOrderDetails(event)">{{ order.gender }}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.timestamp }}</td>
         </tr>
         <tr class="order-details">
             <td colspan="12">
