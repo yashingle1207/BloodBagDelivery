@@ -91,7 +91,9 @@
 <!--                 <th style="width: 150px;" data-hide="true">Ward</th>
                 <th style="width: 150px;" data-hide="true">Bed Number</th> -->
                 <th style="width: 150px;">Gender</th>
-                <th style="width: 150px;" data-hide="true">Time of Dispatch</th>
+                <th style="width: 150px;" data-hide="true">Time of Placing Order</th>
+                  <th style="width: 150px;" data-hide="true">Time of Dispatch</th>
+                 <th style="width: 150px;" data-hide="true">Time of Delivery</th>
             </tr>
 
             {% for order in orders %}
@@ -102,15 +104,17 @@
                 <td>{{ order.BloodGrp }}</td>
                 <td>{{ order.BloodComp }}</td>
                 <td>{{ order.BloodQuantity }}</td>
-                <td data-hide="true">{{ order.req_type }}</td>
+<!--                 <td data-hide="true">{{ order.req_type }}</td> -->
                 <td>{{ order.fname }}</td>
-                <td data-hide="true">{{ order.mname }}</td>
+<!--                 <td data-hide="true">{{ order.mname }}</td> -->
                 <td>{{ order.lname }}</td>
                 <td>{{ order.age }}</td>
 <!--                 <td data-hide="true">{{ order.ward }}</td>
                 <td data-hide="true">{{ order.bedno }}</td> -->
                 <td>{{ order.gender }}</td>
                 <td data-hide="true">{{ order.timestamp }}</td>
+                 <td data-hide="true">{{ order.timeofdispatch }}</td>
+                <td data-hide="true">{{ order.timeofdelivery }}</td>
             </tr>
             {% endfor %}
         </table>
