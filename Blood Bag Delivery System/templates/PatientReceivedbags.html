@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Delivered Bags</title>
+    <title>Patient Received Bags</title>
 
     <!-- font awesome cdn link  -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -81,26 +81,27 @@
         </script>
 
 
-<h1 class="heading">Received Blood Bags</h1>
+     <h1 class="heading">Received Blood Bags</h1>
 
-
-     <table>
+        <table>
             <tr>
-                <th>User Name</th>
-                <th>User Address</th>
-                <th>User Contact No.</th>
-                <th>Blood Group</th>
-                <th>Component</th>
-                <th>Quantity</th>
-                <th data-hide="true">Request Type</th>
-                <th>First Name</th>
-                <th data-hide="true">Middle Name</th>
-                <th>Last Name</th>
-                <th>Age</th>
-<!--                 <th data-hide="true">Ward</th>
-                <th data-hide="true">Bed Number</th> -->
-                <th>Gender</th>
-                <th data-hide="true">Time of Dispatch</th>
+                <th style="width: 150px;">BloodBank Name</th>
+                <th style="width: 150px;">BloodBank Address</th>
+                <th style="width: 150px;">BloodBank Contact No.</th>
+                <th style="width: 150px;">Blood Group</th>
+                <th style="width: 150px;">Component</th>
+                <th style="width: 150px;">Quantity</th>
+<!--                 <th style="width: 150px;" data-hide="true">Request Type</th> -->
+                <th style="width: 150px;">First Name</th>
+<!--                 <th style="width: 150px;" data-hide="true">Middle Name</th> -->
+                <th style="width: 150px;">Last Name</th>
+                <th style="width: 150px;">Age</th>
+<!--                 <th style="width: 150px;" data-hide="true">Ward</th>
+                <th style="width: 150px;" data-hide="true">Bed Number</th> -->
+                <th style="width: 150px;">Gender</th>
+                 <th style="width: 150px;" data-hide="true">Time of Placing Order</th>
+                  <th style="width: 150px;" data-hide="true">Time of Dispatch</th>
+                 <th style="width: 150px;" data-hide="true">Time of Delivery</th>
             </tr>
 
             {% for order in orders %}
@@ -111,34 +112,27 @@
                 <td>{{ order.BloodGrp }}</td>
                 <td>{{ order.BloodComp }}</td>
                 <td>{{ order.BloodQuantity }}</td>
-                <td data-hide="true">{{ order.req_type }}</td>
+<!--                 <td>{{ order.req_type }}</td> -->
                 <td>{{ order.fname }}</td>
-                <td data-hide="true">{{ order.mname }}</td>
+<!--                 <td data-hide="true">{{ order.mname }}</td> -->
                 <td>{{ order.lname }}</td>
                 <td>{{ order.age }}</td>
 <!--                 <td data-hide="true">{{ order.ward }}</td>
                 <td data-hide="true">{{ order.bedno }}</td> -->
                 <td>{{ order.gender }}</td>
-                <td data-hide="true">{{ order.timestamp }}</td>
+                 <td data-hide="true">{{ order.timestamp }}</td>
+                 <td data-hide="true">{{ order.timeofdispatch }}</td>
+                <td data-hide="true">{{ order.timeofdelivery }}</td>
             </tr>
-            <tr>
-                <td colspan="21"><hr></td>
-            </tr>
-        {% endfor %}
-    </table>
+            {% endfor %}
+           
+        </table>
 
-
-
-
-<!-- footer section  -->
-
- <section class="footer">
-
-
-<div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to Ingle Laboratory
+        <!-- Footer section -->
+        <section class="footer">
+            <div class="credit">Created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory</div>
+        </section>
     </div>
-
-</section>
-
 </body>
+
 </html>
