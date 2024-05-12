@@ -100,7 +100,7 @@
             <th>User Name</th>
             <th>User Address</th>
             <th>User Contact No.</th>
-            <th>Blood Bank ID</th>
+            <th>Doctor Name</th>
             <th>Blood Group</th>
             <th>Blood Component</th>
             <th>Blood Quantity</th>
@@ -109,9 +109,10 @@
             <th data-hide="true">Middle Name</th>
             <th>Last Name</th>
             <th>Age</th>
-<!--             <th data-hide="true">Ward</th>
-            <th data-hide="true">Bed Number</th> -->
             <th>Gender</th>
+            <th>Time of Placing Order</th>
+          
+            
         </tr>
 
         {% for order in orders %}
@@ -122,7 +123,7 @@
                 <td>{{ order.user_name }}</td>
                 <td>{{ order.user_address }}</td>
                 <td>{{ order.phone_number }}</td>
-                <td>{{ order.BloodBank_Id}}</td>
+                <td>{{ order.docname }}</td>
                 <td>{{ order.BloodGrp }}</td>
                 <td>{{ order.BloodComp }}</td>
                 <td>{{ order.BloodQuantity }}</td>
@@ -131,9 +132,8 @@
                 <td data-hide="true">{{ order.mname }}</td>
                 <td>{{ order.lname }}</td>
                 <td>{{ order.age }}</td>
-<!--                 <td data-hide="true">{{ order.ward }}</td>
-                <td data-hide="true">{{ order.bedno }}</td> -->
                 <td>{{ order.gender }}</td>
+                <td>{{ order.timestamp }}</td>
             </tr>
         {% endfor %}
 
