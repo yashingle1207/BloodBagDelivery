@@ -127,11 +127,13 @@
         <th>Blood Component</th>
         <th>Blood Quantity</th>
         <th>Request Type</th>
+        <th>Doctor Name</th>
         <th>First Name</th>
         <th data-hide="true">Middle Name</th>
         <th>Last Name</th>
         <th>Age</th>
         <th>Gender</th>
+         <th>Time of Placing order</th>
     </tr>
 
 
@@ -144,11 +146,13 @@
             <td onclick="toggleOrderDetails(event)">{{ order.BloodComp }}</td>
             <td onclick="toggleOrderDetails(event)">{{ order.BloodQuantity }}</td>
             <td onclick="toggleOrderDetails(event)">{{ order.req_type }}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.docname }}</td>
             <td onclick="toggleOrderDetails(event)">{{ order.fname }}</td>
             <td onclick="toggleOrderDetails(event)" data-hide="true">{{ order.mname }}</td>
             <td onclick="toggleOrderDetails(event)">{{ order.lname }}</td>
             <td onclick="toggleOrderDetails(event)">{{ order.age }}</td>
             <td onclick="toggleOrderDetails(event)">{{ order.gender }}</td>
+              <td onclick="toggleOrderDetails(event)">{{ order.timestamp }}</td>
         </tr>
         <tr class="order-details">
             <td colspan="12">
