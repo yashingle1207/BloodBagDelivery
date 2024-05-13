@@ -953,19 +953,11 @@ def send_otp_verification_email(recipient_email, order_id):
             hospital_name = hospital_user['facility_name']
             hospital_address = hospital_user['address']
             hospital_contact = hospital_user['contact_num']
-            patient_address = None
-            patient_contact = None
     else:
-        hospital_name = None
-        hospital_address = None
-        hospital_contact = None
         patient_user = PatientUser.find_one({'_id': order_details['User_ID']})
         if patient_user:
             patient_address = patient_user['address']
             patient_contact = patient_user['contact_num']
-            hospital_name = None
-            hospital_address = None
-            hospital_contact = None
 
     # Construct the OTP verification link
     otp_verification_link = f"http://www.transfusiotrack.com/otp_verification?order_id={order_id}"
@@ -984,7 +976,7 @@ def send_otp_verification_email(recipient_email, order_id):
            f"<tr><td>Blood Component</td><td>{order_details['BloodComp']}</td></tr>"\
            f"<tr><td>Blood Quantity</td><td>{order_details['BloodQuantity']}</td></tr>"
 
-    if hospital_name is not None:
+    if hospital_name:
         body += f"<tr><td>Hospital Name</td><td>{hospital_name}</td></tr>"\
                 f"<tr><td>Hospital Address</td><td>{hospital_address}</td></tr>"\
                 f"<tr><td>Hospital Contact No.</td><td>{hospital_contact}</td></tr>"
