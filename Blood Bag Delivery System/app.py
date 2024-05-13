@@ -273,13 +273,17 @@ def payment_response():
                 # Send email to hospital/patient
                 if 'hosp_reg_no' in session:
                     request_by = HospUser.find_one({'reg_num': user_id})['facility_name']
+                    request_by_address = HospUser.find_one({'reg_num': user_id})['address']
+                    request_by_contact = HospUser.find_one({'reg_num': user_id})['contact_num']
                     print("request by:",request_by)
                     send_email(hospital_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'user',request_by)
                 elif '_id' in session:
                     request_by = PatientUser.find_one({'_id': user_id})['patient_name']
+                    request_by_address = PatientUser.find_one({'_id': user_id})['address']
+                    request_by_contact = PatientUser.find_one({'_id': user_id})['contact_num']
                     print("request by:",request_by)
-                    send_email(patient_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'user',request_by)
-                send_email(blood_bank_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'bloodbank',request_by)
+                    send_email(patient_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'user',request_by,request_by_address,request_by_contact)
+                send_email(blood_bank_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'bloodbank',request_by,request_by_address,request_by_contact)
 
                 # Redirect to the success page
                 return render_template(template_name,
@@ -306,13 +310,13 @@ def payment_response():
     print("Missing or invalid transaction ID.")
     return render_template('error.html', message='Transaction ID missing or invalid')
 
-def send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, timestamp, blood_group, blood_component, requested_quantity, bb_price,request_type,request_by):
+def send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, timestamp, blood_group, blood_component, requested_quantity, bb_price,request_type,request_by,request_by_address,request_by_contact):
     # Email subject
     subject = "Blood Order Details"
     if request_type == 'user':
         body = render_template('email_body.html', order_id=order_id, phonepe_transaction_id=phonepe_transaction_id, total_amt=total_amt, timestamp=timestamp, blood_group=blood_group, blood_component=blood_component, requested_quantity=requested_quantity, bb_price=bb_price)
     elif request_type == 'bloodbank':
-        body = render_template('email_bodybb.html', order_id=order_id, phonepe_transaction_id=phonepe_transaction_id, total_amt=total_amt, timestamp=timestamp, blood_group=blood_group, blood_component=blood_component, requested_quantity=requested_quantity, bb_price=bb_price,request_by=request_by)
+        body = render_template('email_bodybb.html', order_id=order_id, phonepe_transaction_id=phonepe_transaction_id, total_amt=total_amt, timestamp=timestamp, blood_group=blood_group, blood_component=blood_component, requested_quantity=requested_quantity, bb_price=bb_price,request_by=request_by,request_by_address = request_by_address,request_by_contact = request_by_contact)
 
     # Prepare message
     msg = MIMEText(body, 'html')  # Specify content type as HTML
@@ -963,26 +967,58 @@ def send_otp_verification_email(recipient_email, order_id):
 
     # Construct email content
     subject = f"Blood Bag Dispatched - Patient: {patient_name}"
-    body = f"<p>To confirm receipt and verify delivery, please click the following link and enter the OTP provided by the patient - Blood Receiver:</p>"\
-           f"<p><a href='{otp_verification_link}'>Verify Delivery</a></p>"\
-           f"<br>"\
-           f"<h2>Order Details:</h2>"\
-           f"<table border='1'>"\
-           f"<tr><th>Attribute</th><th>Value</th></tr>"\
-           f"<tr><td>Order ID</td><td>{order_id}</td></tr>"\
-           f"<tr><td>Patient Name</td><td>{patient_name}</td></tr>"\
-           f"<tr><td>Blood Group</td><td>{order_details['BloodGrp']}</td></tr>"\
-           f"<tr><td>Blood Component</td><td>{order_details['BloodComp']}</td></tr>"\
-           f"<tr><td>Blood Quantity</td><td>{order_details['BloodQuantity']}</td></tr>"
+    body = f"<p style='margin-bottom: 20px;'>To confirm receipt and verify delivery, please click the following link and enter the OTP provided by the patient - Blood Receiver:</p>"\
+       f"<p><a href='{otp_verification_link}' style='display: inline-block; padding: 10px 20px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;'>Verify Delivery</a></p>"\
+       f"<h2 style='margin-top: 20px; margin-bottom: 10px;'>Order Details:</h2>"\
+       f"<table style='border-collapse: collapse; width: 100%;'>"\
+       f"<tr style='background-color: #f2f2f2;'>"\
+       f"<th style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Attribute</th>"\
+       f"<th style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Value</th>"\
+       f"</tr>"\
+       f"<tr>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Order ID</td>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{order_id}</td>"\
+       f"</tr>"\
+       f"<tr>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Patient Name</td>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{patient_name}</td>"\
+       f"</tr>"\
+       f"<tr>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Blood Group</td>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{order_details['BloodGrp']}</td>"\
+       f"</tr>"\
+       f"<tr>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Blood Component</td>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{order_details['BloodComp']}</td>"\
+       f"</tr>"\
+       f"<tr>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Blood Quantity</td>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{order_details['BloodQuantity']}</td>"\
+       f"</tr>"
 
     if hospital_name:
-        body += f"<tr><td>Hospital Name</td><td>{hospital_name}</td></tr>"\
-                f"<tr><td>Hospital Address</td><td>{hospital_address}</td></tr>"\
-                f"<tr><td>Hospital Contact No.</td><td>{hospital_contact}</td></tr>"
+        body += f"<tr>"\
+                f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Hospital Name</td>"\
+                f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{hospital_name}</td>"\
+                f"</tr>"\
+                f"<tr>"\
+                f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Hospital Address</td>"\
+                f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{hospital_address}</td>"\
+                f"</tr>"\
+                f"<tr>"\
+                f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Hospital Contact No.</td>"\
+                f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{hospital_contact}</td>"\
+                f"</tr>"
     else:
-        body += f"<tr><td>Patient Address</td><td>{patient_address}</td></tr>"\
-                f"<tr><td>Patient Contact No.</td><td>{patient_contact}</td></tr>"
-
+        body += f"<tr>"\
+                f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Patient Address</td>"\
+                f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{patient_address}</td>"\
+                f"</tr>"\
+                f"<tr>"\
+                f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Patient Contact No.</td>"\
+                f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{patient_contact}</td>"\
+                f"</tr>"
+    
     body += f"</table>"
 
     # Prepare message
