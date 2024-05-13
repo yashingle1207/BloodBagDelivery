@@ -948,15 +948,15 @@ def send_otp_verification_email(recipient_email, order_id):
     hospital_address = ''
     hospital_contact = ''
     hospital_user = HospUser.find_one({'reg_num': order_details['User_ID']})
-        if hospital_user:
-            hospital_name = hospital_user['facility_name']
-            hospital_address = hospital_user['address']
-            hospital_contact = hospital_user['contact_num']
+    if hospital_user:
+        hospital_name = hospital_user['facility_name']
+        hospital_address = hospital_user['address']
+        hospital_contact = hospital_user['contact_num']
 
     patient_user = PatientUser.find_one({'_id': order_details['User_ID']})
-        if patient_user:
-            patient_address = patient_user['address']
-            patient_contact = patient_user['contact_num']
+    if patient_user:
+        patient_address = patient_user['address']
+        patient_contact = patient_user['contact_num']
 
     # Construct the OTP verification link
     otp_verification_link = f"http://www.transfusiotrack.com/otp_verification?order_id={order_id}"
