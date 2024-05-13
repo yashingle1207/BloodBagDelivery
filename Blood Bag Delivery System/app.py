@@ -947,14 +947,13 @@ def send_otp_verification_email(recipient_email, order_id):
     hospital_name = ''
     hospital_address = ''
     hospital_contact = ''
-    if 'hosp_reg_no' in order_details:
-        hospital_user = HospUser.find_one({'reg_num': order_details['User_ID']})
+    hospital_user = HospUser.find_one({'reg_num': order_details['User_ID']})
         if hospital_user:
             hospital_name = hospital_user['facility_name']
             hospital_address = hospital_user['address']
             hospital_contact = hospital_user['contact_num']
-    else:
-        patient_user = PatientUser.find_one({'_id': order_details['User_ID']})
+
+    patient_user = PatientUser.find_one({'_id': order_details['User_ID']})
         if patient_user:
             patient_address = patient_user['address']
             patient_contact = patient_user['contact_num']
