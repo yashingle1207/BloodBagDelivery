@@ -85,7 +85,7 @@
     <header>
         <a href="/" class="logo">Transfusio<span>Track</span></a>
         <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
-           <nav class="navbar">
+            <nav class="navbar" id="navbar">
               {% if '_id' in session %}
             <a>User ID: {{ session['_id'] }}</a>
         {% endif %}
@@ -94,6 +94,18 @@
             <a href="/">Logout</a>
         </nav>
     </header>
+
+      <!-- Include your JavaScript code -->
+        <script>
+        function toggleNavbar() {
+            var navbar = document.getElementById("navbar");
+            if (navbar.classList.contains("active")) {
+                navbar.classList.remove("active");
+            } else {
+                navbar.classList.add("active");
+            }
+        }
+        </script>
 
     <section class="home">
         <div class="content">
