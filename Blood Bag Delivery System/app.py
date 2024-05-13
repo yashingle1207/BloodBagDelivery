@@ -795,6 +795,31 @@ def verify_otp():
                     {'$set': {'status': 'delivered', 'timeofdelivery': current_datetime}}
                 )
 
+                # Prepare email content
+                subject_patient = f"Order Delivered - {patient_fname} {patient_mname} {patient_lname}"
+                subject_blood_bank = f"You have successfully Delivered Blood Bag - {patient_fname} {patient_mname} {patient_lname}"
+
+                body_patient = f"Order ID: {order_id}\n"\
+                               f"Patient Name: {patient_fname} {patient_mname} {patient_lname}\n"\
+                               f"Blood Group: {blood_grp}\n"\
+                               f"Blood Component: {blood_comp}\n"\
+                               f"Blood Quantity: {blood_quantity}\n"\
+                               f"Time of Delivery: {current_datetime.strftime('%Y-%m-%d %H:%M:%S')}"
+
+                body_blood_bank = f"Order ID: {order_id}\n"\
+                                  f"Patient Name: {patient_fname} {patient_mname} {patient_lname}\n"\
+                                  f"Blood Group: {blood_grp}\n"\
+                                  f"Blood Component: {blood_comp}\n"\
+                                  f"Blood Quantity: {blood_quantity}\n"\
+                                  f"Time of Delivery: {current_datetime.strftime('%Y-%m-%d %H:%M:%S')}"
+    
+
+                # Send email to hospital/patient
+                send_delivery_email(recipient_email=order['patient_email'], subject=subject_patient, body=body_patient)
+
+                # Send email to blood bank
+                send_delivery_email(recipient_email=order['blood_bank_email'], subject=subject_blood_bank, body=body_blood_bank)
+
                 # Render a success template with the appropriate message and patient details
                 return render_template('otpsuccess.html', message="Blood bag delivered successfully.",
                                        patient_fname=patient_fname, patient_mname=patient_mname,
@@ -809,7 +834,31 @@ def verify_otp():
         else:
             # Render an error template with the appropriate message
             return render_template('error.html', message="Order not found.")
+            
 
+def send_delivery_email(recipient_email, subject, body):
+    # Prepare message
+    msg = MIMEText(body)
+    msg['Subject'] = subject
+    msg['From'] = EMAIL_FROM
+    msg['To'] = recipient_email
+
+    try:
+        # Connect to SMTP server and send email
+        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+        server.ehlo()
+        server.starttls()
+        server.ehlo()
+        server.login(EMAIL_FROM, EMAIL_PASSWORD)
+        server.sendmail(EMAIL_FROM, recipient_email, msg.as_string())
+        server.quit()
+
+        # Log email sent
+        print(f"Email sent to {recipient_email} with subject: {subject}")
+
+    except Exception as e:
+        # Log error if email sending fails
+        print(f"Error sending email: {e}")
 
 
 
