@@ -2032,7 +2032,8 @@ def admindashboard():
 def adminL():
     return render_template('AdminLogin.html')
 
-@app.route('/settle')
+
+@app.route('/settled')
 def settlepayments():
     return render_template('AdminSettled_payments.html')
 
