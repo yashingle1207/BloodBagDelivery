@@ -1192,21 +1192,48 @@ def send_dispatch_email(recipient_email, otp, order_id, callback=None):
     blood_bank_contact = BBUser.find_one({'reg_num': blood_bank_id})['contact_num']
     # Construct email content
     subject = f"Blood Bag Dispatched - Patient: {patient_name}"
-    body = f"<h2>Blood Bag Dispatched</h2>"\
-           f"<p>Your blood bag has been dispatched. Please expect delivery soon.</p>"\
-           f"<p>Kindly share the OTP ({otp}) with the delivery person to receive the blood bag.</p>"\
-           f"<h3>Order Details:</h3>"\
-           f"<table border='1'>"\
-           f"<tr><th>Attribute</th><th>Value</th></tr>"\
-           f"<tr><td>Order ID</td><td>{order_details['_id']}</td></tr>"\
-           f"<tr><td>Patient Name</td><td>{patient_name}</td></tr>"\
-           f"<tr><td>Blood Group</td><td>{order_details['BloodGrp']}</td></tr>"\
-           f"<tr><td>Blood Component</td><td>{order_details['BloodComp']}</td></tr>"\
-           f"<tr><td>Blood Quantity</td><td>{order_details['BloodQuantity']}</td></tr>"\
-           f"<tr><td>Blood Bank Name</td><td>{blood_bank_name}</td></tr>"\
-           f"<tr><td>Blood Bank Address</td><td>{blood_bank_address}</td></tr>"\
-           f"<tr><td>Blood Bank Contact No.</td><td>{blood_bank_contact}</td></tr>"\
-           f"</table>"
+    body = f"<h2 style='margin-top: 20px; margin-bottom: 10px;'>Blood Bag Dispatched</h2>"\
+       f"<p style='margin-bottom: 20px;'>Your blood bag has been dispatched. Please expect delivery soon.</p>"\
+       f"<p style='margin-bottom: 20px;'>Kindly share the OTP ({otp}) with the delivery person to receive the blood bag.</p>"\
+       f"<h3 style='margin-top: 20px; margin-bottom: 10px;'>Order Details:</h3>"\
+       f"<table style='border-collapse: collapse; width: 100%;'>"\
+       f"<tr style='background-color: #f2f2f2;'>"\
+       f"<th style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Attribute</th>"\
+       f"<th style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Value</th>"\
+       f"</tr>"\
+       f"<tr>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Order ID</td>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{order_details['_id']}</td>"\
+       f"</tr>"\
+       f"<tr>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Patient Name</td>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{patient_name}</td>"\
+       f"</tr>"\
+       f"<tr>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Blood Group</td>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{order_details['BloodGrp']}</td>"\
+       f"</tr>"\
+       f"<tr>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Blood Component</td>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{order_details['BloodComp']}</td>"\
+       f"</tr>"\
+       f"<tr>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Blood Quantity</td>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{order_details['BloodQuantity']}</td>"\
+       f"</tr>"\
+       f"<tr>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Blood Bank Name</td>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{blood_bank_name}</td>"\
+       f"</tr>"\
+       f"<tr>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Blood Bank Address</td>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{blood_bank_address}</td>"\
+       f"</tr>"\
+       f"<tr>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Blood Bank Contact No.</td>"\
+       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{blood_bank_contact}</td>"\
+       f"</tr>"\
+       f"</table>"
 
     # Prepare message
     msg = MIMEText(body, 'html')
