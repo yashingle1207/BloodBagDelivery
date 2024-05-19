@@ -276,7 +276,7 @@ def payment_response():
                     request_by_address = HospUser.find_one({'reg_num': user_id})['address']
                     request_by_contact = HospUser.find_one({'reg_num': user_id})['contact_num']
                     print("request by:",request_by)
-                    send_email(hospital_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'user',request_by)
+                    send_email(hospital_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'user',request_by,request_by_address,request_by_contact)
                 elif '_id' in session:
                     request_by = PatientUser.find_one({'_id': user_id})['patient_name']
                     request_by_address = PatientUser.find_one({'_id': user_id})['address']
