@@ -88,19 +88,9 @@
             border-top-color: green;
         }
     </style>
-
-    <script>
-        function toggleNavbar() {
-            var navbar = document.getElementById("navbar");
-            if (navbar.classList.contains("active")) {
-                navbar.classList.remove("active");
-            } else {
-                navbar.classList.add("active");
-            }
-        }
-    </script>
 </head>
 <body>
+
 
 <div class="container">
 
@@ -115,6 +105,22 @@
         <a href="/">Logout</a>
     </nav>
 </header>
+
+  <script>
+        function toggleNavbar() {
+            var navbar = document.getElementById("navbar");
+            if (navbar.classList.contains("active")) {
+                navbar.classList.remove("active");
+            } else {
+                navbar.classList.add("active");
+            }
+        }
+
+      function toggleOrderDetails(event) {
+        var orderDetails = event.currentTarget.parentElement.nextElementSibling;
+        orderDetails.classList.toggle('active');
+    }
+    </script>
 
 <h1 class="heading">Blood Bag (In progress)</h1>
 
