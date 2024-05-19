@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+
+    <!-- Font Awesome CDN link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Custom CSS file link -->
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #f5f5f5;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 400px;
+            max-width: 100%;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .container h1 {
+            font-size: 28px;
+            margin-bottom: 25px;
+        }
+
+        .container input {
+            width: 100%;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+
+        .container button {
+            border: none;
+            padding: 15px 30px;
+            background-color: #ff4757;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        .container button:hover {
+            background-color: #e84347;
+        }
+
+        .container a {
+            display: block;
+            margin-top: 15px;
+            color: #3498db;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .container a:hover {
+            text-decoration: underline;
+        }
+
+        /* Media queries for mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                width: 80%;
+                padding: 20px;
+            }
+
+            .container h1 {
+                font-size: 20px;
+            }
+
+            .container input, .container button {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .container a {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 90%;
+                padding: 10px;
+            }
+
+            .container h1 {
+                font-size: 18px;
+            }
+
+            .container input, .container button {
+                font-size: 12px;
+                padding: 8px;
+            }
+
+            .container a {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<section class="home">
+    <div class="container" id="container">
+        <div class="form-container sign-in-container">
+            <form id="signin-form" action="/AdminSignIn" method="POST">
+                <h1>Admin Sign In</h1>
+                <input type="email" id="adminEmailId" name="adminEmailId" placeholder="Admin Email ID" required />
+                <input type="password" id="adminPassword" name="adminPassword" placeholder="Password" required />
+                <a href="#">Forgot your password?</a>
+                <button type="submit">Sign In</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- JavaScript file link -->
+<script src="static/js/script1.js"></script>
+
+</body>
+</html>
