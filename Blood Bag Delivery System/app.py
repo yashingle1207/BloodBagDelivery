@@ -1603,7 +1603,7 @@ def Patient_Blood_bag_inProgress():
                 'timestamp': order.get('timestamp'),
                 'user_name': blood_bank_details.get('bb_name'),
                 'user_address': blood_bank_details.get('address'),
-                'phone_number': blood_bank_details.get('contact_num')
+                'phone_number': blood_bank_details.get('contact_num'),
                 'status':order.get('status')
             })
 
