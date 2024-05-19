@@ -805,7 +805,7 @@ def verify_otp():
                 hospital_user = HospUser.find_one({'reg_num': order['User_ID']})
                 if hospital_user:
                     user_email = hospital_user['email']
-                    c = hospital_user['facility_name']
+                    hospital_name = hospital_user['facility_name']
             
                 patient_user = PatientUser.find_one({'_id': order['User_ID']})
                 if patient_user:
