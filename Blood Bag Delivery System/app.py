@@ -919,7 +919,7 @@ def verify_otp():
 
 def send_delivery_email(recipient_email, subject, body):
     # Prepare message
-    msg = MIMEText(body)
+    msg = MIMEText(body, 'html')
     msg['Subject'] = subject
     msg['From'] = EMAIL_FROM
     msg['To'] = recipient_email
