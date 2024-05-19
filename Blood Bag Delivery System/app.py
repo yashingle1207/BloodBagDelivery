@@ -278,9 +278,9 @@ def payment_response():
                     print("request by:",request_by)
                     send_email(hospital_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'user',request_by,request_by_address,request_by_contact)
                 elif '_id' in session:
-                    request_by = PatientUser.find_one({'_id': user_id})['patient_name']
-                    request_by_address = PatientUser.find_one({'_id': user_id})['address']
-                    request_by_contact = PatientUser.find_one({'_id': user_id})['contact_num']
+                    request_by = PatientUser.find_one({'email': user_id})['patient_name']
+                    request_by_address = PatientUser.find_one({'email': user_id})['address']
+                    request_by_contact = PatientUser.find_one({'email': user_id})['contact_num']
                     print("request by:",request_by)
                     send_email(patient_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'user',request_by,request_by_address,request_by_contact)
                 send_email(blood_bank_email, order_id, phonepe_transaction_id, total_amt, ist_timestamp, blood_group, blood_component, requested_quantity, bb_price,'bloodbank',request_by,request_by_address,request_by_contact)
@@ -807,7 +807,7 @@ def verify_otp():
                     user_email = hospital_user['email']
                     hospital_name = hospital_user['facility_name']
             
-                patient_user = PatientUser.find_one({'_id': order['User_ID']})
+                patient_user = PatientUser.find_one({'email': order['User_ID']})
                 if patient_user:
                     user_email = patient_user['email']
 
@@ -1061,7 +1061,7 @@ def update_delivery_status(order_id):
         return
 
     # Find user email in PatientUser collection
-    patient_user = PatientUser.find_one({'_id': user_id})
+    patient_user = PatientUser.find_one({'email': user_id})
     if patient_user:
         send_dispatch_email(patient_user['email'], otp, order_id, callback)
         return    
@@ -1087,7 +1087,7 @@ def send_otp_verification_email(recipient_email, order_id):
         hospital_address = hospital_user['address']
         hospital_contact = hospital_user['contact_num']
 
-    patient_user = PatientUser.find_one({'_id': order_details['User_ID']})
+    patient_user = PatientUser.find_one({'email': order_details['User_ID']})
     if patient_user:
         patient_address = patient_user['address']
         patient_contact = patient_user['contact_num']
@@ -1330,7 +1330,7 @@ def bloodbank_completed_orders():
             user_details = hospital_details
         else:
             # Search for user details in the patient collection
-            patient_details = PatientUser.find_one({'_id': user_id})
+            patient_details = PatientUser.find_one({'email': user_id})
             if patient_details:
                 user_details = patient_details
 
@@ -1379,7 +1379,7 @@ def bloodbank_dispatched_orders():
             user_details = hospital_details
         else:
             # Search for user details in the patient collection
-            patient_details = PatientUser.find_one({'_id': user_id})
+            patient_details = PatientUser.find_one({'email': user_id})
             if patient_details:
                 user_details = patient_details
 
