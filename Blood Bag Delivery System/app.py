@@ -1565,6 +1565,10 @@ def Hosp_Blood_bag_inProgress():
     for order in orders:
         # Query blood bank details
         blood_bank_details = BBUser.find_one({'reg_num': order.get('BloodBank_Id')})
+
+        # Convert timestamp to Indian Standard Time (IST)
+                ist_timezone = pytz.timezone('Asia/Kolkata')
+                ist_timestamp = datetime.now(pytz.utc).astimezone(ist_timezone)
         
         if blood_bank_details:
             order_list.append({
@@ -1582,7 +1586,7 @@ def Hosp_Blood_bag_inProgress():
              
                 'docname': order.get('docname'),
                 'gender': order.get('gender'),
-                'timestamp': order.get('timestamp'),
+                'timestamp': order.get('ist_timestamp'),
                 'user_name': blood_bank_details.get('bb_name'),
                 'user_address': blood_bank_details.get('address'),
                 'phone_number': blood_bank_details.get('contact_num'),
