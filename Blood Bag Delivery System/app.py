@@ -43,6 +43,7 @@ Order = db['Orders']
 PatientUser = db['PatientUsers']
 PatientSearchBB = db['BloodStock']
 pricing_collection = db['pricing']
+admin_collection = db['Admin']
 
 SMTP_SERVER = 'smtp.gmail.com'
 SMTP_PORT = 587
@@ -406,6 +407,27 @@ def home():
 
 
 
+################# Admin Login ############################
+
+
+@app.route('/AdminSignIn', methods=['POST'])
+def adminsignIn():
+    if request.method == 'POST':
+        admin_email = request.form.get('adminEmailId')
+        admin_password = request.form.get('adminPassword')
+
+        existing_admin = admin_collection.find_one({'email': admin_email, 'password': admin_password})
+        if existing_admin:
+            # Set the email in the session if needed
+            session['admin_email'] = admin_email
+
+            return render_template('AdminDashboard.html')
+        else:
+            return render_template('LoginUnsuccessful.html')
+
+    return render_template('AdminLogin.html')
+
+######## ###
 
 @app.route('/HospSignIn', methods=['POST'])
 def HospsignIn():
