@@ -1597,12 +1597,14 @@ def Patient_Blood_bag_inProgress():
                 'mname': order.get('mname'),
                 'lname': order.get('lname'),
                 'age': order.get('age'),
+
                 'docname': order.get('docname'),
                 'gender': order.get('gender'),
                 'timestamp': order.get('timestamp'),
                 'user_name': blood_bank_details.get('bb_name'),
                 'user_address': blood_bank_details.get('address'),
                 'phone_number': blood_bank_details.get('contact_num')
+                'status':order.get('status')
             })
 
     return render_template('PatientPendingReq.html', orders=order_list)
