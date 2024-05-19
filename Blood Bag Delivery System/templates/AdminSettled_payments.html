@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settled Payments</title>
+
+    <!-- Font Awesome CDN link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Custom CSS file link -->
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+
+    <style>
+        /* General table styles */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 90%;
+            margin: 10px auto;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+            font-size: 16px;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            width: 150px;
+        }
+
+        /* Media query for smaller screens */
+        @media (max-width: 768px) {
+            th[data-hide="true"], td[data-hide="true"] {
+                display: none;
+            }
+        }
+    </style>
+
+    <script>
+        function toggleNavbar() {
+            var navbar = document.getElementById("navbar");
+            navbar.classList.toggle("active");
+        }
+    </script>
+</head>
+<body>
+
+<div class="container">
+
+<header>
+    <a href="/" class="logo">Transfusio<span>Track</span></a>
+    <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
+    <nav class="navbar" id="navbar">
+         <a href="/admindash">Admin Dashboard</a>
+        <a href="#">Settled Payments</a>
+        <a href="">Blood Bank Dropdown</a>
+        <a href="#">Date Filter</a>
+        <a href="/">Logout</a>
+    </nav>
+</header>
+
+<h1 class="heading">Settled Payments (Already Paid)</h1>
+
+<form action="/settle_payment" method="POST">
+    <table>
+        <tr>
+            <th>Blood Bank Name</th>
+            <th>Address</th>
+            <th>Contact No.</th>
+            <th>Blood Component</th>
+            <th>Quantity Sold (Units)</th>
+            <th>Price per Unit</th>
+            <th>Total Amount per Component</th>
+            <th>Select</th>
+            <th>Total Amount Payable</th>
+        </tr>
+
+        {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.blood_bank_name }}</td>
+                <td>{{ transaction.address }}</td>
+                <td>{{ transaction.contact_no }}</td>
+                <td>{{ transaction.component }}</td>
+                <td>{{ transaction.quantity_sold }}</td>
+                <td>{{ transaction.price_per_unit }}</td>
+                <td>{{ transaction.total_amount_per_component }}</td>
+                <td>
+                    <input type="radio" name="selected_transaction" value="{{ transaction.id }}">
+                </td>
+                <td>{{ transaction.total_amount_payable }}</td>
+            </tr>
+        {% endfor %}
+
+        <tr>
+            <td colspan="9" style="text-align: center;">
+                <input class='btn' type="submit" value="Settle Payment">
+            </td>
+        </tr>
+    </table>
+</form>
+
+<!-- Footer section -->
+<section class="footer">
+    <div class="credit">Created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory</div>
+</section>
+
+</div>
+
+</body>
+</html>
