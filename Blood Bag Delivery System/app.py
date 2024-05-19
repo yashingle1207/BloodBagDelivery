@@ -794,31 +794,112 @@ def verify_otp():
                     {'_id': ObjectId(order_id)},
                     {'$set': {'status': 'delivered', 'timeofdelivery': current_datetime}}
                 )
-
+                
                 # Prepare email content
                 subject_patient = f"Order Delivered - {patient_fname} {patient_mname} {patient_lname}"
                 subject_blood_bank = f"You have successfully Delivered Blood Bag - {patient_fname} {patient_mname} {patient_lname}"
+                user_email = ''
+                hospital_name = ''
+                bb_email = ''
+                bb_name = ''
+                hospital_user = HospUser.find_one({'reg_num': order['User_ID']})
+                if hospital_user:
+                    user_email = hospital_user['email']
+                    c = hospital_user['facility_name']
+            
+                patient_user = PatientUser.find_one({'_id': order['User_ID']})
+                if patient_user:
+                    user_email = patient_user['email']
 
-                body_patient = f"Order ID: {order_id}\n"\
-                               f"Patient Name: {patient_fname} {patient_mname} {patient_lname}\n"\
-                               f"Blood Group: {blood_grp}\n"\
-                               f"Blood Component: {blood_comp}\n"\
-                               f"Blood Quantity: {blood_quantity}\n"\
-                               f"Time of Delivery: {current_datetime.strftime('%Y-%m-%d %H:%M:%S')}"
+                bb_user = BBUser.find_one({'reg_num': order['BloodBank_Id']})
+                if bb_user:
+                    bb_email = bb_user['email']
+                    bb_name = bb_user['bb_name']
+                    
+                body_patient = f"<p style='margin-bottom: 20px;'>Your blood bag has been successfully delivered.</p>"\
+                   f"<h2 style='margin-top: 20px; margin-bottom: 10px;'>Order Details:</h2>"\
+                   f"<table style='border-collapse: collapse; width: 100%;'>"\
+                   f"<tr style='background-color: #f2f2f2;'>"\
+                   f"<th style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Attribute</th>"\
+                   f"<th style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Value</th>"\
+                   f"</tr>"\
+                   f"<tr>"\
+                   f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Order ID</td>"\
+                   f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{order_id}</td>"\
+                   f"</tr>"\
+                   f"<tr>"\
+                   f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Patient Name</td>"\
+                   f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{patient_fname} {patient_mname} {patient_lname}</td>"\
+                   f"</tr>"\
+                   f"<tr>"\
+                   f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Blood Group</td>"\
+                   f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{blood_grp}</td>"\
+                   f"</tr>"\
+                   f"<tr>"\
+                   f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Blood Component</td>"\
+                   f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{blood_comp}</td>"\
+                   f"</tr>"\
+                   f"<tr>"\
+                   f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Blood Quantity</td>"\
+                   f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{blood_quantity}</td>"\
+                   f"</tr>"\
+                   f"<tr>"\
+                   f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Blood Bank Name</td>"\
+                   f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{bb_name}</td>"\
+                   f"</tr>"\
+                   f"<tr>"\
+                   f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Time of Delivery</td>"\
+                   f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{current_datetime.strftime('%Y-%m-%d %H:%M:%S')}</td>"\
+                   f"</tr>"\
+                   f"</table>"
 
-                body_blood_bank = f"Order ID: {order_id}\n"\
-                                  f"Patient Name: {patient_fname} {patient_mname} {patient_lname}\n"\
-                                  f"Blood Group: {blood_grp}\n"\
-                                  f"Blood Component: {blood_comp}\n"\
-                                  f"Blood Quantity: {blood_quantity}\n"\
-                                  f"Time of Delivery: {current_datetime.strftime('%Y-%m-%d %H:%M:%S')}"
-    
+                body_blood_bank = f"<p style='margin-bottom: 20px;'>You have successfully delivered the blood bag.</p>"\
+                                  f"<h2 style='margin-top: 20px; margin-bottom: 10px;'>Order Details:</h2>"\
+                                  f"<table style='border-collapse: collapse; width: 100%;'>"\
+                                  f"<tr style='background-color: #f2f2f2;'>"\
+                                  f"<th style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Attribute</th>"\
+                                  f"<th style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Value</th>"\
+                                  f"</tr>"\
+                                  f"<tr>"\
+                                  f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Order ID</td>"\
+                                  f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{order_id}</td>"\
+                                  f"</tr>"\
+                                  f"<tr>"\
+                                  f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Patient Name</td>"\
+                                  f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{patient_fname} {patient_mname} {patient_lname}</td>"\
+                                  f"</tr>"\
+                                  f"<tr>"\
+                                  f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Blood Group</td>"\
+                                  f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{blood_grp}</td>"\
+                                  f"</tr>"\
+                                  f"<tr>"\
+                                  f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Blood Component</td>"\
+                                  f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{blood_comp}</td>"\
+                                  f"</tr>"\
+                                  f"<tr>"\
+                                  f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Blood Quantity</td>"\
+                                  f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{blood_quantity}</td>"\
+                                  f"</tr>"
+                
+                if hospital_user:
+                    body_blood_bank += f"<tr>"\
+                                       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Hospital Name</td>"\
+                                       f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{hospital_name}</td>"\
+                                       f"</tr>"
+                
+                body_blood_bank += f"<tr>"\
+                                   f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>Time of Delivery</td>"\
+                                   f"<td style='border: 1px solid #dddddd; text-align: left; padding: 8px;'>{current_datetime.strftime('%Y-%m-%d %H:%M:%S')}</td>"\
+                                   f"</tr>"\
+                                   f"</table>"
 
+                
+                
                 # Send email to hospital/patient
-                send_delivery_email(recipient_email=order['patient_email'], subject=subject_patient, body=body_patient)
+                send_delivery_email(recipient_email=user_email, subject=subject_patient, body=body_patient)
 
                 # Send email to blood bank
-                send_delivery_email(recipient_email=order['blood_bank_email'], subject=subject_blood_bank, body=body_blood_bank)
+                send_delivery_email(recipient_email=bb_email, subject=subject_blood_bank, body=body_blood_bank)
 
                 # Render a success template with the appropriate message and patient details
                 return render_template('otpsuccess.html', message="Blood bag delivered successfully.",
