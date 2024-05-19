@@ -2023,6 +2023,19 @@ def guidemanual():
     return render_template('guideManual.html')
 
 
+@app.route('/admindash')
+def admindashboard():
+    return render_template('AdminDashboard.html')
+
+
+@app.route('/AdminLogin')
+def adminL():
+    return render_template('AdminLogin.html')
+
+@app.route('/settle')
+def settlepayments():
+    return render_template('AdminSettled_payments.html')
+
 
 
 # Decorator to handle CORS headers
