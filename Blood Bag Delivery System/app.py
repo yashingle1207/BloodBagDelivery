@@ -158,7 +158,7 @@ def payment_response():
             user_id = session['_id']
             template_name = 'Patientmap.html'
             # Fetch patient email from database
-            patient_email = PatientUser.find_one({'_id': user_id})['email']
+            patient_email = PatientUser.find_one({'email': user_id})['email']
         else:
             # Neither hospital user nor patient user is logged in
             print("No user logged in.")
