@@ -47,12 +47,48 @@
             margin-top: 15px;
             margin-bottom: 35px;
         }
+
+        .container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 80%;
+            max-width: 90%;
+            margin: 20px auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .btn {
+            background-color: #ff4757;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #e84347;
+        }
     </style>
 
     <script>
         function toggleNavbar() {
             var navbar = document.getElementById("navbar");
             navbar.classList.toggle("active");
+        }
+
+        function updateTotalAmountPayable(input, componentAmount, totalAmountCell) {
+            let percentage = parseFloat(input.value);
+            if (isNaN(percentage) || percentage < 0 || percentage > 100) {
+                totalAmountCell.textContent = componentAmount.toFixed(2);
+                return;
+            }
+            let discountAmount = (componentAmount * percentage) / 100;
+            let payableAmount = componentAmount - discountAmount;
+            totalAmountCell.textContent = payableAmount.toFixed(2);
         }
     </script>
 </head>
@@ -83,6 +119,7 @@
             <th>Quantity Sold (Units)</th>
             <th>Price per Unit</th>
             <th>Total Amount per Component</th>
+            <th>Commission fee in (%)</th>
             <th>Select</th>
             <th>Total Amount Payable</th>
         </tr>
@@ -97,14 +134,18 @@
                 <td>{{ transaction.price_per_unit }}</td>
                 <td>{{ transaction.total_amount_per_component }}</td>
                 <td>
+                    <input type="number" min="0" max="100" step="0.01" 
+                           oninput="updateTotalAmountPayable(this, {{ transaction.total_amount_per_component }}, document.getElementById('total-{{ transaction.id }}'))">
+                </td>
+                <td>
                     <input type="radio" name="selected_transaction" value="{{ transaction.id }}">
                 </td>
-                <td>{{ transaction.total_amount_payable }}</td>
+                <td id="total-{{ transaction.id }}">{{ transaction.total_amount_per_component }}</td>
             </tr>
         {% endfor %}
 
         <tr>
-            <td colspan="9" style="text-align: center;">
+            <td colspan="10" style="text-align: center;">
                 <input class='btn' type="submit" value="Settle Payment">
             </td>
         </tr>
