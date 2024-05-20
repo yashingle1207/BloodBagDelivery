@@ -409,7 +409,6 @@ def home():
 
 ################# Admin Login ############################
 
-
 @app.route('/AdminSignIn', methods=['POST'])
 def adminsignIn():
     if request.method == 'POST':
@@ -421,7 +420,41 @@ def adminsignIn():
             # Set the email in the session if needed
             session['admin_email'] = admin_email
 
-            return render_template('AdminDashboard.html')
+            # Fetch orders of the current day
+            start_of_day = datetime.combine(datetime.today(), datetime.min.time())
+            end_of_day = datetime.combine(datetime.today(), datetime.max.time())
+            orders = list(Order.find({'timeofdelivery': {'$gte': start_of_day, '$lte': end_of_day}}))
+
+            # Organize orders by blood bank and blood component
+            organized_orders = defaultdict(lambda: defaultdict(list))
+            for order in orders:
+                blood_bank_id = order['BloodBank_Id']
+                component = order['BloodComp']
+                organized_orders[blood_bank_id][component].append(order)
+
+            # Prepare the transactions data for the template
+            transactions = []
+            for blood_bank_id, components in organized_orders.items():
+                blood_bank = BBUser.find_one({'_id': blood_bank_id})
+                for component, orders in components.items():
+                    quantity_sold = sum(order['BloodQuantity'] for order in orders)
+                    price_per_unit = orders[0]['total_amount'] / orders[0]['BloodQuantity']  # Assuming total_amount is for the quantity sold
+                    total_amount_per_component = quantity_sold * price_per_unit
+                    total_amount_payable = sum(order['total_amount'] for order in orders)
+
+                    transactions.append({
+                        'blood_bank_name': blood_bank['name'],
+                        'address': blood_bank['address'],
+                        'contact_no': blood_bank['contact'],
+                        'component': component,
+                        'quantity_sold': quantity_sold,
+                        'price_per_unit': price_per_unit,
+                        'total_amount_per_component': total_amount_per_component,
+                        'total_amount_payable': total_amount_payable,
+                        'id': str(orders[0]['_id'])  # Assuming each order has a unique '_id'
+                    })
+
+            return render_template('AdminDashboard.html', transactions=transactions)
         else:
             return render_template('LoginUnsuccessful.html')
 
