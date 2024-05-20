@@ -1600,8 +1600,8 @@ def Hosp_Blood_bag_inProgress():
         blood_bank_details = BBUser.find_one({'reg_num': order.get('BloodBank_Id')})
 
         # Convert timestamp to Indian Standard Time (IST)
-                ist_timezone = pytz.timezone('Asia/Kolkata')
-                ist_timestamp = datetime.now(pytz.utc).astimezone(ist_timezone)
+        ist_timezone = pytz.timezone('Asia/Kolkata')
+        ist_timestamp = datetime.now(pytz.utc).astimezone(ist_timezone)
         
         if blood_bank_details:
             order_list.append({
