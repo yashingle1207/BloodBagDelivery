@@ -443,9 +443,9 @@ def adminsignIn():
                     total_amount_payable = sum(order['total_amount'] for order in orders)
 
                     transactions.append({
-                        'blood_bank_name': blood_bank['name'],
+                        'blood_bank_name': blood_bank['bb_name'],
                         'address': blood_bank['address'],
-                        'contact_no': blood_bank['contact'],
+                        'contact_no': blood_bank['contact_num'],
                         'component': component,
                         'quantity_sold': quantity_sold,
                         'price_per_unit': price_per_unit,
