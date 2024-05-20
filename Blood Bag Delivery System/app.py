@@ -239,7 +239,8 @@ def payment_response():
                     'timestamp': ist_timestamp,  # IST timestamp
                     'status': 'undelivered',
                     'phonepe_transaction_id': phonepe_transaction_id,  # Add PhonePe transaction ID
-                    'total_amount': total_amt  # Add total amount paid
+                    'total_amount': total_amt,  # Add total amount paid
+                    'settlement_status':False
                 }
 
                 # Insert order data into MongoDB
@@ -423,7 +424,10 @@ def adminsignIn():
             # Fetch orders of the current day
             start_of_day = datetime.combine(datetime.today(), datetime.min.time())
             end_of_day = datetime.combine(datetime.today(), datetime.max.time())
-            orders = list(Order.find({'timeofdelivery': {'$gte': start_of_day, '$lte': end_of_day}}))
+            # orders = list(Order.find({'timeofdelivery': {'$gte': start_of_day, '$lte': end_of_day}}))
+
+            orders = list(Order.find({'$and': [{'timeofdelivery': {'$gte': start_of_day, '$lte': end_of_day}},
+                    {'settlement_status': False}]}))
 
             # Organize orders by blood bank and blood component
             organized_orders = defaultdict(lambda: defaultdict(list))
