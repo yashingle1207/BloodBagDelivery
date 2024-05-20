@@ -435,7 +435,7 @@ def adminsignIn():
             # Prepare the transactions data for the template
             transactions = []
             for blood_bank_id, components in organized_orders.items():
-                blood_bank = BBUser.find_one({'_id': blood_bank_id})
+                blood_bank = BBUser.find_one({'reg_num': blood_bank_id})
                 for component, orders in components.items():
                     quantity_sold = sum(order['BloodQuantity'] for order in orders)
                     price_per_unit = orders[0]['total_amount'] / orders[0]['BloodQuantity']  # Assuming total_amount is for the quantity sold
