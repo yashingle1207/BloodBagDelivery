@@ -1472,7 +1472,7 @@ def bloodbank_dispatched_orders():
 @app.route('/delorder1', methods=['GET'])
 def hosp_received_orders():
     # Query MongoDB to get all orders
-    orders = Order.find({'BloodBank_Id':session.get('bb_reg_no'), 'status': 'delivered'})
+    orders = Order.find({'BloodBank_Id': session.get('bb_reg_no'), 'status': 'delivered'})
 
     # Prepare the results to be displayed
     order_list = []
@@ -1481,7 +1481,7 @@ def hosp_received_orders():
         blood_bank_details = BBUser.find_one({'reg_num': order.get('BloodBank_Id')})
         
         if blood_bank_details:
-            order_list.append({
+            formatted_order = {
                 '_id': order.get('_id'),
                 'User_ID': order.get('User_ID'),
                 'BloodBank_Id': order.get('BloodBank_Id'),
@@ -1493,16 +1493,22 @@ def hosp_received_orders():
                 'mname': order.get('mname'),
                 'lname': order.get('lname'),
                 'age': order.get('age'),
-   
                 'docname': order.get('docname'),
                 'gender': order.get('gender'),
-                'timestamp': order.get('timestamp'),
-                'timeofdispatch': order.get('timeofdispatch'),
-                'timeofdelivery': order.get('timeofdelivery'),
                 'user_name': blood_bank_details.get('bb_name'),
                 'user_address': blood_bank_details.get('address'),
                 'phone_number': blood_bank_details.get('contact_num')
-            })
+            }
+
+            # Format timestamps if they exist
+            if 'timestamp' in order:
+                formatted_order['timestamp'] = order['timestamp'].strftime('%Y-%m-%d %H:%M:%S')
+            if 'timeofdispatch' in order:
+                formatted_order['timeofdispatch'] = order['timeofdispatch'].strftime('%Y-%m-%d %H:%M:%S')
+            if 'timeofdelivery' in order:
+                formatted_order['timeofdelivery'] = order['timeofdelivery'].strftime('%Y-%m-%d %H:%M:%S')
+            
+            order_list.append(formatted_order)
 
     return render_template('Receivedbags.html', orders=order_list)
 
