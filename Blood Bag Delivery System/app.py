@@ -427,7 +427,7 @@ def adminsignIn():
             # orders = list(Order.find({'timeofdelivery': {'$gte': start_of_day, '$lte': end_of_day}}))
 
             orders = list(Order.find({'$and': [{'timeofdelivery': {'$gte': start_of_day, '$lte': end_of_day}},
-                    {'settlement_status': 'False'}]}))
+                    {'settlement_status': 'false'}]}))
 
             # Organize orders by blood bank and blood component
             organized_orders = defaultdict(lambda: defaultdict(list))
