@@ -1370,15 +1370,17 @@ def viewstock():
     # Render the template with the organized results
     return render_template('ViewStock.html', results=results)
 
-####################################
+#################################### order fetching logic #####################
 
 @app.route('/delorder', methods=['GET'])
 def bloodbank_completed_orders():
     # Query MongoDB to get all orders
-    orders = Order.find({'BloodBank_Id':session.get('bb_reg_no'),'status': 'delivered'})
+    orders = Order.find({'BloodBank_Id': session.get('bb_reg_no'), 'status': 'delivered'})
 
     # Prepare the results to be displayed
     order_list = []
+    ist_timezone = pytz.timezone('Asia/Kolkata')
+
     for order in orders:
         user_id = order.get('User_ID')
         user_details = None
@@ -1393,10 +1395,8 @@ def bloodbank_completed_orders():
             if patient_details:
                 user_details = patient_details
 
-
-   
         if user_details:
-            order_list.append({
+            formatted_order = {
                 '_id': order.get('_id'),
                 'User_ID': order.get('User_ID'),
                 'BloodBank_Id': order.get('BloodBank_Id'),
@@ -1410,13 +1410,28 @@ def bloodbank_completed_orders():
                 'age': order.get('age'),
                 'docname': order.get('docname'),
                 'gender': order.get('gender'),
-                'timestamp': order.get('timestamp'),
-                'timeofdispatch': order.get('timeofdispatch'),
-                'timeofdelivery': order.get('timeofdelivery'),
                 'user_name': user_details.get('facility_name') or user_details.get('patient_name'),
                 'user_address': user_details.get('address'),
-                'phone_number':user_details.get('contact_num')
-            })
+                'phone_number': user_details.get('contact_num')
+            }
+
+            # Format timestamps if they exist
+            if 'timestamp' in order:
+                utc_timestamp = order['timestamp'].replace(tzinfo=pytz.utc)
+                ist_timestamp = utc_timestamp.astimezone(ist_timezone)
+                formatted_order['timestamp'] = ist_timestamp.strftime('%Y-%m-%d %H:%M:%S')
+                
+            if 'timeofdispatch' in order:
+                utc_timeofdispatch = order['timeofdispatch'].replace(tzinfo=pytz.utc)
+                ist_timeofdispatch = utc_timeofdispatch.astimezone(ist_timezone)
+                formatted_order['timeofdispatch'] = ist_timeofdispatch.strftime('%Y-%m-%d %H:%M:%S')
+
+            if 'timeofdelivery' in order:
+                utc_timeofdelivery = order['timeofdelivery'].replace(tzinfo=pytz.utc)
+                ist_timeofdelivery = utc_timeofdelivery.astimezone(ist_timezone)
+                formatted_order['timeofdelivery'] = ist_timeofdelivery.strftime('%Y-%m-%d %H:%M:%S')
+
+            order_list.append(formatted_order)
 
     return render_template('DeliveredBags.html', orders=order_list)
 
@@ -1424,10 +1439,12 @@ def bloodbank_completed_orders():
 @app.route('/dispatched', methods=['GET'])
 def bloodbank_dispatched_orders():
     # Query MongoDB to get all orders
-    orders = Order.find({'BloodBank_Id':session.get('bb_reg_no'),'status': 'dispatched'})
+    orders = Order.find({'BloodBank_Id': session.get('bb_reg_no'), 'status': 'dispatched'})
 
     # Prepare the results to be displayed
     order_list = []
+    ist_timezone = pytz.timezone('Asia/Kolkata')
+
     for order in orders:
         user_id = order.get('User_ID')
         user_details = None
@@ -1442,10 +1459,8 @@ def bloodbank_dispatched_orders():
             if patient_details:
                 user_details = patient_details
 
-
-   
         if user_details:
-            order_list.append({
+            formatted_order = {
                 '_id': order.get('_id'),
                 'User_ID': order.get('User_ID'),
                 'BloodBank_Id': order.get('BloodBank_Id'),
@@ -1459,15 +1474,26 @@ def bloodbank_dispatched_orders():
                 'age': order.get('age'),
                 'docname': order.get('docname'),
                 'gender': order.get('gender'),
-                'timestamp': order.get('timestamp'),
-                'timeofdispatch': order.get('timeofdispatch'),
                 'user_name': user_details.get('facility_name') or user_details.get('patient_name'),
                 'user_address': user_details.get('address'),
-                'phone_number':user_details.get('contact_num')
-            })
+                'phone_number': user_details.get('contact_num')
+            }
+
+            # Format timestamps if they exist
+            if 'timestamp' in order:
+                utc_timestamp = order['timestamp'].replace(tzinfo=pytz.utc)
+                ist_timestamp = utc_timestamp.astimezone(ist_timezone)
+                formatted_order['timestamp'] = ist_timestamp.strftime('%Y-%m-%d %H:%M:%S')
+                
+            if 'timeofdispatch' in order:
+                utc_timeofdispatch = order['timeofdispatch'].replace(tzinfo=pytz.utc)
+                ist_timeofdispatch = utc_timeofdispatch.astimezone(ist_timezone)
+                formatted_order['timeofdispatch'] = ist_timeofdispatch.strftime('%Y-%m-%d %H:%M:%S')
+
+            order_list.append(formatted_order)
 
     return render_template('BBDispatch.html', orders=order_list)
-
+    
 
 @app.route('/delorder1', methods=['GET'])
 def hosp_received_orders():
@@ -1476,6 +1502,8 @@ def hosp_received_orders():
 
     # Prepare the results to be displayed
     order_list = []
+    ist_timezone = pytz.timezone('Asia/Kolkata')
+
     for order in orders:
         # Query blood bank details
         blood_bank_details = BBUser.find_one({'reg_num': order.get('BloodBank_Id')})
@@ -1502,11 +1530,19 @@ def hosp_received_orders():
 
             # Format timestamps if they exist
             if 'timestamp' in order:
-                formatted_order['timestamp'] = order['timestamp'].strftime('%Y-%m-%d %H:%M:%S')
+                utc_timestamp = order['timestamp'].replace(tzinfo=pytz.utc)
+                ist_timestamp = utc_timestamp.astimezone(ist_timezone)
+                formatted_order['timestamp'] = ist_timestamp.strftime('%Y-%m-%d %H:%M:%S')
+                
             if 'timeofdispatch' in order:
-                formatted_order['timeofdispatch'] = order['timeofdispatch'].strftime('%Y-%m-%d %H:%M:%S')
+                utc_timeofdispatch = order['timeofdispatch'].replace(tzinfo=pytz.utc)
+                ist_timeofdispatch = utc_timeofdispatch.astimezone(ist_timezone)
+                formatted_order['timeofdispatch'] = ist_timeofdispatch.strftime('%Y-%m-%d %H:%M:%S')
+                
             if 'timeofdelivery' in order:
-                formatted_order['timeofdelivery'] = order['timeofdelivery'].strftime('%Y-%m-%d %H:%M:%S')
+                utc_timeofdelivery = order['timeofdelivery'].replace(tzinfo=pytz.utc)
+                ist_timeofdelivery = utc_timeofdelivery.astimezone(ist_timezone)
+                formatted_order['timeofdelivery'] = ist_timeofdelivery.strftime('%Y-%m-%d %H:%M:%S')
             
             order_list.append(formatted_order)
 
@@ -1516,16 +1552,18 @@ def hosp_received_orders():
 @app.route('/delorder2', methods=['GET'])
 def patient_received_orders():
     # Query MongoDB to get all orders
-    orders = Order.find({'User_ID': session.get('_id'),'status': 'delivered'})
+    orders = Order.find({'User_ID': session.get('_id'), 'status': 'delivered'})
 
-        # Prepare the results to be displayed
+    # Prepare the results to be displayed
     order_list = []
+    ist_timezone = pytz.timezone('Asia/Kolkata')
+    
     for order in orders:
         # Query blood bank details
         blood_bank_details = BBUser.find_one({'reg_num': order.get('BloodBank_Id')})
         
         if blood_bank_details:
-            order_list.append({
+            formatted_order = {
                 '_id': order.get('_id'),
                 'User_ID': order.get('User_ID'),
                 'BloodBank_Id': order.get('BloodBank_Id'),
@@ -1539,13 +1577,29 @@ def patient_received_orders():
                 'age': order.get('age'),
                 'docname': order.get('docname'),
                 'gender': order.get('gender'),
-                'timestamp': order.get('timestamp'),
-                'timeofdispatch': order.get('timeofdispatch'),
-                'timeofdelivery': order.get('timeofdelivery'),
                 'user_name': blood_bank_details.get('bb_name'),
                 'user_address': blood_bank_details.get('address'),
                 'phone_number': blood_bank_details.get('contact_num')
-            })
+            }
+
+            # Format timestamps if they exist
+            if 'timestamp' in order:
+                utc_timestamp = order['timestamp'].replace(tzinfo=pytz.utc)
+                ist_timestamp = utc_timestamp.astimezone(ist_timezone)
+                formatted_order['timestamp'] = ist_timestamp.strftime('%Y-%m-%d %H:%M:%S')
+                
+            if 'timeofdispatch' in order:
+                utc_timeofdispatch = order['timeofdispatch'].replace(tzinfo=pytz.utc)
+                ist_timeofdispatch = utc_timeofdispatch.astimezone(ist_timezone)
+                formatted_order['timeofdispatch'] = ist_timeofdispatch.strftime('%Y-%m-%d %H:%M:%S')
+                
+            if 'timeofdelivery' in order:
+                utc_timeofdelivery = order['timeofdelivery'].replace(tzinfo=pytz.utc)
+                ist_timeofdelivery = utc_timeofdelivery.astimezone(ist_timezone)
+                formatted_order['timeofdelivery'] = ist_timeofdelivery.strftime('%Y-%m-%d %H:%M:%S')
+
+            order_list.append(formatted_order)
+
     return render_template('PatientReceivedbags.html', orders=order_list)
 
 ################################################################
@@ -1572,6 +1626,16 @@ def Blood_bag_inProgress():
                 user_details = patient_details
 
         if user_details:
+            # Convert timestamp to Indian Standard Time (IST) and format it
+            ist_timezone = pytz.timezone('Asia/Kolkata')
+            timestamp = order.get('timestamp')
+            if timestamp:
+                utc_timestamp = timestamp.replace(tzinfo=pytz.utc)
+                ist_timestamp = utc_timestamp.astimezone(ist_timezone)
+                formatted_timestamp = ist_timestamp.strftime('%Y-%m-%d %H:%M:%S')
+            else:
+                formatted_timestamp = None
+
             order_list.append({
                 '_id': order.get('_id'),
                 'User_ID': user_id,
@@ -1584,17 +1648,15 @@ def Blood_bag_inProgress():
                 'mname': order.get('mname'),
                 'lname': order.get('lname'),
                 'age': order.get('age'),
-                
                 'docname': order.get('docname'),
                 'gender': order.get('gender'),
-                'timestamp': order.get('timestamp'),
+                'timestamp': formatted_timestamp,
                 'user_name': user_details.get('facility_name') or user_details.get('patient_name'),
                 'user_address': user_details.get('address'),
-                'phone_number':user_details.get('contact_num')
+                'phone_number': user_details.get('contact_num')
             })
 
     return render_template('BBNewReq.html', orders=order_list)
-
 
 ##############################################
 
@@ -1609,33 +1671,35 @@ def Hosp_Blood_bag_inProgress():
         # Query blood bank details
         blood_bank_details = BBUser.find_one({'reg_num': order.get('BloodBank_Id')})
 
-        # Convert timestamp to Indian Standard Time (IST)
+        # Convert timestamps to Indian Standard Time (IST) and format them
         ist_timezone = pytz.timezone('Asia/Kolkata')
-        ist_timestamp = datetime.now(pytz.utc).astimezone(ist_timezone)
-        
-        if blood_bank_details:
-            order_list.append({
-                '_id': order.get('_id'),
-                'User_ID': order.get('User_ID'),
-                'BloodBank_Id': order.get('BloodBank_Id'),
-                'BloodGrp': order.get('BloodGrp'),
-                'BloodComp': order.get('BloodComp'),
-                'BloodQuantity': order.get('BloodQuantity'),
-                'req_type': order.get('req_type'),
-                'fname': order.get('fname'),
-                'mname': order.get('mname'),
-                'lname': order.get('lname'),
-                'age': order.get('age'),
-             
-                'docname': order.get('docname'),
-                'gender': order.get('gender'),
-                'timestamp': order.get('ist_timestamp'),
-                'user_name': blood_bank_details.get('bb_name'),
-                'user_address': blood_bank_details.get('address'),
-                'phone_number': blood_bank_details.get('contact_num'),
-                'status':order.get('status')
+        formatted_order = {
+            '_id': order.get('_id'),
+            'User_ID': order.get('User_ID'),
+            'BloodBank_Id': order.get('BloodBank_Id'),
+            'BloodGrp': order.get('BloodGrp'),
+            'BloodComp': order.get('BloodComp'),
+            'BloodQuantity': order.get('BloodQuantity'),
+            'req_type': order.get('req_type'),
+            'fname': order.get('fname'),
+            'mname': order.get('mname'),
+            'lname': order.get('lname'),
+            'age': order.get('age'),
+            'docname': order.get('docname'),
+            'gender': order.get('gender'),
+            'user_name': blood_bank_details.get('bb_name'),
+            'user_address': blood_bank_details.get('address'),
+            'phone_number': blood_bank_details.get('contact_num'),
+            'status': order.get('status')
+        }
 
-            })
+        # Format timestamps if they exist
+        if 'timestamp' in order:
+            utc_timestamp = order['timestamp'].replace(tzinfo=pytz.utc)
+            ist_timestamp = utc_timestamp.astimezone(ist_timezone)
+            formatted_order['timestamp'] = ist_timestamp.strftime('%Y-%m-%d %H:%M:%S')
+
+        order_list.append(formatted_order)
 
     return render_template('HospitalPendingReq.html', orders=order_list)
 
@@ -1645,7 +1709,7 @@ def Hosp_Blood_bag_inProgress():
 @app.route('/Patient_Pending_Req', methods=['GET'])
 def Patient_Blood_bag_inProgress():
     # Query MongoDB to get all orders
-    orders = Order.find({'User_ID':session.get('_id')})
+    orders = Order.find({'User_ID': session.get('_id')})
 
     # Prepare the results to be displayed
     order_list = []
@@ -1654,7 +1718,10 @@ def Patient_Blood_bag_inProgress():
         blood_bank_details = BBUser.find_one({'reg_num': order.get('BloodBank_Id')})
         
         if blood_bank_details:
-            order_list.append({
+            # Convert timestamp to Indian Standard Time (IST) and format them
+            ist_timezone = pytz.timezone('Asia/Kolkata')
+
+            formatted_order = {
                 '_id': order.get('_id'),
                 'User_ID': order.get('User_ID'),
                 'BloodBank_Id': order.get('BloodBank_Id'),
@@ -1666,20 +1733,23 @@ def Patient_Blood_bag_inProgress():
                 'mname': order.get('mname'),
                 'lname': order.get('lname'),
                 'age': order.get('age'),
-
                 'docname': order.get('docname'),
                 'gender': order.get('gender'),
-                'timestamp': order.get('timestamp'),
                 'user_name': blood_bank_details.get('bb_name'),
                 'user_address': blood_bank_details.get('address'),
                 'phone_number': blood_bank_details.get('contact_num'),
-                'status':order.get('status')
-            })
+                'status': order.get('status')
+            }
+
+            # Format timestamps if they exist
+            if 'timestamp' in order:
+                utc_timestamp = order['timestamp'].replace(tzinfo=pytz.utc)
+                ist_timestamp = utc_timestamp.astimezone(ist_timezone)
+                formatted_order['timestamp'] = ist_timestamp.strftime('%Y-%m-%d %H:%M:%S')
+
+            order_list.append(formatted_order)
 
     return render_template('PatientPendingReq.html', orders=order_list)
-
-
-
 
 
 
