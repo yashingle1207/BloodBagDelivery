@@ -79,24 +79,23 @@
 <section class="order-details">
     {% if order %}
         <h2>Dispatched Order Details</h2>
-<hr> 
+        <hr> 
         <p><strong>User Name:</strong> {{ order.user_name }}</p>
         <p><strong>User Address:</strong> {{ order.user_address }}</p>
         <p><strong>Phone Number:</strong> {{ order.phone_number }}</p>
-<hr> 
+        <hr> 
         <p><strong>Blood Group:</strong> {{ order.BloodGrp }}</p>
         <p><strong>Blood Component:</strong> {{ order.BloodComp }}</p>
         <p><strong>Blood Quantity:</strong> {{ order.BloodQuantity }}</p>
         <p><strong>Request Type:</strong> {{ order.req_type }}</p>
-<hr> 
+        <hr> 
         <p><strong>First Name:</strong> {{ order.fname }}</p>
         <p><strong>Middle Name:</strong> {{ order.mname }}</p>
         <p><strong>Last Name:</strong> {{ order.lname }}</p>
         <p><strong>Age:</strong> {{ order.age }}</p>
         <p><strong>Doctor Name:</strong> {{ order.docname }}</p>
         <p><strong>Gender:</strong> {{ order.gender }}</p>
-<hr> 
-      
+        <hr>    
         <p><strong>Timestamp:</strong> {{ order.timestamp }}</p>
         <p><strong>Time of Dispatch:</strong> {{ order.timeofdispatch }}</p>
        
