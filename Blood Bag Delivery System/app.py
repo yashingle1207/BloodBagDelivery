@@ -472,6 +472,7 @@ def HospsignIn():
         hosp_email = request.form.get('hospEmailId')
         hosp_password = request.form.get('hospPassword')
 
+        # Check if the user exists and their email is verified
         existing_user = HospUser.find_one({'email': hosp_email, 'password': hosp_password, 'email_verified': True})
         
         if existing_user:
@@ -480,15 +481,16 @@ def HospsignIn():
             # Set the registration number in the session
             session['hosp_reg_no'] = hosp_reg_no 
 
-            # Redirect to the hospital dashboard
+            # Redirect to the hospital dashboard or render a template
             # return redirect(url_for('HospDashboard'))
             return render_template('HospitalDashboard.html',  hosp_reg_no=hosp_reg_no )
 
         else:
+            # If user login is unsuccessful due to unverified email
             return render_template('LoginUnsuccessful.html')
 
+    # If the request method is not POST, render the login page
     response = app.make_response(render_template('HospitalSignIn.html'))
-
     return response
 
 
