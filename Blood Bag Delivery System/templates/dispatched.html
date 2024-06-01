@@ -12,9 +12,26 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/LogoTT.png') }}">
 
+    <style>
+        p {
+            font-size: 20px; /* Changed font size to match other text */
+        }
+
+        h2{
+            font-size: 24px;
+        }
+
+        /* Style for hr elements */
+        hr {
+            border: 0;
+            border-top: 1px solid #ccc;
+            margin: 20px 0;
+        }
+    </style>
+
 </head>
 <body>
-    
+
 <div class="container">
 
 <header>
@@ -61,22 +78,25 @@
 
 <section class="order-details">
     {% if order %}
-        <h2>Order Details</h2>
-        <p><strong>User ID:</strong> {{ order.User_ID }}</p>
-        <p><strong>Blood Bank ID:</strong> {{ order.BloodBank_Id }}</p>
+        <h2>Dispatched Order Details</h2>
+<hr> 
+        <p><strong>User Name:</strong> {{ order.user_name }}</p>
+        <p><strong>User Address:</strong> {{ order.user_address }}</p>
+        <p><strong>Phone Number:</strong> {{ order.phone_number }}</p>
+<hr> 
         <p><strong>Blood Group:</strong> {{ order.BloodGrp }}</p>
         <p><strong>Blood Component:</strong> {{ order.BloodComp }}</p>
         <p><strong>Blood Quantity:</strong> {{ order.BloodQuantity }}</p>
         <p><strong>Request Type:</strong> {{ order.req_type }}</p>
+<hr> 
         <p><strong>First Name:</strong> {{ order.fname }}</p>
         <p><strong>Middle Name:</strong> {{ order.mname }}</p>
         <p><strong>Last Name:</strong> {{ order.lname }}</p>
         <p><strong>Age:</strong> {{ order.age }}</p>
         <p><strong>Doctor Name:</strong> {{ order.docname }}</p>
         <p><strong>Gender:</strong> {{ order.gender }}</p>
-        <p><strong>User Name:</strong> {{ order.user_name }}</p>
-        <p><strong>User Address:</strong> {{ order.user_address }}</p>
-        <p><strong>Phone Number:</strong> {{ order.phone_number }}</p>
+<hr> 
+      
         <p><strong>Timestamp:</strong> {{ order.timestamp }}</p>
         <p><strong>Time of Dispatch:</strong> {{ order.timeofdispatch }}</p>
        
@@ -84,6 +104,7 @@
         <p>No order details available.</p>
     {% endif %}
 </section>
+
 
 <section class="footer">
     <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to Ingle Laboratory
