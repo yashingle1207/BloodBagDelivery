@@ -616,19 +616,19 @@ def Hospsignup():
 
 
 def send_hosp_email_verification(email, token):
-   subject = 'Email Verification for Authentication'
-   body = f'''<p>Dear User,</p>
-<p>Welcome to TransfusioTrack!</p>
-<p>TransfusioTrack is India's first blood bag order placing and delivery system, innovating seamless blood delivery through advanced technology.</p>
-<p>To verify your email and unlock the full features of our platform, please click the following link:</p>
-<p><a href="{url_for("verify_email", token=token, _external=True)}">Verify Email</a></p>
-<p>This verification is crucial to protect your account from any unauthorized access or theft. Once verified, you will gain access to blood bag order placing and smooth delivery services.</p>
-<p>If you did not request this verification or suspect any unauthorized activity, please report it to us immediately at <a href="mailto:transfusiotrack@gmail.com">transfusiotrack@gmail.com</a>. Do not verify the link until you confirm its legitimacy.</p>
-<p>In case of any issues with verification or further assistance, please feel free to contact us at the provided email address.</p>
-<p>Thank you for choosing TransfusioTrack!</p>
-<p>Regards,</p>
-<p>TransfusioTrack Team</p>'''
-    
+    subject = 'Email Verification for Authentication'
+    body = f'''<p>Dear User,</p>
+        <p>Welcome to TransfusioTrack!</p>
+        <p>TransfusioTrack is India's first blood bag order placing and delivery system, innovating seamless blood delivery through advanced technology.</p>
+        <p>To verify your email and unlock the full features of our platform, please click the following link:</p>
+        <p><a href="{url_for("verify_email", token=token, _external=True)}">Verify Email</a></p>
+        <p>This verification is crucial to protect your account from any unauthorized access or theft. Once verified, you will gain access to blood bag order placing and smooth delivery services.</p>
+        <p>If you did not request this verification or suspect any unauthorized activity, please report it to us immediately at <a href="mailto:transfusiotrack@gmail.com">transfusiotrack@gmail.com</a>. Do not verify the link until you confirm its legitimacy.</p>
+        <p>In case of any issues with verification or further assistance, please feel free to contact us at the provided email address.</p>
+        <p>Thank you for choosing TransfusioTrack!</p>
+        <p>Regards,</p>
+        <p>TransfusioTrack Team</p>'''
+
     message = MIMEMultipart()
     message['From'] = EMAIL_FROM
     message['To'] = email
@@ -640,6 +640,7 @@ def send_hosp_email_verification(email, token):
     server.login(EMAIL_FROM, EMAIL_PASSWORD)
     server.sendmail(EMAIL_FROM, email, message.as_string())
     server.quit()
+
 
 
 @app.route('/verify_email/<token>', methods=['GET'])
@@ -697,17 +698,18 @@ def Psignup():
 
 def send_paitent_email_verification(email, token):
     subject = 'Email Verification for Authentication'
-     body = f'''<p>Dear User,</p>
-<p>Welcome to TransfusioTrack!</p>
-<p>TransfusioTrack is India's first blood bag order placing and delivery system, innovating seamless blood delivery through advanced technology.</p>
-<p>To verify your email and unlock the full features of our platform, please click the following link:</p>
-<p><a href="{url_for("verify_email", token=token, _external=True)}">Verify Email</a></p>
-<p>This verification is crucial to protect your account from any unauthorized access or theft. Once verified, you will gain access to blood bag order placing and smooth delivery services.</p>
-<p>If you did not request this verification or suspect any unauthorized activity, please report it to us immediately at <a href="mailto:transfusiotrack@gmail.com">transfusiotrack@gmail.com</a>. Do not verify the link until you confirm its legitimacy.</p>
-<p>In case of any issues with verification or further assistance, please feel free to contact us at the provided email address.</p>
-<p>Thank you for choosing TransfusioTrack!</p>
-<p>Regards,</p>
-<p>TransfusioTrack Team</p>'''
+    body = f'''<p>Dear User,</p>
+        <p>Welcome to TransfusioTrack!</p>
+        <p>TransfusioTrack is India's first blood bag order placing and delivery system, innovating seamless blood delivery through advanced technology.</p>
+        <p>To verify your email and unlock the full features of our platform, please click the following link:</p>
+        <p><a href="{url_for("verify_email", token=token, _external=True)}">Verify Email</a></p>
+        <p>This verification is crucial to protect your account from any unauthorized access or theft. Once verified, you will gain access to blood bag order placing and smooth delivery services.</p>
+        <p>If you did not request this verification or suspect any unauthorized activity, please report it to us immediately at <a href="mailto:transfusiotrack@gmail.com">transfusiotrack@gmail.com</a>. Do not verify the link until you confirm its legitimacy.</p>
+        <p>In case of any issues with verification or further assistance, please feel free to contact us at the provided email address.</p>
+        <p>Thank you for choosing TransfusioTrack!</p>
+        <p>Regards,</p>
+        <p>TransfusioTrack Team</p>'''
+
     message = MIMEMultipart()
     message['From'] = EMAIL_FROM
     message['To'] = email
@@ -719,7 +721,6 @@ def send_paitent_email_verification(email, token):
     server.login(EMAIL_FROM, EMAIL_PASSWORD)
     server.sendmail(EMAIL_FROM, email, message.as_string())
     server.quit()
-
 
 @app.route('/verify_email_patient/<token>', methods=['GET'])
 def verify_email_patient(token):
