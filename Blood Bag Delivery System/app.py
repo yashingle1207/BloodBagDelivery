@@ -472,7 +472,8 @@ def HospsignIn():
         hosp_email = request.form.get('hospEmailId')
         hosp_password = request.form.get('hospPassword')
 
-        existing_user = HospUser.find_one({'email': hosp_email, 'password': hosp_password})
+        existing_user = HospUser.find_one({'email': hosp_email, 'password': hosp_password, 'email_verified': True})
+        
         if existing_user:
             hosp_reg_no = existing_user.get('reg_num')
 
@@ -523,7 +524,7 @@ def PsignIn():
         p_password = request.form.get('patientPassword1')
 
         # Check if the user exists in the database
-        existing_user = PatientUser.find_one({'email': p_email, 'password': p_password})
+        existing_user = PatientUser.find_one({'email': p_email, 'password': p_password, 'email_verified': True})
         if existing_user:
             patient_reg_no = str(existing_user.get('email'))
 
