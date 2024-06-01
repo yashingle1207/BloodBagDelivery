@@ -79,9 +79,7 @@
         <p><strong>Phone Number:</strong> {{ order.phone_number }}</p>
         <p><strong>Timestamp:</strong> {{ order.timestamp }}</p>
         <p><strong>Time of Dispatch:</strong> {{ order.timeofdispatch }}</p>
-        {% if order.timeofdelivery %}
-            <p><strong>Time of Delivery:</strong> {{ order.timeofdelivery }}</p>
-        {% endif %}
+       
     {% else %}
         <p>No order details available.</p>
     {% endif %}
