@@ -3,77 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login-Failed</title>
+    <title>Login Failed</title>
 
     <!-- Font Awesome CDN link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <!-- Custom CSS file link -->
     <link rel="stylesheet" href="static/style.css">
-      <link rel="icon" type="image/png" href="static/images/LogoTT.png">
-
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
 
     <style>
-        .contact {
-    margin-top: 20px;
-}
+        hr {
+            border: 0;
+            border-top: 2px solid #ccc;
+            margin: 10px auto;
+            margin-top:40px;
+            max-width: 1250px; /* Adjust the width as needed */
+        }
 
-h2 {
-    text-align: center;
-    color: #333;
-    font-size: 24px;
-     margin-top: 50px;
-}
+        h1, h2 {
+            text-align: left;
+            color: #333;
+            font-size: 24px;
+            margin-top: 20px;
+            margin-left: 80px;
+        }
 
-ul {
-    list-style-type: none;
-    padding: 0;
-    text-align: center;
-}
+        ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+        }
 
-li {
-    margin-bottom: 30px;
-    padding: 25px;
-    font-size: 30px;
-    border: 1px solid #ddd;
-    background-color: #fff;
-    border-radius: 5px;
-}
+        li {
+            margin-bottom: 30px;
+            padding: 25px;
+            font-size: 30px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            border-radius: 5px;
+        }
 
-p {
-    text-align: left;
-    color: #555;
-    font-size: 18px;
-    margin-top: 30px;
-}
+        p {
+            text-align: left;
+            color: #555;
+            font-size: 22px;
+            margin-top: 30px;
+            margin-left: 80px;
+            margin-right: 80px;
+        }
+
 
     </style>
 </head>
 <body>
 
-
-
 <div class="container">
-
     <header>
-
         <a href="/" class="logo">Transfusio<span>Track</span></a>
-
         <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
-
         <nav class="navbar" id="navbar">
              <a href="/">Home</a>
             <a href="/HospSign">Hospital Login</a>
             <a href="/BBSign">BloodBank Login</a>
-             <a href="/PatientSign">Patient Login</a>
-            <a href="/aboutus">About Us</a>
+            <a href="/PatientSign">Patient Login</a>
+            <a href="/guide">Our Guide</a>
             <a href="/contact">Contact Us</a>
-
         </nav>
     </header>
- 
 
- <script>
+    <script>
         function toggleNavbar() {
             var navbar = document.getElementById("navbar");
             if (navbar.classList.contains("active")) {
@@ -82,28 +81,31 @@ p {
                 navbar.classList.add("active");
             }
         }
-        </script>
+    </script>
 
-    <h1 class="heading">OPPS!! Login In failed</h1>
+    <h1 class="heading">Oops!! Login Failed</h1>
 
-    <h2> Please enter valid Credentials </h2>
+    <h2>Please enter valid credentials.</h2>
+    <h2>If you have not verified your email, please verify it first. Then try logging in again.</h2>
 
-    <h2> If you do not have TransfusioTrack Account<br> Kindly Sign up with us!! </h2>
-    <h2> Take your next step towards the seamless transportation of Blood</h2>
-
-
-
-    <div class="herflink">
-          <a href="/" class="btn">Try Again</a>
-        </div>
-
-   <section class="footer">
-
-
-
-    <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to Ingle Laboratory
+    <div class="herflink" >
+        <a href="/" class="btn">Try Again</a>
     </div>
 
-</section>
+    <hr>
+
+    <h1 class="heading">Sign Up First</h1>
+    <h2>If you do not have a TransfusioTrack Account:</h2>
+    <p>Sign up with us and Take your next step towards seamless transportation of blood. <br> Use our guide to understand the process of signing up on the platform</p>
+
+    <div class="herflink" >
+        <a href="/guide" class="btn">Check out our guide</a>
+    </div>
+
+   <section class="footer">
+       <div class="credit">Created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory</div>
+   </section>
+</div>
+
 </body>
 </html>
