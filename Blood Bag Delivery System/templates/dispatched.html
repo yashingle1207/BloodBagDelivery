@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <!-- custom css file link  -->
-    <link rel="stylesheet" href="static/style.css">
-      <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/LogoTT.png') }}">
 
 </head>
 <body>
@@ -19,7 +19,7 @@
 
 <header>
 
-      <a href="/" class="logo">Transfusio<span>Track</span></a>
+    <a href="/" class="logo">Transfusio<span>Track</span></a>
 
     <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
 
@@ -27,48 +27,69 @@
         {% if 'bb_reg_no' in session %}
             <a>Blood Bank ID: {{ session['bb_reg_no'] }}</a>
         {% endif %}
-          <a href="/BBDashboard">BloodBank Dashboard</a>
-         <a href="/">Logout</a>
+        <a href="/BBDashboard">BloodBank Dashboard</a>
+        <a href="/">Logout</a>
     </nav>
 
 </header>
 
- <script>
-        function toggleNavbar() {
-            var navbar = document.getElementById("navbar");
-            if (navbar.classList.contains("active")) {
-                navbar.classList.remove("active");
-            } else {
-                navbar.classList.add("active");
-            }
+<script>
+    function toggleNavbar() {
+        var navbar = document.getElementById("navbar");
+        if (navbar.classList.contains("active")) {
+            navbar.classList.remove("active");
+        } else {
+            navbar.classList.add("active");
         }
-        </script>
-
+    }
+</script>
 
 <section class="home">
 
-      <div class="content">
+    <div class="content">
         <h3>Blood Bag Dispatched Successfully!!</h3>
         <p>
             <a href="/dispatched" style="text-decoration: none; color: inherit;">Click Here To View Dispatched Orders</a>
         </p>
     </div>
 
-        <div class="image">
+    <div class="image">
         <img src="{{ url_for('static', filename='images/h2.gif') }}" alt="">
-        </div>
+    </div>
 
 </section>
 
+<section class="order-details">
+    {% if order %}
+        <h2>Order Details</h2>
+        <p><strong>User ID:</strong> {{ order.User_ID }}</p>
+        <p><strong>Blood Bank ID:</strong> {{ order.BloodBank_Id }}</p>
+        <p><strong>Blood Group:</strong> {{ order.BloodGrp }}</p>
+        <p><strong>Blood Component:</strong> {{ order.BloodComp }}</p>
+        <p><strong>Blood Quantity:</strong> {{ order.BloodQuantity }}</p>
+        <p><strong>Request Type:</strong> {{ order.req_type }}</p>
+        <p><strong>First Name:</strong> {{ order.fname }}</p>
+        <p><strong>Middle Name:</strong> {{ order.mname }}</p>
+        <p><strong>Last Name:</strong> {{ order.lname }}</p>
+        <p><strong>Age:</strong> {{ order.age }}</p>
+        <p><strong>Doctor Name:</strong> {{ order.docname }}</p>
+        <p><strong>Gender:</strong> {{ order.gender }}</p>
+        <p><strong>User Name:</strong> {{ order.user_name }}</p>
+        <p><strong>User Address:</strong> {{ order.user_address }}</p>
+        <p><strong>Phone Number:</strong> {{ order.phone_number }}</p>
+        <p><strong>Timestamp:</strong> {{ order.timestamp }}</p>
+        <p><strong>Time of Dispatch:</strong> {{ order.timeofdispatch }}</p>
+        {% if order.timeofdelivery %}
+            <p><strong>Time of Delivery:</strong> {{ order.timeofdelivery }}</p>
+        {% endif %}
+    {% else %}
+        <p>No order details available.</p>
+    {% endif %}
+</section>
 
-
-   <section class="footer">
-
-
-
+<section class="footer">
     <div class="credit"> created by <span> Team Transfusio </span> | All @rights reserved to Ingle Laboratory
     </div>
-
 </section>
 
 </body>
