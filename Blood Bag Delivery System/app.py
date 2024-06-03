@@ -428,8 +428,8 @@ def settle_payment():
 @app.route('/admin_dashboard')
 def admin_dashboard():
     # Fetch transactions that are not yet settled from the 'Orders' collection
-    transactions = Order.find({'settlement_status': {'$ne': True}})
-    return render_template('admin_dashboard.html', transactions=transactions)
+    transactions = Order.find({'settlement_status': {'$ne': False}})
+    return render_template('AdminDashboard.html', transactions=transactions)
 ################# Admin Login ############################
 
 @app.route('/AdminSignIn', methods=['POST'])
