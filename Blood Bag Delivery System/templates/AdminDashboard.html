@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-
     <!-- Font Awesome CDN link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
     <!-- Custom CSS file link -->
-    <link rel="stylesheet" href="static/style.css">
-    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/LogoTT.png') }}">
 
     <style>
         /* General table styles */
@@ -113,7 +111,7 @@
 
 <h1 class="heading">Welcome To Admin Dashboard</h1>
 
-<form action="/settle_payment" method="POST">
+<form action="{{ url_for('settle_payment') }}" method="POST">
     <table>
         <tr>
             <th>Blood Bank Name</th>
@@ -139,12 +137,12 @@
                 <td>{{ transaction.total_amount_per_component }}</td>
                 <td class="commission-fee">
                     <input type="number" min="0" max="100" step="0.01"
-                           oninput="updateTotalAmountPayable(this, {{ transaction.total_amount_per_component }}, document.getElementById('total-{{ transaction.id }}'))">
+                           oninput="updateTotalAmountPayable(this, {{ transaction.total_amount_per_component }}, document.getElementById('total-{{ transaction._id }}'))">
                 </td>
                 <td>
-                    <input type="radio" name="selected_transaction" value="{{ transaction.id }}">
+                    <input type="radio" name="selected_transaction" value="{{ transaction._id }}">
                 </td>
-                <td id="total-{{ transaction.id }}">{{ transaction.total_amount_per_component }}</td>
+                <td id="total-{{ transaction._id }}">{{ transaction.total_amount_per_component }}</td>
             </tr>
         {% endfor %}
 
