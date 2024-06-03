@@ -2289,7 +2289,9 @@ def adminL():
 
 @app.route('/settled')
 def settlepayments():
-    return render_template('AdminSettled_payments.html')
+    transactions = Order.find({'settlement_payment': True})
+    return render_template('AdminSettled_payments.html', transactions=transactions)
+
 
 
 
