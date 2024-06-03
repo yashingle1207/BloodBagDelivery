@@ -934,7 +934,7 @@ def verify_otp():
                 # Update the order with timeofdelivery and status delivered
                 Order.update_one(
                     {'_id': ObjectId(order_id)},
-                    {'$set': {'status': 'delivered', 'timeofdelivery': current_datetime}}
+                    {'$set': {'status': 'delivered', 'timeofdelivery': str(current_datetime)}}
                 )
                 
                 # Prepare email content
@@ -1185,7 +1185,7 @@ def update_delivery_status(order_id):
     # Update the status to 'dispatched', add timestamp for time of dispatch (in IST), and store OTP
     Order.update_one(
         {'_id': ObjectId(order_id)},
-        {'$set': {'status': 'dispatched', 'timeofdispatch': current_datetime_ist, 'otp': otp}}
+        {'$set': {'status': 'dispatched', 'timeofdispatch': str(current_datetime_ist), 'otp': otp}}
     )
 
     user_id = Order.find_one({'_id': ObjectId(order_id)})['User_ID']
