@@ -2289,7 +2289,7 @@ def adminL():
 
 @app.route('/settled')
 def settlepayments():
-    transactions = Order.find({'settlement_payment': True})
+    transactions = Order.find({'settlement_status': True})
     return render_template('AdminSettled_payments.html', transactions=transactions)
 
 
