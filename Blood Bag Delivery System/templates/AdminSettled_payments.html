@@ -42,7 +42,7 @@
             }
         }
 
-        h1{
+        h1 {
             font-size: 50px;
             margin-top: 15px;
             margin-bottom: 35px;
@@ -64,7 +64,7 @@
     <a href="/" class="logo">Transfusio<span>Track</span></a>
     <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
     <nav class="navbar" id="navbar">
-         <a href="/admindash">Admin Dashboard</a>
+        <a href="/admindash">Admin Dashboard</a>
         <a href="/settled">Settled Payments</a>
         <a href="">Blood Bank Dropdown</a>
         <a href="#">Date Filter</a>
@@ -74,43 +74,31 @@
 
 <h1 class="heading">Settled Payments (Already Paid)</h1>
 
-<form action="/settle_payment" method="POST">
-    <table>
-        <tr>
-            <th>Blood Bank Name</th>
-            <th>Address</th>
-            <th>Contact No.</th>
-            <th>Blood Component</th>
-            <th>Quantity Sold (Units)</th>
-            <th>Price per Unit</th>
-            <th>Total Amount per Component</th>
-            <th>Select</th>
-            <th>Total Amount Payable</th>
-        </tr>
+<table>
+    <tr>
+        <th>Blood Bank Name</th>
+        <th>Address</th>
+        <th>Contact No.</th>
+        <th>Blood Component</th>
+        <th>Quantity Sold (Units)</th>
+        <th>Price per Unit</th>
+        <th>Total Amount per Component</th>
+        <th>Total Amount Payable</th>
+    </tr>
 
-        {% for transaction in transactions %}
-            <tr>
-                <td>{{ transaction.blood_bank_name }}</td>
-                <td>{{ transaction.address }}</td>
-                <td>{{ transaction.contact_no }}</td>
-                <td>{{ transaction.component }}</td>
-                <td>{{ transaction.quantity_sold }}</td>
-                <td>{{ transaction.price_per_unit }}</td>
-                <td>{{ transaction.total_amount_per_component }}</td>
-                <td>
-                    <input type="radio" name="selected_transaction" value="{{ transaction.id }}">
-                </td>
-                <td>{{ transaction.total_amount_payable }}</td>
-            </tr>
-        {% endfor %}
-
+    {% for transaction in transactions %}
         <tr>
-            <td colspan="9" style="text-align: center;">
-                <input class='btn' type="submit" value="Settle Payment">
-            </td>
+            <td>{{ transaction.blood_bank_name }}</td>
+            <td>{{ transaction.address }}</td>
+            <td>{{ transaction.contact_no }}</td>
+            <td>{{ transaction.component }}</td>
+            <td>{{ transaction.quantity_sold }}</td>
+            <td>{{ transaction.price_per_unit }}</td>
+            <td>{{ transaction.total_amount_per_component }}</td>
+            <td>{{ transaction.total_amount_payable }}</td>
         </tr>
-    </table>
-</form>
+    {% endfor %}
+</table>
 
 <!-- Footer section -->
 <section class="footer">
