@@ -1,7 +1,7 @@
 from datetime import datetime
 from bson import ObjectId
 import os
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for,flash
 from pymongo import MongoClient
 import uuid
 import requests
@@ -477,7 +477,7 @@ def adminsignIn():
                         'price_per_unit': price_per_unit,
                         'total_amount_per_component': total_amount_per_component,
                         'total_amount_payable': total_amount_payable,
-                        'id': str(orders[0]['_id'])  # Assuming each order has a unique '_id'
+                        '_id': str(orders[0]['_id'])  # Assuming each order has a unique '_id'
                     })
 
             return render_template('AdminDashboard.html', transactions=transactions)
