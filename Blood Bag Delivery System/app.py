@@ -408,6 +408,28 @@ def home():
 
 
 
+################# Settle Payment #############################
+@app.route('/settle_payment', methods=['POST'])
+def settle_payment():
+    transaction_id = request.form.get('selected_transaction')
+
+    if transaction_id:
+        # Update the settlement status of the selected transaction in the 'Orders' collection
+        Order.update_one(
+            {'_id': ObjectId(transaction_id)},
+            {'$set': {'settlement_status': True}}
+        )
+        flash("Payment settled successfully.", "success")
+    else:
+        flash("No transaction selected.", "danger")
+
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/admin_dashboard')
+def admin_dashboard():
+    # Fetch transactions that are not yet settled from the 'Orders' collection
+    transactions = Order.find({'settlement_status': {'$ne': True}})
+    return render_template('admin_dashboard.html', transactions=transactions)
 ################# Admin Login ############################
 
 @app.route('/AdminSignIn', methods=['POST'])
