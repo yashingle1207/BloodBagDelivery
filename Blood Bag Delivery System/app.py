@@ -240,7 +240,7 @@ def payment_response():
                     'status': 'undelivered',
                     'phonepe_transaction_id': phonepe_transaction_id,  # Add PhonePe transaction ID
                     'total_amount': total_amt,  # Add total amount paid
-                    'settlement_status':false
+                    'settlement_status':False
                 }
 
                 # Insert order data into MongoDB
