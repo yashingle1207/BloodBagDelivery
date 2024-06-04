@@ -1925,7 +1925,7 @@ def Hosp_Blood_bag_inProgress():
 #     return render_template('PatientPendingReq.html', orders=order_list)
 
 
-@app.route('/Patient_Pending_Req', methods=['GET'])
+@app.route('/Patient_Blood_bag_inProgress', methods=['GET'])
 def Patient_Blood_bag_inProgress():
     # Query MongoDB to get all orders
     orders = Order.find({'User_ID': session.get('_id')})
@@ -1937,29 +1937,31 @@ def Patient_Blood_bag_inProgress():
         blood_bank_details = BBUser.find_one({'reg_num': order.get('BloodBank_Id')})
 
         formatted_order = {
-                '_id': order.get('_id'),
-                'User_ID': order.get('User_ID'),
-                'BloodBank_Id': order.get('BloodBank_Id'),
-                'BloodGrp': order.get('BloodGrp'),
-                'BloodComp': order.get('BloodComp'),
-                'BloodQuantity': order.get('BloodQuantity'),
-                'req_type': order.get('req_type'),
-                'fname': order.get('fname'),
-                'mname': order.get('mname'),
-                'lname': order.get('lname'),
-                'age': order.get('age'),
-                'docname': order.get('docname'),
-                'gender': order.get('gender'),
-                'user_name': blood_bank_details.get('bb_name'),
-                'user_address': blood_bank_details.get('address'),
-                'phone_number': blood_bank_details.get('contact_num'),
-                'status': order.get('status'),
-                'timestamp': order.get('timestamp', '').split('.')[0] if 'timestamp' in order else None
-            }
+            '_id': order.get('_id'),
+            'User_ID': order.get('User_ID'),
+            'BloodBank_Id': order.get('BloodBank_Id'),
+            'BloodGrp': order.get('BloodGrp'),
+            'BloodComp': order.get('BloodComp'),
+            'BloodQuantity': order.get('BloodQuantity'),
+            'req_type': order.get('req_type'),
+            'fname': order.get('fname'),
+            'mname': order.get('mname'),
+            'lname': order.get('lname'),
+            'age': order.get('age'),
+            'docname': order.get('docname'),
+            'gender': order.get('gender'),
+            'user_name': blood_bank_details.get('bb_name'),
+            'user_address': blood_bank_details.get('address'),
+            'phone_number': blood_bank_details.get('contact_num'),
+            'status': order.get('status'),
+            'timestamp': order.get('timestamp', '').split('.')[0] if 'timestamp' in order else None
+        }
 
-            order_list.append(formatted_order)
+        
+        order_list.append(formatted_order)
 
     return render_template('PatientPendingReq.html', orders=order_list)
+
 
 
 ##################################################
