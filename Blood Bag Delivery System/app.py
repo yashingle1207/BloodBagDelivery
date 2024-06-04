@@ -1936,7 +1936,7 @@ def Patient_Blood_bag_inProgress():
         # Query blood bank details
         blood_bank_details = BBUser.find_one({'reg_num': order.get('BloodBank_Id')})
 
-            formatted_order = {
+        formatted_order = {
                 '_id': order.get('_id'),
                 'User_ID': order.get('User_ID'),
                 'BloodBank_Id': order.get('BloodBank_Id'),
