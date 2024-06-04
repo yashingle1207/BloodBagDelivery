@@ -1817,10 +1817,10 @@ def Blood_bag_inProgress():
         user_details = patient_details
 
     if user_details:
-      # No timestamp conversion, apply splitting logic
+      # Assuming timestamp is always a string, directly split
       timestamp = order.get('timestamp', '')
       if timestamp:
-        timestamp = timestamp.split('.')[0]  # Split if a string exists
+        timestamp = timestamp.split('.')[0]
       else:
         timestamp = None
 
@@ -1845,6 +1845,8 @@ def Blood_bag_inProgress():
       })
 
   return render_template('BBNewReq.html', orders=order_list)
+
+
 ##############################################
 
 # @app.route('/Hosp_Pending_Req', methods=['GET'])
