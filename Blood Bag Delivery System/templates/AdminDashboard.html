@@ -81,18 +81,16 @@
         }
 
         /* Filter and Sort Order Styles */
-
-          .filter-sort-container {
+        .filter-sort-container {
             text-align: left;
-
         }
 
-         .filter-sort-container label {
+        .filter-sort-container label {
             font-size: 18px;
             margin-right: 10px;
         }
 
-         .filter-sort-container select,
+        .filter-sort-container select,
         .filter-sort-container input {
             padding: 8px 12px;
             font-size: 16px;
@@ -108,14 +106,11 @@
             background-color: #e2e2e2;
         }
 
-
         .filter-container {
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 20px;
-
-
         }
 
         .filter-sort-container {
@@ -125,7 +120,6 @@
         .date-filter-container {
             display: flex;
             align-items: center;
-
         }
 
         .date-filter-container label {
@@ -149,7 +143,7 @@
             background-color: #e2e2e2;
         }
 
-      .btn {
+        .btn {
             background-color: #ff4757;
             color: white;
             padding: 10px 20px;
@@ -158,21 +152,18 @@
             cursor: pointer;
             margin: 10px;
         }
-
-
     </style>
 </head>
 <body>
 
 <div class="container">
-
 <header>
     <a href="/" class="logo">Transfusio<span>Track</span></a>
     <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
     <nav class="navbar" id="navbar">
-         <a href="/admin_dashboard">Admin Dashboard</a>
+        <a href="/admin_dashboard">Admin Dashboard</a>
         <a href="/settled">Settled Payments</a>
-        <a href="AdminLogin">Logout</a>
+        <a href="/AdminLogin">Logout</a>
     </nav>
 </header>
 
@@ -193,10 +184,9 @@
 
     <!-- Date Filter -->
     <div class="date-filter-container">
-
-        <label for="dateFrom"> From:</label>
+        <label for="dateFrom">From:</label>
         <input type="text" id="dateFrom" placeholder="Select date">
-        <label for="dateTo"> To:</label>
+        <label for="dateTo">To:</label>
         <input type="text" id="dateTo" placeholder="Select date">
         <button class="btn" onclick="applyFilters()">Apply Filters</button>
     </div>
@@ -227,7 +217,7 @@
             <td>{{ transaction.total_amount_per_component }}</td>
             <td class="commission-fee">
                 <input type="number" min="0" max="100" step="0.01"
-                                              oninput="updateTotalAmountPayable(this, {{ transaction.total_amount_per_component }}, document.getElementById('total-{{ transaction._id }}'))">
+                    oninput="updateTotalAmountPayable(this, {{ transaction.total_amount_per_component }}, document.getElementById('total-{{ transaction._id }}'))">
             </td>
             <td>
                 <input type="radio" name="selected_transaction" value="{{ transaction._id }}">
@@ -270,12 +260,14 @@
     function applyFilters() {
         var dateFrom = document.getElementById("dateFrom").value;
         var dateTo = document.getElementById("dateTo").value;
+        var bloodBank = document.getElementById("bloodBank").value;
 
-        // Your filter logic here
-        console.log("Date From:", dateFrom);
-        console.log("Date To:", dateTo);
+        var url = new URL(window.location.href);
+        url.searchParams.set('dateFrom', dateFrom);
+        url.searchParams.set('dateTo', dateTo);
+        url.searchParams.set('bloodBank', bloodBank);
 
-        // Perform actions based on selected date range
+        window.location.href = url.toString();
     }
 
     function settlePayments() {
@@ -306,4 +298,3 @@
 
 </body>
 </html>
-
