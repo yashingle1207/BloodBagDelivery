@@ -1925,7 +1925,7 @@ def Hosp_Blood_bag_inProgress():
 #     return render_template('PatientPendingReq.html', orders=order_list)
 
 
-@app.route('/Patient_Blood_bag_inProgress', methods=['GET'])
+@app.route('/Patient_Pending_Req', methods=['GET'])
 def Patient_Blood_bag_inProgress():
     # Query MongoDB to get all orders
     orders = Order.find({'User_ID': session.get('_id')})
