@@ -582,17 +582,23 @@ def adminsignIn():
 def admin_dashboard():
     # Fetch blood bank names
     blood_banks = BBUser.find({}, {'reg_num': 1, 'bb_name': 1})
-
+    
     # Fetch orders
-    orders = Order.find({'settlement_status': False})
+    date_from = request.args.get('dateFrom')
+    date_to = request.args.get('dateTo')
+    blood_bank_id = request.args.get('bloodBank')
 
-    # Apply date filter if provided
-    date_filter = request.args.get('dateFilter')
-    if date_filter:
-        if date_filter == 'today':
-            start_of_day = datetime.combine(datetime.today(), datetime.min.time())
-            end_of_day = datetime.combine(datetime.today(), datetime.max.time())
-            orders = orders.find({'timeofdelivery': {'$gte': start_of_day, '$lte': end_of_day}})
+    filter_conditions = {'settlement_status': False}
+
+    if date_from and date_to:
+        date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
+        date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
+        filter_conditions['timeofdelivery'] = {'$gte': date_from_dt, '$lte': date_to_dt}
+
+    if blood_bank_id:
+        filter_conditions['BloodBank_Id'] = blood_bank_id
+
+    orders = Order.find(filter_conditions)
 
     # Organize orders by blood bank and blood component
     organized_orders = defaultdict(lambda: defaultdict(list))
@@ -624,7 +630,6 @@ def admin_dashboard():
             })
 
     return render_template('AdminDashboard.html', transactions=transactions, blood_banks=blood_banks)
-
 
 ######## ###
 
