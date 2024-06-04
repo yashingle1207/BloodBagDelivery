@@ -125,7 +125,7 @@
         .date-filter-container {
             display: flex;
             align-items: center;
-          
+
         }
 
         .date-filter-container label {
@@ -228,7 +228,7 @@
             <td>{{ transaction.total_amount_per_component }}</td>
             <td class="commission-fee">
                 <input type="number" min="0" max="100" step="0.01"
-                       oninput="updateTotalAmountPayable(this, {{ transaction.total_amount_per_component }}, document.getElementById('total-{{ transaction._id }}'))">
+                                              oninput="updateTotalAmountPayable(this, {{ transaction.total_amount_per_component }}, document.getElementById('total-{{ transaction._id }}'))">
             </td>
             <td>
                 <input type="radio" name="selected_transaction" value="{{ transaction._id }}">
@@ -239,7 +239,7 @@
 
     <tr>
         <td colspan="10" style="text-align: center;">
-            <input class='btn' type="submit" value="Settle Payment">
+            <input class='btn' type="submit" value="Settle Payment" onclick="settlePayments()">
         </td>
     </tr>
 </table>
@@ -278,7 +278,33 @@
 
         // Perform actions based on selected date range
     }
+
+    function settlePayments() {
+        var selectedTransaction = document.querySelector('input[name="selected_transaction"]:checked');
+
+        // Check if a transaction is selected
+        if (!selectedTransaction) {
+            alert("Please select a transaction to settle.");
+            return;
+        }
+
+        // Confirmation popup
+        var confirmation = confirm("Are you sure you want to settle this payment?");
+
+        // If user confirms, proceed with settling payment
+        if (confirmation) {
+            // Code to settle payment
+            alert("Payment settled successfully.");
+        }
+    }
+
+    function updateTotalAmountPayable(input, totalAmount, targetElement) {
+        var commissionFee = input.value;
+        var totalAmountPayable = totalAmount * (1 - commissionFee / 100);
+        targetElement.textContent = totalAmountPayable.toFixed(2);
+    }
 </script>
 
 </body>
 </html>
+
