@@ -591,22 +591,21 @@ def admin_dashboard():
     filter_conditions = {'settlement_status': False}
 
     if date_from and date_to:
-        # Convert dates to the format stored in MongoDB strings
-        date_from_str = datetime.strptime(date_from, "%Y-%m-%d").strftime("%Y-%m-%d 00:00:00.000000+0000")
-        date_to_str = (datetime.strptime(date_to, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d 00:00:00.000000+0000")
+        # Convert dates to the format YYYY-MM-DD for comparison
+        date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
+        date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
+        date_from_str = date_from_dt.strftime("%Y-%m-%d")
+        date_to_str = (date_to_dt + timedelta(days=1)).strftime("%Y-%m-%d")
+
         filter_conditions['timeofdelivery'] = {
-            '$gte': date_from_str,
-            '$lt': date_to_str
+            '$regex': f"^{date_from_str}|{date_to_str}"
         }
     else:
         # Set the filter for the current day if no date filters are provided
-        start_of_day = datetime.combine(datetime.today(), datetime.min.time())
-        end_of_day = start_of_day + timedelta(days=1)
-        start_of_day_str = start_of_day.strftime("%Y-%m-%d 00:00:00.000000+0000")
-        end_of_day_str = end_of_day.strftime("%Y-%m-%d 00:00:00.000000+0000")
+        today_str = datetime.today().strftime("%Y-%m-%d")
+        tomorrow_str = (datetime.today() + timedelta(days=1)).strftime("%Y-%m-%d")
         filter_conditions['timeofdelivery'] = {
-            '$gte': start_of_day_str,
-            '$lt': end_of_day_str
+            '$regex': f"^{today_str}|{tomorrow_str}"
         }
 
     if blood_bank_id:
