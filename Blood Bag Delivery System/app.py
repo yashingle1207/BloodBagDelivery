@@ -1502,6 +1502,9 @@ def viewstock():
 
 #################################### order fetching logic #####################
 
+
+####### Delivered bags Blood bank - delorder #########
+
 @app.route('/delorder', methods=['GET'])
 def bloodbank_completed_orders():
     # Query MongoDB to get all orders
@@ -1509,7 +1512,6 @@ def bloodbank_completed_orders():
 
     # Prepare the results to be displayed
     order_list = []
-    ist_timezone = pytz.timezone('Asia/Kolkata')
 
     for order in orders:
         user_id = order.get('User_ID')
@@ -1545,26 +1547,23 @@ def bloodbank_completed_orders():
                 'phone_number': user_details.get('contact_num')
             }
 
-            # Format timestamps if they exist
+            # Handle timestamps as strings, split to remove milliseconds if present
             if 'timestamp' in order:
-                utc_timestamp = order['timestamp'].replace(tzinfo=pytz.utc)
-                ist_timestamp = utc_timestamp.astimezone(ist_timezone)
-                formatted_order['timestamp'] = ist_timestamp.strftime('%Y-%m-%d %H:%M:%S')
-                
+                formatted_order['timestamp'] = order['timestamp'].split('.')[0]
+
             if 'timeofdispatch' in order:
-                utc_timeofdispatch = order['timeofdispatch'].replace(tzinfo=pytz.utc)
-                ist_timeofdispatch = utc_timeofdispatch.astimezone(ist_timezone)
-                formatted_order['timeofdispatch'] = ist_timeofdispatch.strftime('%Y-%m-%d %H:%M:%S')
+                formatted_order['timeofdispatch'] = order['timeofdispatch'].split('.')[0]
 
             if 'timeofdelivery' in order:
-                utc_timeofdelivery = order['timeofdelivery'].replace(tzinfo=pytz.utc)
-                ist_timeofdelivery = utc_timeofdelivery.astimezone(ist_timezone)
-                formatted_order['timeofdelivery'] = ist_timeofdelivery.strftime('%Y-%m-%d %H:%M:%S')
+                formatted_order['timeofdelivery'] = order['timeofdelivery'].split('.')[0]
 
             order_list.append(formatted_order)
 
     return render_template('DeliveredBags.html', orders=order_list)
 
+
+
+####### Dispatched bags Blood bank - #########
 
 @app.route('/dispatched', methods=['GET'])
 def bloodbank_dispatched_orders():
@@ -1573,7 +1572,6 @@ def bloodbank_dispatched_orders():
 
     # Prepare the results to be displayed
     order_list = []
-    ist_timezone = pytz.timezone('Asia/Kolkata')
 
     for order in orders:
         user_id = order.get('User_ID')
@@ -1609,21 +1607,19 @@ def bloodbank_dispatched_orders():
                 'phone_number': user_details.get('contact_num')
             }
 
-            # Format timestamps if they exist
+            # Handle timestamps as strings, split to remove milliseconds if present
             if 'timestamp' in order:
-                utc_timestamp = order['timestamp'].replace(tzinfo=pytz.utc)
-                ist_timestamp = utc_timestamp.astimezone(ist_timezone)
-                formatted_order['timestamp'] = ist_timestamp.strftime('%Y-%m-%d %H:%M:%S')
-                
+                formatted_order['timestamp'] = order['timestamp'].split('.')[0]
+
             if 'timeofdispatch' in order:
-                utc_timeofdispatch = order['timeofdispatch'].replace(tzinfo=pytz.utc)
-                ist_timeofdispatch = utc_timeofdispatch.astimezone(ist_timezone)
-                formatted_order['timeofdispatch'] = ist_timeofdispatch.strftime('%Y-%m-%d %H:%M:%S')
+                formatted_order['timeofdispatch'] = order['timeofdispatch'].split('.')[0]
 
             order_list.append(formatted_order)
 
     return render_template('BBDispatch.html', orders=order_list)
     
+
+####### Hospital delivered bags - delorder1 #########
 
 @app.route('/delorder1', methods=['GET'])
 def hosp_received_orders():
@@ -1632,7 +1628,6 @@ def hosp_received_orders():
 
     # Prepare the results to be displayed
     order_list = []
-    ist_timezone = pytz.timezone('Asia/Kolkata')
 
     for order in orders:
         # Query blood bank details
@@ -1658,26 +1653,23 @@ def hosp_received_orders():
                 'phone_number': blood_bank_details.get('contact_num')
             }
 
-            # Format timestamps if they exist
+            # Handle timestamps as strings, split to remove milliseconds if present
             if 'timestamp' in order:
-                utc_timestamp = order['timestamp'].replace(tzinfo=pytz.utc)
-                ist_timestamp = utc_timestamp.astimezone(ist_timezone)
-                formatted_order['timestamp'] = ist_timestamp.strftime('%Y-%m-%d %H:%M:%S')
-                
+                formatted_order['timestamp'] = order['timestamp'].split('.')[0]
+
             if 'timeofdispatch' in order:
-                utc_timeofdispatch = order['timeofdispatch'].replace(tzinfo=pytz.utc)
-                ist_timeofdispatch = utc_timeofdispatch.astimezone(ist_timezone)
-                formatted_order['timeofdispatch'] = ist_timeofdispatch.strftime('%Y-%m-%d %H:%M:%S')
-                
+                formatted_order['timeofdispatch'] = order['timeofdispatch'].split('.')[0]
+
             if 'timeofdelivery' in order:
-                utc_timeofdelivery = order['timeofdelivery'].replace(tzinfo=pytz.utc)
-                ist_timeofdelivery = utc_timeofdelivery.astimezone(ist_timezone)
-                formatted_order['timeofdelivery'] = ist_timeofdelivery.strftime('%Y-%m-%d %H:%M:%S')
+                formatted_order['timeofdelivery'] = order['timeofdelivery'].split('.')[0]
             
             order_list.append(formatted_order)
 
     return render_template('Receivedbags.html', orders=order_list)
 
+
+
+####### Patient delivered bags - delorder2 #########
 
 @app.route('/delorder2', methods=['GET'])
 def patient_received_orders():
@@ -1686,8 +1678,7 @@ def patient_received_orders():
 
     # Prepare the results to be displayed
     order_list = []
-    ist_timezone = pytz.timezone('Asia/Kolkata')
-    
+
     for order in orders:
         # Query blood bank details
         blood_bank_details = BBUser.find_one({'reg_num': order.get('BloodBank_Id')})
@@ -1712,25 +1703,20 @@ def patient_received_orders():
                 'phone_number': blood_bank_details.get('contact_num')
             }
 
-            # Format timestamps if they exist
+            # Handle timestamps as strings, split to remove milliseconds if present
             if 'timestamp' in order:
-                utc_timestamp = order['timestamp'].replace(tzinfo=pytz.utc)
-                ist_timestamp = utc_timestamp.astimezone(ist_timezone)
-                formatted_order['timestamp'] = ist_timestamp.strftime('%Y-%m-%d %H:%M:%S')
-                
+                formatted_order['timestamp'] = order['timestamp'].split('.')[0]
+
             if 'timeofdispatch' in order:
-                utc_timeofdispatch = order['timeofdispatch'].replace(tzinfo=pytz.utc)
-                ist_timeofdispatch = utc_timeofdispatch.astimezone(ist_timezone)
-                formatted_order['timeofdispatch'] = ist_timeofdispatch.strftime('%Y-%m-%d %H:%M:%S')
-                
+                formatted_order['timeofdispatch'] = order['timeofdispatch'].split('.')[0]
+
             if 'timeofdelivery' in order:
-                utc_timeofdelivery = order['timeofdelivery'].replace(tzinfo=pytz.utc)
-                ist_timeofdelivery = utc_timeofdelivery.astimezone(ist_timezone)
-                formatted_order['timeofdelivery'] = ist_timeofdelivery.strftime('%Y-%m-%d %H:%M:%S')
+                formatted_order['timeofdelivery'] = order['timeofdelivery'].split('.')[0]
 
             order_list.append(formatted_order)
 
     return render_template('PatientReceivedbags.html', orders=order_list)
+
 
 ################################################################
 
