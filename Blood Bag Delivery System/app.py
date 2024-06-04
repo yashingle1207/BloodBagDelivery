@@ -488,12 +488,19 @@ def adminsignIn():
 #     start_of_day = datetime.combine(datetime.today(), datetime.min.time())
 #     end_of_day = datetime.combine(datetime.today(), datetime.max.time())
 
-#     orders = list(Order.find({'$and': [{'timeofdelivery': {'$gte': start_of_day, '$lte': end_of_day}},
-#                                        {'settlement_status': False }]}))
+#     orders = list(Order.find({'$and': [{'settlement_status': False}]}))
+
+#     # Convert string dates to datetime objects and filter orders
+#     filtered_orders = []
+#     for order in orders:
+#         if 'timeofdelivery' in order:
+#             timeofdelivery = datetime.strptime(order['timeofdelivery'].split('.')[0], '%Y-%m-%d %H:%M:%S')
+#             if start_of_day <= timeofdelivery <= end_of_day:
+#                 filtered_orders.append(order)
 
 #     # Organize orders by blood bank and blood component
 #     organized_orders = defaultdict(lambda: defaultdict(list))
-#     for order in orders:
+#     for order in filtered_orders:
 #         blood_bank_id = order['BloodBank_Id']
 #         component = order['BloodComp']
 #         organized_orders[blood_bank_id][component].append(order)
@@ -524,23 +531,23 @@ def adminsignIn():
 
 @app.route('/admin_dashboard')
 def admin_dashboard():
-    # Fetch orders of the current day
-    start_of_day = datetime.combine(datetime.today(), datetime.min.time())
-    end_of_day = datetime.combine(datetime.today(), datetime.max.time())
+    # Fetch blood bank names
+    blood_banks = BBUser.find({}, {'reg_num': 1, 'bb_name': 1})
 
-    orders = list(Order.find({'$and': [{'settlement_status': False}]}))
+    # Fetch orders
+    orders = Order.find({'settlement_status': False})
 
-    # Convert string dates to datetime objects and filter orders
-    filtered_orders = []
-    for order in orders:
-        if 'timeofdelivery' in order:
-            timeofdelivery = datetime.strptime(order['timeofdelivery'].split('.')[0], '%Y-%m-%d %H:%M:%S')
-            if start_of_day <= timeofdelivery <= end_of_day:
-                filtered_orders.append(order)
+    # Apply date filter if provided
+    date_filter = request.args.get('dateFilter')
+    if date_filter:
+        if date_filter == 'today':
+            start_of_day = datetime.combine(datetime.today(), datetime.min.time())
+            end_of_day = datetime.combine(datetime.today(), datetime.max.time())
+            orders = orders.find({'timeofdelivery': {'$gte': start_of_day, '$lte': end_of_day}})
 
     # Organize orders by blood bank and blood component
     organized_orders = defaultdict(lambda: defaultdict(list))
-    for order in filtered_orders:
+    for order in orders:
         blood_bank_id = order['BloodBank_Id']
         component = order['BloodComp']
         organized_orders[blood_bank_id][component].append(order)
@@ -567,7 +574,7 @@ def admin_dashboard():
                 '_id': str(orders[0]['_id'])  # Assuming each order has a unique '_id'
             })
 
-    return render_template('AdminDashboard.html', transactions=transactions)
+    return render_template('AdminDashboard.html', transactions=transactions, blood_banks=blood_banks)
 
 
 ######## ###
@@ -2330,10 +2337,6 @@ def price():
 def guidemanual():
     return render_template('guideManual.html')
 
-
-@app.route('/admindash')
-def admindashboard():
-    return render_template('AdminDashboard.html')
 
 
 @app.route('/AdminLogin')
