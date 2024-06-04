@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Order Status</title>
+    <title>Order Status</title>
 
-    <!-- font awesome cdn link  -->
+    <!-- Font Awesome CDN link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-    <!-- custom css file link  -->
+    <!-- Custom CSS file link -->
     <link rel="stylesheet" href="static/style.css">
     <link rel="icon" type="image/png" href="static/images/LogoTT.png">
 
+    <!-- Inline CSS -->
     <style>
         /* General table styles */
         table {
@@ -20,7 +21,6 @@
             max-width: 90%;
             margin: 10px auto;
         }
-
         th, td {
             border: 1px solid #dddddd;
             text-align: left;
@@ -29,7 +29,6 @@
             white-space: normal; /* Allow text to wrap */
             word-wrap: break-word; /* Wrap text in data cells */
         }
-
         th {
             background-color: #f2f2f2;
             width: 150px; /* Adjust the width as needed for larger screens */
@@ -43,7 +42,7 @@
             }
         }
 
-          /* Status animation styles */
+        /* Status animation styles */
         .order-details {
             display: none;
         }
@@ -91,38 +90,51 @@
 </head>
 <body>
 
-
 <div class="container">
 
 <header>
     <a href="/" class="logo">Transfusio<span>Track</span></a>
     <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
     <nav class="navbar" id="navbar">
-           {% if '_id' in session %}
-            <a>User ID: {{ session['_id'] }}</a>
+        {% if 'hosp_reg_no' in session %}
+            <a>User ID: {{ session['hosp_reg_no'] }}</a>
         {% endif %}
-        <a href="/PatientDashboard">Patient Dashboard</a>
+        <a href="/HospDashboard">Hospital Dashboard</a>
         <a href="/">Logout</a>
     </nav>
 </header>
 
-  <script>
-        function toggleNavbar() {
-            var navbar = document.getElementById("navbar");
-            if (navbar.classList.contains("active")) {
-                navbar.classList.remove("active");
-            } else {
-                navbar.classList.add("active");
-            }
+<script>
+    function toggleNavbar() {
+        var navbar = document.getElementById("navbar");
+        if (navbar.classList.contains("active")) {
+            navbar.classList.remove("active");
+        } else {
+            navbar.classList.add("active");
         }
+    }
 
-      function toggleOrderDetails(event) {
+    function toggleOrderDetails(event) {
         var orderDetails = event.currentTarget.parentElement.nextElementSibling;
         orderDetails.classList.toggle('active');
     }
-    </script>
+
+    function changeSortOrder() {
+        var sortOrder = document.getElementById("sortOrder").value;
+        window.location.href = "/Patient_Pending_Req?sort=" + sortOrder;
+    }
+</script>
 
 <h1 class="heading">Blood Bag (In progress)</h1>
+
+<!-- Sort Order Filter -->
+<div style="text-align: center; margin-bottom: 20px;">
+    <label for="sortOrder">Sort By:</label>
+    <select id="sortOrder" onchange="changeSortOrder()">
+        <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Newest First</option>
+        <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Oldest First</option>
+    </select>
+</div>
 
 <table>
     <tr>
@@ -139,15 +151,14 @@
         <th>Last Name</th>
         <th>Age</th>
         <th>Gender</th>
-         <th>Time of Placing order</th>
+        <th>Time of Placing order</th>
     </tr>
 
-
-   {% for order in orders %}
+    {% for order in orders %}
         <tr>
-            <td onclick="toggleOrderDetails(event)">{{ order.user_name}}</td>
-            <td onclick="toggleOrderDetails(event)">{{ order.user_address}}</td>
-            <td onclick="toggleOrderDetails(event)">{{ order.phone_number}}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.user_name }}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.user_address }}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.phone_number }}</td>
             <td onclick="toggleOrderDetails(event)">{{ order.BloodGrp }}</td>
             <td onclick="toggleOrderDetails(event)">{{ order.BloodComp }}</td>
             <td onclick="toggleOrderDetails(event)">{{ order.BloodQuantity }}</td>
@@ -158,7 +169,7 @@
             <td onclick="toggleOrderDetails(event)">{{ order.lname }}</td>
             <td onclick="toggleOrderDetails(event)">{{ order.age }}</td>
             <td onclick="toggleOrderDetails(event)">{{ order.gender }}</td>
-              <td onclick="toggleOrderDetails(event)">{{ order.timestamp }}</td>
+            <td onclick="toggleOrderDetails(event)">{{ order.timestamp }}</td>
         </tr>
         <tr class="order-details">
             <td colspan="14">
@@ -180,7 +191,7 @@
                         <p style="margin: 5px; margin-right: 280px; margin-left: 60px;">
                             <span style="font-weight: bold;">Order Dispatched</span>
                         </p>
-                        <p style="margin: 5px; ">
+                        <p style="margin: 5px;">
                             <span style="font-weight: bold;">Order Delivered</span>
                         </p>
                     </div>
