@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="static/style.css">
     <link rel="icon" type="image/png" href="static/images/LogoTT.png">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
     <style>
         /* General table styles */
         table {
@@ -47,6 +49,85 @@
             margin-top: 15px;
             margin-bottom: 35px;
         }
+
+         /* Filter and Sort Order Styles */
+
+          .filter-sort-container {
+            text-align: left;
+
+        }
+
+         .filter-sort-container label {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+         .filter-sort-container select,
+        .filter-sort-container input {
+            padding: 8px 12px;
+            font-size: 16px;
+            border: 1px solid #dddddd;
+            border-radius: 4px;
+            background-color: #f2f2f2;
+            transition: background-color 0.3s ease;
+        }
+
+        .filter-sort-container select:focus,
+        .filter-sort-container input:focus {
+            outline: none;
+            background-color: #e2e2e2;
+        }
+
+
+        .filter-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+
+
+        }
+
+        .filter-sort-container {
+            margin-right: 20px;
+        }
+
+        .date-filter-container {
+            display: flex;
+            align-items: center;
+        
+        }
+
+        .date-filter-container label {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        .date-filter-container input {
+            padding: 8px 12px;
+            font-size: 16px;
+            border: 1px solid #dddddd;
+            border-radius: 4px;
+            background-color: #f2f2f2;
+            transition: background-color 0.3s ease;
+            width: 150px; /* Adjust width if needed */
+            box-sizing: border-box; /* Ensure input width includes padding and border */
+        }
+
+        .date-filter-container input:focus {
+            outline: none;
+            background-color: #e2e2e2;
+        }
+
+      .btn {
+            background-color: #ff4757;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
     </style>
 
     <script>
@@ -73,6 +154,29 @@
 </header>
 
 <h1 class="heading">Settled Payments (Already Paid)</h1>
+
+    <div class="filter-container">
+    <!-- Blood Bank Dropdown -->
+    <div class="filter-sort-container">
+        <label for="bloodBank">Select Blood Bank:</label>
+        <select id="bloodBank">
+            <option value="">All Blood Banks</option>
+            {% for bank in blood_banks %}
+                <option value="{{ bank.reg_num }}">{{ bank.bb_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Date Filter -->
+    <div class="date-filter-container">
+
+        <label for="dateFrom"> From:</label>
+        <input type="text" id="dateFrom" placeholder="Select date">
+        <label for="dateTo"> To:</label>
+        <input type="text" id="dateTo" placeholder="Select date">
+        <button class="btn" onclick="applyFilters()">Apply Filters</button>
+    </div>
+</div>
 
 <table>
     <tr>
@@ -105,7 +209,41 @@
     <div class="credit">Created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory</div>
 </section>
 
-</div>
+
+    <!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    flatpickr("#dateFrom", {
+        dateFormat: "Y-m-d",
+        maxDate: "today",
+        onChange: function(selectedDates, dateStr, instance) {
+            // Set minDate of dateTo based on dateFrom
+            flatpickr("#dateTo", {
+                minDate: dateStr,
+                dateFormat: "Y-m-d",
+                maxDate: "today"
+            });
+        }
+    });
+
+    flatpickr("#dateTo", {
+        dateFormat: "Y-m-d",
+        maxDate: "today"
+    });
+
+    function applyFilters() {
+        var dateFrom = document.getElementById("dateFrom").value;
+        var dateTo = document.getElementById("dateTo").value;
+
+        // Your filter logic here
+        console.log("Date From:", dateFrom);
+        console.log("Date To:", dateTo);
+
+        // Perform actions based on selected date range
+    }
+</script>
+
 
 </body>
 </html>
