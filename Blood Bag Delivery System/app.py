@@ -591,9 +591,23 @@ def admin_dashboard():
     filter_conditions = {'settlement_status': False}
 
     if date_from and date_to:
-        date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
-        date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
-        filter_conditions['timeofdelivery'] = {'$gte': date_from_dt, '$lte': date_to_dt}
+        # Convert dates to the format stored in MongoDB strings
+        date_from_str = datetime.strptime(date_from, "%Y-%m-%d").strftime("%Y-%m-%d 00:00:00.000000+0000")
+        date_to_str = (datetime.strptime(date_to, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d 00:00:00.000000+0000")
+        filter_conditions['timeofdelivery'] = {
+            '$gte': date_from_str,
+            '$lt': date_to_str
+        }
+    else:
+        # Set the filter for the current day if no date filters are provided
+        start_of_day = datetime.combine(datetime.today(), datetime.min.time())
+        end_of_day = start_of_day + timedelta(days=1)
+        start_of_day_str = start_of_day.strftime("%Y-%m-%d 00:00:00.000000+0000")
+        end_of_day_str = end_of_day.strftime("%Y-%m-%d 00:00:00.000000+0000")
+        filter_conditions['timeofdelivery'] = {
+            '$gte': start_of_day_str,
+            '$lt': end_of_day_str
+        }
 
     if blood_bank_id:
         filter_conditions['BloodBank_Id'] = blood_bank_id
@@ -630,7 +644,6 @@ def admin_dashboard():
             })
 
     return render_template('AdminDashboard.html', transactions=transactions, blood_banks=blood_banks)
-
 ######## ###
 
 @app.route('/HospSignIn', methods=['POST'])
