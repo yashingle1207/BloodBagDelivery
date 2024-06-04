@@ -1449,24 +1449,18 @@ def initiate_delivery():
                     'phone_number': user_details.get('contact_num')
                 }
 
-                # Convert timestamps to IST
-                ist_timezone = pytz.timezone('Asia/Kolkata')
-                
+                # Handle timestamps, split to remove milliseconds if present
                 if 'timestamp' in order:
-                    utc_timestamp = order['timestamp'].replace(tzinfo=pytz.utc)
-                    ist_timestamp = utc_timestamp.astimezone(ist_timezone)
-                    formatted_order['timestamp'] = ist_timestamp.strftime('%Y-%m-%d %H:%M:%S')
+                    formatted_order['timestamp'] = order['timestamp'].split('.')[0]
 
                 if 'timeofdispatch' in order:
-                    utc_timeofdispatch = order['timeofdispatch'].replace(tzinfo=pytz.utc)
-                    ist_timeofdispatch = utc_timeofdispatch.astimezone(ist_timezone)
-                    formatted_order['timeofdispatch'] = ist_timeofdispatch.strftime('%Y-%m-%d %H:%M:%S')
+                    formatted_order['timeofdispatch'] = order['timeofdispatch'].split('.')[0]
 
-        
                 # Pass the order details to the template
                 return render_template('dispatched.html', order=formatted_order)
 
     return render_template('dispatched.html', order=None)
+
 
 
 
