@@ -85,9 +85,12 @@
 
         if (!formValid) {
             alert("Please select a Blood Bag order.");
+            return false;
         }
 
-        return formValid;
+        // Show confirmation dialog
+        var confirmation = confirm("Are you sure you want to dispatch this blood bag? Please confirm that the patient's blood sample has been cross-matched with the blood bag. Note: This action is irreversible.");
+        return confirmation;
     }
 </script>
 
