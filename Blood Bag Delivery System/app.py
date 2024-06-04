@@ -1925,7 +1925,7 @@ def Hosp_Blood_bag_inProgress():
 #     return render_template('PatientPendingReq.html', orders=order_list)
 
 
-@app.route('/Patient_Blood_bag_inProgress', methods=['GET'])
+@app.route('/Patient_Pending_Req', methods=['GET'])
 def Patient_Blood_bag_inProgress():
     # Query MongoDB to get all orders
     orders = Order.find({'User_ID': session.get('_id')})
@@ -1935,10 +1935,6 @@ def Patient_Blood_bag_inProgress():
     for order in orders:
         # Query blood bank details
         blood_bank_details = BBUser.find_one({'reg_num': order.get('BloodBank_Id')})
-
-        if blood_bank_details:
-            # Convert timestamp to Indian Standard Time (IST) and format them
-            ist_timezone = pytz.timezone('Asia/Kolkata')
 
             formatted_order = {
                 '_id': order.get('_id'),
@@ -1957,12 +1953,9 @@ def Patient_Blood_bag_inProgress():
                 'user_name': blood_bank_details.get('bb_name'),
                 'user_address': blood_bank_details.get('address'),
                 'phone_number': blood_bank_details.get('contact_num'),
-                'status': order.get('status')
+                'status': order.get('status'),
+                'timestamp': order.get('timestamp', '').split('.')[0] if 'timestamp' in order else None
             }
-
-            # Format timestamps if they exist (without conversion from UTC)
-            if 'timestamp' in order:
-                formatted_order['timestamp'] = order['timestamp'].split('.')[0]  # Split only
 
             order_list.append(formatted_order)
 
