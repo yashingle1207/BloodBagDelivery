@@ -428,10 +428,59 @@ def settle_payment():
 
 
 ################# Settled Payments Admin #############################
+# @app.route('/settled')
+# def settlepayments():
+#     # Fetch orders where settlement_status is True
+#     orders = list(Order.find({'settlement_status': True}))
+
+#     # Organize orders by blood bank and blood component
+#     organized_orders = defaultdict(lambda: defaultdict(list))
+#     for order in orders:
+#         blood_bank_id = order['BloodBank_Id']
+#         component = order['BloodComp']
+#         organized_orders[blood_bank_id][component].append(order)
+
+#     # Prepare the transactions data for the template
+#     transactions = []
+#     for blood_bank_id, components in organized_orders.items():
+#         blood_bank = BBUser.find_one({'reg_num': blood_bank_id})
+#         for component, orders in components.items():
+#             quantity_sold = sum(order['BloodQuantity'] for order in orders)
+#             price_per_unit = orders[0]['total_amount'] / orders[0]['BloodQuantity']  # Assuming total_amount is for the quantity sold
+#             total_amount_per_component = quantity_sold * price_per_unit
+#             total_amount_payable = sum(order['total_amount'] for order in orders)
+
+#             transactions.append({
+#                 'blood_bank_name': blood_bank['bb_name'],
+#                 'address': blood_bank['address'],
+#                 'contact_no': blood_bank['contact_num'],
+#                 'component': component,
+#                 'quantity_sold': quantity_sold,
+#                 'price_per_unit': price_per_unit,
+#                 'total_amount_per_component': total_amount_per_component,
+#                 'total_amount_payable': total_amount_payable,
+#                 '_id': str(orders[0]['_id'])  # Assuming each order has a unique '_id'
+#             })
+
+#     return render_template('AdminSettled_payments.html', transactions=transactions)
+
+
 @app.route('/settled')
 def settlepayments():
     # Fetch orders where settlement_status is True
     orders = list(Order.find({'settlement_status': True}))
+
+    # Fetch blood bank names for dropdown
+    blood_banks = BBUser.find({}, {'reg_num': 1, 'bb_name': 1})
+
+    # Apply date filter if provided
+    date_filter = request.args.get('dateFilter')
+    if date_filter:
+        if date_filter == 'today':
+            start_of_day = datetime.combine(datetime.today(), datetime.min.time())
+            end_of_day = datetime.combine(datetime.today(), datetime.max.time())
+            orders = Order.find({'settlement_status': True, 'timeofdelivery': {'$gte': start_of_day, '$lte': end_of_day}})
+        # Add more conditions for other date filters if needed
 
     # Organize orders by blood bank and blood component
     organized_orders = defaultdict(lambda: defaultdict(list))
@@ -462,8 +511,8 @@ def settlepayments():
                 '_id': str(orders[0]['_id'])  # Assuming each order has a unique '_id'
             })
 
-    return render_template('AdminSettled_payments.html', transactions=transactions)
-
+    return render_template('AdminSettled_payments.html', transactions=transactions, blood_banks=blood_banks)
+    
 ################# Admin Login ############################
 
 @app.route('/AdminSignIn', methods=['POST'])
