@@ -86,13 +86,12 @@
         <a href="/" class="logo">Transfusio<span>Track</span></a>
         <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
          <nav class="navbar" id="navbar">
-                {% if 'hosp_reg_no' in session %}
-                    <a>User ID: {{ session.get('facility_name') }}</a>
-                {% endif %}
-                
-                <a href="/HospDashboard">Hospital Dashboard</a>
-                <a href="/">Logout</a>
-            </nav>
+        {% if 'hosp_reg_no' in session %}
+                <a href="/MyHosp_Acct">User ID: {{ facility_name }}</a>
+            {% endif %}
+            <a href="/HospDashboard">Hospital Dashboard</a>
+            <a href="/">Logout</a>
+        </nav>
     </header>
 
       <script>
