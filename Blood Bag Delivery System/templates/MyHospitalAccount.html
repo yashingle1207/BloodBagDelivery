@@ -15,6 +15,8 @@
     <style>
         p {
             font-size: 20px; /* Changed font size to match other text */
+            margin-left: 80px;
+            margin-top: 7px;
         }
 
         h2 {
@@ -64,24 +66,26 @@
 <section class="home">
 
     <div class="content">
-        <h3>My Account</h3>
+        <h3 align="center"> {{ session.get('facility_name') }} Account</h3>
 
     </div>
 </section>
 
 <section class="order-details">
-    <h2>Hospital Details</h2>
+    <h2>Hospital Information</h2>
     <hr>
-    <p><strong>Hospital Name:</strong> {{ order.facility_name }}</p>
-    <p><strong>Email:</strong> {{ order.email }}</p>
-    <p><strong>Password:</strong> {{ order.password }}</p>
-    <p><strong>Contact Number:</strong> {{ order.contact_num }}</p>
-    <p><strong>Address:</strong> {{ order.address }}</p>
-    <p><strong>Registration Number:</strong> {{ order.reg_num }}</p>
-    <p><strong>Email Verified:</strong> {{ "Yes" if order.email_verified else "No" }}</p>
+    <p><strong>Hospital Name:</strong> </p>
+    <p><strong>Email:</strong> </p>
+    <p><strong>Password:</strong> </p>
+    <p><strong>Contact Number:</strong> </p>
+    <p><strong>Address:</strong> </p>
+    <p><strong>Registration Number:</strong> </p>
+    <p><strong>Email Verified:</strong> </p>
     <hr>
 </section>
 
+ <p><strong>Note:</strong> Your information is secured with TransfusioTrack and we do not share personal details with third parties.
+     <br> If you would like to update or change any information, please contact us at <a href="mailto:transfusiotrack@gmail.com">transfusiotrack@gmail.com</a>
 <section class="footer">
     <div class="credit">created by <span>Team Transfusio</span> | All @rights reserved to Ingle Laboratory</div>
 </section>
