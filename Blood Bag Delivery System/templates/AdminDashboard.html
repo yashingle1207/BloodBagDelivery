@@ -201,6 +201,7 @@
         <th>Quantity Sold (Units)</th>
         <th>Price per Unit</th>
         <th>Total Amount per Component</th>
+        <th>Time of Delivery</th>
         <th class="commission-fee">Commission fee in (%)</th>
         <th>Select</th>
         <th>Total Amount Payable</th>
@@ -215,6 +216,7 @@
             <td>{{ transaction.quantity_sold }}</td>
             <td>{{ transaction.price_per_unit }}</td>
             <td>{{ transaction.total_amount_per_component }}</td>
+            <td>{{ transaction.timeofdelivery }}</td>
             <td class="commission-fee">
                 <input type="number" min="0" max="100" step="0.01"
                     oninput="updateTotalAmountPayable(this, {{ transaction.total_amount_per_component }}, document.getElementById('total-{{ transaction._id }}'))">
@@ -227,7 +229,7 @@
     {% endfor %}
 
     <tr>
-        <td colspan="10" style="text-align: center;">
+        <td colspan="11" style="text-align: center;">
             <input class='btn' type="submit" value="Settle Payment" onclick="settlePayments()">
         </td>
     </tr>
@@ -242,64 +244,47 @@
 
 <!-- Flatpickr JS -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
 <script>
     flatpickr("#dateFrom", {
         dateFormat: "Y-m-d",
-        maxDate: "today",
-        onChange: function(selectedDates, dateStr, instance) {
-            // Set minDate of dateTo based on dateFrom
-            flatpickr("#dateTo", {
-                minDate: dateStr,
-                dateFormat: "Y-m-d",
-                maxDate: "today"
-            });
-        }
     });
-
     flatpickr("#dateTo", {
         dateFormat: "Y-m-d",
-        maxDate: "today"
     });
 
-    function applyFilters() {
-        var dateFrom = document.getElementById("dateFrom").value;
-        var dateTo = document.getElementById("dateTo").value;
-        var bloodBank = document.getElementById("bloodBank").value;
-
-        var url = new URL(window.location.href);
-        url.searchParams.set('dateFrom', dateFrom);
-        url.searchParams.set('dateTo', dateTo);
-        url.searchParams.set('bloodBank', bloodBank);
-
-        window.location.href = url.toString();
+    function updateTotalAmountPayable(input, totalAmountPerComponent, totalAmountPayableElement) {
+        const commissionPercentage = parseFloat(input.value) || 0;
+        const totalAmountPayable = totalAmountPerComponent * (1 - (commissionPercentage / 100));
+        totalAmountPayableElement.innerText = totalAmountPayable.toFixed(2);
     }
 
     function settlePayments() {
-        var selectedTransaction = document.querySelector('input[name="selected_transaction"]:checked');
-
-        // Check if a transaction is selected
-        if (!selectedTransaction) {
-            alert("Please select a transaction to settle.");
-            return;
-        }
-
-        // Confirmation popup
-        var confirmation = confirm("Are you sure you want to settle this payment?");
-
-        // If user confirms, submit the form to the /settled route
-        if (confirmation) {
-            var form = document.getElementById("settlePaymentForm");
-            var transactionIdInput = document.getElementById("transactionIdInput");
-            transactionIdInput.value = selectedTransaction.value;
-            form.submit();
+        const selectedTransaction = document.querySelector('input[name="selected_transaction"]:checked');
+        if (selectedTransaction) {
+            document.getElementById('transactionIdInput').value = selectedTransaction.value;
+            document.getElementById('settlePaymentForm').submit();
+        } else {
+            alert('Please select a transaction to settle.');
         }
     }
 
-    function updateTotalAmountPayable(input, totalAmount, targetElement) {
-        var commissionFee = input.value;
-        var totalAmountPayable = totalAmount * (1 - commissionFee / 100);
-        targetElement.textContent = totalAmountPayable.toFixed(2);
+    function applyFilters() {
+        const bloodBank = document.getElementById('bloodBank').value;
+        const dateFrom = document.getElementById('dateFrom').value;
+        const dateTo = document.getElementById('dateTo').value;
+
+        let query = '?';
+        if (bloodBank) {
+            query += `bloodBank=${bloodBank}&`;
+        }
+        if (dateFrom) {
+            query += `dateFrom=${dateFrom}&`;
+        }
+        if (dateTo) {
+            query += `dateTo=${dateTo}&`;
+        }
+
+        window.location.href = `/admin_dashboard${query}`;
     }
 </script>
 
