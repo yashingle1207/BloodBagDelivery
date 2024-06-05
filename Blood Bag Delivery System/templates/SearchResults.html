@@ -96,7 +96,7 @@
     <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
         <nav class="navbar" id="navbar">
             {% if 'hosp_reg_no' in session %}
-                <a>User_ID: {{ session.get('facility_name') }}</a>
+                <a>User ID: {{ session.get('facility_name') }}</a>
             {% endif %}
             <a href="/HospDashboard">Hospital Dashboard</a>
             <a href="/">Logout</a>
