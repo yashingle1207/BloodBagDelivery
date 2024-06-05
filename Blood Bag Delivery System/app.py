@@ -1928,8 +1928,14 @@ def hosp_received_orders():
 
 @app.route('/delorder2', methods=['GET'])
 def patient_received_orders():
-    # Query MongoDB to get all orders
-    orders = Order.find({'User_ID': session.get('_id'), 'status': 'delivered'})
+    # Get the sort order from query parameters
+    sort_order = request.args.get('sort', 'desc')
+    
+    # Determine the sort direction
+    sort_direction = -1 if sort_order == 'desc' else 1
+
+    # Query MongoDB to get all orders and sort by timestamp
+    orders = Order.find({'User_ID': session.get('_id'), 'status': 'delivered'}).sort('timestamp', sort_direction)
 
     # Prepare the results to be displayed
     order_list = []
