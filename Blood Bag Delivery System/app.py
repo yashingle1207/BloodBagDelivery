@@ -134,6 +134,7 @@ def pay():
     responseData = response.json();
     return redirect(responseData['data']['instrumentResponse']['redirectInfo']['url'])
 
+
 @app.route("/payment_response", methods=['POST'])
 def payment_response():
     # Constants
@@ -150,21 +151,38 @@ def payment_response():
     if transaction_id:
         # Determine user ID based on the session
         if 'hosp_reg_no' in session:
+            redirect_to = check_session('HospSignIn')
+            if redirect_to:
+                return redirect_to
+
             # Hospital user is logged in
             user_id = session['hosp_reg_no']
             template_name = 'map.html'
-            # Fetch hospital email from database
-            hospital_email = HospUser.find_one({'reg_num': user_id})['email']
+            # Fetch hospital email from database and store it in session
+            hospital_user = HospUser.find_one({'reg_num': user_id})
+            hospital_email = hospital_user['email']
+            session['email'] = hospital_email
+            facility_name = hospital_user.get('facility_name', "Unknown Facility")
+            session['facility_name'] = facility_name
+
         elif '_id' in session:
+            redirect_to = check_session('PatientSignIn')
+            if redirect_to:
+                return redirect_to
+
             # Patient user is logged in
             user_id = session['_id']
             template_name = 'Patientmap.html'
-            # Fetch patient email from database
-            patient_email = PatientUser.find_one({'email': user_id})['email']
+            # Fetch patient email from database and store it in session
+            patient_user = PatientUser.find_one({'_id': user_id})
+            patient_email = patient_user['email']
+            session['email'] = patient_email
+
         else:
             # Neither hospital user nor patient user is logged in
             print("No user logged in.")
             return render_template('error.html', message='No user logged in')
+
 
         # Fetch blood bank email from database
         blood_bank_id = session.get('bb_reg_no')
@@ -312,6 +330,7 @@ def payment_response():
     # Handle case where transaction ID is missing or invalid
     print("Missing or invalid transaction ID.")
     return render_template('error.html', message='Transaction ID missing or invalid')
+    
 
 def send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, timestamp, blood_group, blood_component, requested_quantity, bb_price,request_type,request_by,request_by_address,request_by_contact):
     # Email subject
@@ -352,6 +371,42 @@ def send_email(recipient_email, order_id, phonepe_transaction_id, total_amt, tim
 
 
 
+# @app.route('/payment_invoice', methods=['POST'])
+# def payment_invoice():
+#     if request.method == 'POST':
+#         # Get form data
+#         req_type = request.form.get('reqtype')
+#         fname = request.form.get('fname')
+#         mname = request.form.get('mname')
+#         lname = request.form.get('lname')
+#         gender = request.form.get('gender')
+#         age = request.form.get('age')
+#         docname = request.form.get('docname')
+ 
+
+#         # Store form data in session
+#         session['req_type'] = req_type
+#         session['fname'] = fname
+#         session['mname'] = mname
+#         session['lname'] = lname
+#         session['gender'] = gender
+#         session['age'] = age
+#         session['docname'] = docname
+    
+
+#         # Check if the user is a patient or hospital
+#         patient_reg_no = session.get('_id')
+#         hosp_reg_no = session.get('hosp_reg_no')
+
+#         if hosp_reg_no:
+#             return render_template('payment_details.html', hosp_reg_no=hosp_reg_no)
+#         elif patient_reg_no:
+#             return render_template('payment_details.html', patient_reg_no=patient_reg_no)
+
+#     # Handle case where request method is not POST
+#     return render_template('error.html', message='Invalid request method.')
+
+
 @app.route('/payment_invoice', methods=['POST'])
 def payment_invoice():
     if request.method == 'POST':
@@ -363,8 +418,7 @@ def payment_invoice():
         gender = request.form.get('gender')
         age = request.form.get('age')
         docname = request.form.get('docname')
- 
-
+        
         # Store form data in session
         session['req_type'] = req_type
         session['fname'] = fname
@@ -373,20 +427,31 @@ def payment_invoice():
         session['gender'] = gender
         session['age'] = age
         session['docname'] = docname
-    
 
         # Check if the user is a patient or hospital
-        patient_reg_no = session.get('_id')
-        hosp_reg_no = session.get('hosp_reg_no')
+        if 'hosp_reg_no' in session:
+            redirect_to = check_session('HospSignIn')
+            if redirect_to: return redirect_to
+            
+            hosp_reg_no = session.get('hosp_reg_no')
+            # Fetch facility name based on hosp_reg_no
+            existing_hospital = HospUser.find_one({'reg_num': hosp_reg_no})
+            facility_name = existing_hospital.get('facility_name') if existing_hospital else "Unknown Facility"
 
-        if hosp_reg_no:
-            return render_template('payment_details.html', hosp_reg_no=hosp_reg_no)
-        elif patient_reg_no:
+            # Store facility name in session for later use in navbar
+            session['facility_name'] = facility_name
+
+            return render_template('payment_details.html', hosp_reg_no=hosp_reg_no, facility_name=facility_name)
+
+        elif '_id' in session:
+            redirect_to = check_session('PatientSignIn')
+            if redirect_to: return redirect_to
+
+            patient_reg_no = session.get('_id')
             return render_template('payment_details.html', patient_reg_no=patient_reg_no)
 
     # Handle case where request method is not POST
     return render_template('error.html', message='Invalid request method.')
-
 
 
 ###############################################################
@@ -668,6 +733,7 @@ def admin_dashboard():
 
 @app.route('/HospSignIn', methods=['POST'])
 def HospsignIn():
+    check_session('HospSignIn')
     if request.method == 'POST':
         hosp_email = request.form.get('hospEmailId')
         hosp_password = request.form.get('hospPassword')
@@ -2142,6 +2208,8 @@ from flask import session
 
 @app.route('/searchbb_hosp', methods=['POST'])
 def search_blood_bag():
+    check_session('HospSignIn') 
+    
     if request.method == 'POST':
         # Get user input from the form
         blood_group = request.form.get('bloodgrp')
@@ -2150,6 +2218,10 @@ def search_blood_bag():
 
         # Retrieve hosp_reg_no from the session
         hosp_reg_no= session.get('hosp_reg_no')
+
+        existing_hospital = HospUser.find_one({'reg_num': hosp_reg_no})
+        facility_name = existing_hospital.get('facility_name') if existing_hospital else "Unknown Facility"
+
 
         # Query MongoDB to find matching blood bags
         blood_bags = Searchbb.find({
@@ -2179,9 +2251,9 @@ def search_blood_bag():
         session['quantity'] = quantity
 
         # Return the results to the template along with hosp_reg_no
-        return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no)
+        return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no, facility_name=facility_name)
 
-    return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no)
+    return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no, facility_name=facility_name)
 
 
 
@@ -2231,6 +2303,32 @@ def PsearchBB():
 
 
 ####################################################################
+# @app.route('/set_selected_blood_bank', methods=['POST'])
+# def set_selected_blood_bank():
+#     if request.method == 'POST':
+#         selected_blood_bank_reg_num = request.form.get('selected_blood_bank')
+
+#         # Fetch the price of the selected blood product from the database
+#         selected_blood_product = session.get('blood_component_code')
+#         blood_product_price = get_blood_product_price(selected_blood_product)
+
+#         # Check if a hospital or patient is logged in
+#         if 'hosp_reg_no' in session:
+#             # Set the selected blood bank reg_num and blood product price in the session for a hospital
+#             session['bb_reg_no'] = selected_blood_bank_reg_num
+#             session['blood_product_price'] = blood_product_price
+#             return render_template('BloodBagRequestForm.html')  # Redirect to the hospital's request form
+
+#         elif '_id' in session:
+#             # Set the selected blood bank reg_num and blood product price in the session for a patient
+#             session['bb_reg_no'] = selected_blood_bank_reg_num
+#             session['blood_product_price'] = blood_product_price
+#             return render_template('PatientBBreqform.html')  # Redirect to the patient's request form
+
+#     # Redirect to a default page or handle the case where the user type is not identified
+#     return render_template('error.html', message='User type not identified.')
+
+
 @app.route('/set_selected_blood_bank', methods=['POST'])
 def set_selected_blood_bank():
     if request.method == 'POST':
@@ -2242,16 +2340,32 @@ def set_selected_blood_bank():
 
         # Check if a hospital or patient is logged in
         if 'hosp_reg_no' in session:
+            redirect_to = check_session('HospSignIn')
+            if redirect_to: return redirect_to
+
+            hosp_reg_no = session.get('hosp_reg_no')
+            # Fetch facility name based on hosp_reg_no
+            existing_hospital = HospUser.find_one({'reg_num': hosp_reg_no})
+            facility_name = existing_hospital.get('facility_name') if existing_hospital else "Unknown Facility"
+
             # Set the selected blood bank reg_num and blood product price in the session for a hospital
             session['bb_reg_no'] = selected_blood_bank_reg_num
             session['blood_product_price'] = blood_product_price
-            return render_template('BloodBagRequestForm.html')  # Redirect to the hospital's request form
+            return render_template('BloodBagRequestForm.html', hosp_reg_no=hosp_reg_no, facility_name=facility_name)  # Pass to the hospital's request form
 
         elif '_id' in session:
+            redirect_to = check_session('PatientSignIn')
+            if redirect_to: return redirect_to
+
+            user_id = session.get('_id')
+            # Fetch email based on user_id
+            existing_patient = PatientUser.find_one({'_id': user_id})
+            email = existing_patient.get('email') if existing_patient else "Unknown Email"
+
             # Set the selected blood bank reg_num and blood product price in the session for a patient
             session['bb_reg_no'] = selected_blood_bank_reg_num
             session['blood_product_price'] = blood_product_price
-            return render_template('PatientBBreqform.html')  # Redirect to the patient's request form
+            return render_template('PatientBBreqform.html', user_id=user_id, email=email)  # Pass to the patient's request form
 
     # Redirect to a default page or handle the case where the user type is not identified
     return render_template('error.html', message='User type not identified.')
@@ -2426,9 +2540,31 @@ def searchres():
     return render_template('SearchResults.html')
 
 
+# @app.route('/SearchBlood')
+# def searchblood():
+#     return render_template('SearchBloodBag.html')
+
 @app.route('/SearchBlood')
 def searchblood():
+    check_session('HospSignIn')
+    reg_num = session.get('hosp_reg_no')
+
+    if reg_num:
+        # Query the MongoDB collection to fetch the hospital's facility name based on the registration number
+        existing_hospital = HospUser.find_one({'reg_num': reg_num})
+
+        if existing_hospital:
+            facility_name = existing_hospital.get('facility_name')
+
+            # Store the facility name in the session for future rendering in the template
+            session['facility_name'] = facility_name
+
+            # Pass reg_num and facility_name to the template for display
+            return render_template('SearchBloodBag.html', reg_num=reg_num, facility_name=facility_name)
+
+    # If data retrieval fails or reg_num is not present, render the template without data
     return render_template('SearchBloodBag.html')
+
   
 
 @app.route('/PatientSearchBB')
