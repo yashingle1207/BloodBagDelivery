@@ -721,7 +721,7 @@ def adminsignIn():
 def admin_dashboard():
     # Fetch blood bank names
     blood_banks = BBUser.find({}, {'reg_num': 1, 'bb_name': 1})
-
+    
     # Fetch orders
     date_from = request.args.get('dateFrom')
     date_to = request.args.get('dateTo')
@@ -730,21 +730,26 @@ def admin_dashboard():
     filter_conditions = {'settlement_status': False}
 
     if date_from and date_to:
-        # Create regex pattern to match the date range
+        # Create filter to match date range
         date_from_str = date_from
         date_to_str = date_to
 
-        # Define regex pattern to match date part of the timeofdelivery
-        date_regex = f"^{date_from_str}|^{date_to_str}"
+        # Convert date_from and date_to to datetime objects
+        date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
+        date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
 
-        filter_conditions['timeofdelivery'] = {
-            '$regex': date_regex
+        # Filter based on the date part of the string
+        filter_conditions['$expr'] = {
+            '$and': [
+                {'$gte': [{'$substr': ['$timeofdelivery', 0, 10]}, date_from_str]},
+                {'$lte': [{'$substr': ['$timeofdelivery', 0, 10]}, date_to_str]}
+            ]
         }
-    elif not date_from and not date_to:
+    else:
         # Set the filter for the current day if no date filters are provided
         today_str = datetime.today().strftime("%Y-%m-%d")
-        filter_conditions['timeofdelivery'] = {
-            '$regex': f'^{today_str}'
+        filter_conditions['$expr'] = {
+            '$eq': [{'$substr': ['$timeofdelivery', 0, 10]}, today_str]
         }
 
     if blood_bank_id:
