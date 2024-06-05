@@ -720,7 +720,7 @@ def adminsignIn():
 def admin_dashboard():
     # Fetch blood bank names
     blood_banks = BBUser.find({}, {'reg_num': 1, 'bb_name': 1})
-    
+
     # Fetch orders
     date_from = request.args.get('dateFrom')
     date_to = request.args.get('dateTo')
@@ -732,18 +732,20 @@ def admin_dashboard():
         # Convert dates to the format YYYY-MM-DD for comparison
         date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
         date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
-        date_from_str = date_from_dt.strftime("%Y-%m-%d")
-        date_to_str = (date_to_dt + timedelta(days=1)).strftime("%Y-%m-%d")
 
+        # Use regex to match the date part in the timeofdelivery string
+        date_from_str = date_from_dt.strftime("%Y-%m-%d")
+        date_to_str = date_to_dt.strftime("%Y-%m-%d")
+
+        # Create a regex pattern to match dates within the range
         filter_conditions['timeofdelivery'] = {
-            '$regex': f"^{date_from_str}|{date_to_str}"
+            '$regex': f"^({date_from_str}|{date_to_str})"
         }
     else:
         # Set the filter for the current day if no date filters are provided
         today_str = datetime.today().strftime("%Y-%m-%d")
-        tomorrow_str = (datetime.today() + timedelta(days=1)).strftime("%Y-%m-%d")
         filter_conditions['timeofdelivery'] = {
-            '$regex': f"^{today_str}|{tomorrow_str}"
+            '$regex': f"^{today_str}"
         }
 
     if blood_bank_id:
@@ -781,6 +783,7 @@ def admin_dashboard():
             })
 
     return render_template('AdminDashboard.html', transactions=transactions, blood_banks=blood_banks)
+    
 ######## ###
 
 @app.route('/HospSignIn', methods=['POST'])
