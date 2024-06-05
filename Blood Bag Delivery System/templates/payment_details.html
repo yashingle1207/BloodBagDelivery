@@ -61,7 +61,7 @@
                     <a>User ID: {{ patient_reg_no }}</a>
                     <a href="/PDashboard">Patient Dashboard</a>
                 {% elif hosp_reg_no %}
-                    <a>User_ID: {{ session.get('facility_name', 'Unknown Facility') }}</a>
+                    <a>User ID: {{ session.get('facility_name', 'Unknown Facility') }}</a>
                     <a href="/HospDashboard">Hospital Dashboard</a>
                 {% endif %}
                 <a href="/">Logout</a>
