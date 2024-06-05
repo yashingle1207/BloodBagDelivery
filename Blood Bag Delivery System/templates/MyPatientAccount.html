@@ -37,20 +37,15 @@
 <div class="container">
 
 <header>
-
     <a href="/" class="logo">Transfusio<span>Track</span></a>
-
     <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
-
-  
-        <nav class="navbar" id="navbar">
-              {% if '_id' in session %}
+    <nav class="navbar" id="navbar">
+        {% if '_id' in session %}
             <a href="/MyPatient_Acct">User ID: {{ session['_id'] }}</a>
         {% endif %}
         <a href="/PatientDashboard">Patient Dashboard</a>
-          <a href="/">Logout</a>
-        </nav>
-
+        <a href="/">Logout</a>
+    </nav>
 </header>
 
 <script>
@@ -65,26 +60,23 @@
 </script>
 
 <section class="home">
-
     <div class="content">
-        <h3 align="center"> {{ session.get('patient_name') }} Account</h3>
-
+        <h3 align="center"> {{ order.patient_name }}'s Account</h3>
     </div>
 </section>
 
 <section class="order-details">
    <h2>Patient Information</h2>
-        <hr>
-        <p><strong>Patient Name:</strong> {{ order.patient_name }}</p>
-        <p><strong>Email:</strong> {{ order.email }}</p>
-        <p><strong>Contact Number:</strong> {{ order.contact_num }}</p>
-        <p><strong>Address:</strong> {{ order.address }}</p>
-        <p><strong>City:</strong> {{ order.p_city }}</p>
-        <p><strong>Email Verified:</strong> {{ "Yes" if order.email_verified else "No" }}</p>
-    </section>
+   <hr>
+   <p><strong>Patient Name:</strong> {{ order.patient_name }}</p>
+   <p><strong>Email:</strong> {{ order.email }}</p>
+   <p><strong>Contact Number:</strong> {{ order.contact_num }}</p>
+   <p><strong>Address:</strong> {{ order.address }}</p>
+   <p><strong>City:</strong> {{ order.p_city }}</p>
+   <p><strong>Email Verified:</strong> {{ "Yes" if order.email_verified else "No" }}</p>
 </section>
 
- <p><strong>Note:</strong> Your information is secured with TransfusioTrack and we do not share personal details with third parties.
+<p><strong>Note:</strong> Your information is secured with TransfusioTrack and we do not share personal details with third parties.
      <br> If you would like to update or change any information, please contact us at <a href="mailto:transfusiotrack@gmail.com">transfusiotrack@gmail.com</a>
 <section class="footer">
     <div class="credit">created by <span>Team Transfusio</span> | All @rights reserved to Ingle Laboratory</div>
