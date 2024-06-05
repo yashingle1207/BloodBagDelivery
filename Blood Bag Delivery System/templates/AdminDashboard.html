@@ -229,8 +229,8 @@
     {% endfor %}
 
     <tr>
-        <td colspan="10" style="text-align: center;">
-            <input class='btn' type="submit" value="Settle Payment" onclick="settlePayments()">
+        <td colspan="11" style="text-align: center;">
+            <button class='btn' id="settlePaymentButton">Settle Payment</button>
         </td>
     </tr>
 </table>
@@ -250,7 +250,6 @@
         dateFormat: "Y-m-d",
         maxDate: "today",
         onChange: function(selectedDates, dateStr, instance) {
-            // Set minDate of dateTo based on dateFrom
             flatpickr("#dateTo", {
                 minDate: dateStr,
                 dateFormat: "Y-m-d",
@@ -262,6 +261,23 @@
     flatpickr("#dateTo", {
         dateFormat: "Y-m-d",
         maxDate: "today"
+    });
+
+    document.getElementById("settlePaymentButton").addEventListener("click", function() {
+        var selectedTransaction = document.querySelector('input[name="selected_transaction"]:checked');
+
+        if (!selectedTransaction) {
+            alert("Please select a transaction to settle.");
+            return;
+        }
+
+        var confirmation = confirm("Are you sure you want to settle this payment?");
+        if (confirmation) {
+            var form = document.getElementById("settlePaymentForm");
+            var transactionIdInput = document.getElementById("transactionIdInput");
+            transactionIdInput.value = selectedTransaction.value;
+            form.submit();
+        }
     });
 
     function applyFilters() {
@@ -277,27 +293,6 @@
         window.location.href = url.toString();
     }
 
-    function settlePayments() {
-        var selectedTransaction = document.querySelector('input[name="selected_transaction"]:checked');
-
-        // Check if a transaction is selected
-        if (!selectedTransaction) {
-            alert("Please select a transaction to settle.");
-            return;
-        }
-
-        // Confirmation popup
-        var confirmation = confirm("Are you sure you want to settle this payment?");
-
-        // If user confirms, submit the form to the /settled route
-        if (confirmation) {
-            var form = document.getElementById("settlePaymentForm");
-            var transactionIdInput = document.getElementById("transactionIdInput");
-            transactionIdInput.value = selectedTransaction.value;
-            form.submit();
-        }
-    }
-
     function updateTotalAmountPayable(input, totalAmount, targetElement) {
         var commissionFee = input.value;
         var totalAmountPayable = totalAmount * (1 - commissionFee / 100);
@@ -307,4 +302,3 @@
 
 </body>
 </html>
-
