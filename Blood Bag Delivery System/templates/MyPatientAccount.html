@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account</title>
+
+    <!-- Font Awesome CDN link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Custom CSS file link -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/LogoTT.png') }}">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .logo {
+            font-size: 24px;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        hr {
+            border: 0;
+            border-top: 2px solid #ccc;
+            margin: 20px 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #333;
+            color: #fff;
+        }
+    </style>
+
+</head>
+<body>
+
+<header>
+    <a href="/" class="logo">Transfusio<span>Track</span></a>
+</header>
+
+<div class="container">
+    <h1>Session: {{patient_name}} Account</h1>
+
+    <section>
+        <h2>Patient Information</h2>
+        <hr>
+        <p><strong>Patient Name:</strong> {{ order.patient_name }}</p>
+        <p><strong>Email:</strong> {{ order.email }}</p>
+        <p><strong>Contact Number:</strong> {{ order.contact_num }}</p>
+        <p><strong>Address:</strong> {{ order.address }}</p>
+        <p><strong>City:</strong> {{ order.p_city }}</p>
+        <p><strong>Email Verified:</strong> {{ "Yes" if order.email_verified else "No" }}</p>
+    </section>
+
+    <p><strong>Note:</strong> Your information is secured with TransfusioTrack and we do not share personal details with third parties. If you would like to update or change any information, please contact us at <a href="mailto:transfusiotrack@gmail.com">transfusiotrack@gmail.com</a></p>
+</div>
+
+<footer>
+    <div class="credit">Created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory</div>
+</footer>
+
+</body>
+</html>
