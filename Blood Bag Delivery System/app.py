@@ -520,6 +520,29 @@ def my_hospital_account():
         return render_template('HospSignup.html')
 
 
+####### My Patient acct ##########
+@app.route('/MyPatient_Acct')
+def patient_account():
+    # Retrieve the patient ID from the session
+    patient_reg_no = session.get('_id')
+    account_details = {}
+
+    # Check if the user is logged in and has a registration number
+    if patient_reg_no:
+        # Fetch patient details from the database based on the patient ID (_id)
+        patient_details = Patient.find_one({'_id': patient_reg_no})
+        
+        if patient_details:
+            account_details['patient_name'] = patient_details.get('patient_name')
+            account_details['email'] = patient_details.get('email')
+            account_details['password'] = patient_details.get('password')
+            account_details['contact_num'] = patient_details.get('contact_num')
+            account_details['address'] = patient_details.get('address')
+
+        return render_template('MyPatientAccount.html', order=account_details)
+    else:
+        # Redirect to the login page if the user is not logged in
+        return render_template('PatientSignIn.html')
 
 
 
