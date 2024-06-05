@@ -603,7 +603,7 @@ def settle_payment():
 #     return render_template('AdminSettled_payments.html', transactions=transactions)
 
 
-@app.route('/settled')
+@app.route('/settled',methods=['POST'])
 def settlepayments():
     # Fetch orders where settlement_status is True
     orders = list(Order.find({'settlement_status': True}))
