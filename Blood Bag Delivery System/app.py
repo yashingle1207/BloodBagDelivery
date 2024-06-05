@@ -492,6 +492,35 @@ def check_session(route):
     return
 
 
+############################ My account hospital ##############################
+
+@app.route('/MyHosp_Acct')
+def my_hospital_account():
+    # Retrieve the hospital registration number from the session
+    hosp_reg_no = session.get('hosp_reg_no')
+    account_details = {}
+
+    # Check if the user is logged in and has a registration number
+    if hosp_reg_no:
+        # Fetch hospital details from the database based on the registration number
+        hospital_details = HospUser.find_one({'reg_num': hosp_reg_no})
+        
+        if hospital_details:
+            account_details['facility_name'] = hospital_details.get('facility_name')
+            account_details['email'] = hospital_details.get('email')
+            account_details['password'] = hospital_details.get('password')
+            account_details['contact_num'] = hospital_details.get('contact_num')
+            account_details['address'] = hospital_details.get('address')
+            account_details['reg_num'] = hospital_details.get('reg_num')
+            account_details['email_verified'] = hospital_details.get('email_verified')
+
+        return render_template('MyHospitalAccount.html', order=account_details)
+    else:
+        # Redirect to the login page if the user is not logged in
+        return render_template('HospSignup.html')
+
+
+
 
 
 
