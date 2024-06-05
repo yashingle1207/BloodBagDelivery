@@ -120,13 +120,13 @@
 <header>
     <a href="/" class="logo">Transfusio<span>Track</span></a>
     <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
-    <nav class="navbar" id="navbar">
-        {% if 'hosp_reg_no' in session %}
-            <a>User ID: {{ session['hosp_reg_no'] }}</a>
+       <nav class="navbar" id="navbar">
+              {% if '_id' in session %}
+            <a>User ID: {{ session['_id'] }}</a>
         {% endif %}
-        <a href="/HospDashboard">Hospital Dashboard</a>
-        <a href="/">Logout</a>
-    </nav>
+        <a href="/PatientDashboard">Patient Dashboard</a>
+          <a href="/">Logout</a>
+        </nav>
 </header>
 
 <script>
