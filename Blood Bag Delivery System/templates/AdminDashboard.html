@@ -235,6 +235,11 @@
 
 </div>
 
+<!-- Hidden form to submit selected transaction ID -->
+<form id="settlePaymentForm" method="post" action="/settled" style="display: none;">
+    <input type="hidden" name="transaction_id" id="transactionIdInput">
+</form>
+
 <!-- Flatpickr JS -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
@@ -282,10 +287,12 @@
         // Confirmation popup
         var confirmation = confirm("Are you sure you want to settle this payment?");
 
-        // If user confirms, proceed with settling payment
+        // If user confirms, submit the form to the /settled route
         if (confirmation) {
-            // Code to settle payment
-            alert("Payment settled successfully.");
+            var form = document.getElementById("settlePaymentForm");
+            var transactionIdInput = document.getElementById("transactionIdInput");
+            transactionIdInput.value = selectedTransaction.value;
+            form.submit();
         }
     }
 
