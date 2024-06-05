@@ -721,7 +721,7 @@ def adminsignIn():
 def admin_dashboard():
     # Fetch blood bank names
     blood_banks = BBUser.find({}, {'reg_num': 1, 'bb_name': 1})
-    
+
     # Fetch orders
     date_from = request.args.get('dateFrom')
     date_to = request.args.get('dateTo')
@@ -774,17 +774,19 @@ def admin_dashboard():
             total_amount_per_component = quantity_sold * price_per_unit
             total_amount_payable = sum(order['total_amount'] for order in orders)
 
-            transactions.append({
-                'blood_bank_name': blood_bank['bb_name'],
-                'address': blood_bank['address'],
-                'contact_no': blood_bank['contact_num'],
-                'component': component,
-                'quantity_sold': quantity_sold,
-                'price_per_unit': price_per_unit,
-                'total_amount_per_component': total_amount_per_component,
-                'total_amount_payable': total_amount_payable,
-                '_id': str(orders[0]['_id'])  # Assuming each order has a unique '_id'
-            })
+            for order in orders:
+                transactions.append({
+                    'blood_bank_name': blood_bank['bb_name'],
+                    'address': blood_bank['address'],
+                    'contact_no': blood_bank['contact_num'],
+                    'component': component,
+                    'quantity_sold': order['BloodQuantity'],
+                    'price_per_unit': price_per_unit,
+                    'total_amount_per_component': total_amount_per_component,
+                    'total_amount_payable': order['total_amount'],
+                    '_id': str(order['_id']),  # Assuming each order has a unique '_id'
+                    'timeofdelivery': order['timeofdelivery']  # Include time of delivery
+                })
 
     return render_template('AdminDashboard.html', transactions=transactions, blood_banks=blood_banks)
 
