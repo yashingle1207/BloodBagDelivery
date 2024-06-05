@@ -475,7 +475,7 @@ def home():
 
 
 
-########## session check login ######################
+########## check - session check login ######################
 from flask import session, redirect, url_for
 
 # Function to check session variables and log out if not found
@@ -1833,14 +1833,17 @@ def bloodbank_dispatched_orders():
 
 @app.route('/delorder1', methods=['GET'])
 def hosp_received_orders():
-    # Query MongoDB to get all orders
+    redirect_to = check_session('HospSignIn')
+    if redirect_to:
+        return redirect_to
+
+    # Query MongoDB to get all orders with status 'delivered' for the hospital
     orders = Order.find({'User_ID': session.get('hosp_reg_no'), 'status': 'delivered'})
 
     # Prepare the results to be displayed
     order_list = []
 
     for order in orders:
-        # Query blood bank details
         blood_bank_details = BBUser.find_one({'reg_num': order.get('BloodBank_Id')})
         
         if blood_bank_details:
@@ -1875,7 +1878,15 @@ def hosp_received_orders():
             
             order_list.append(formatted_order)
 
+    # Fetch hospital details to get the facility name
+    existing_hospital = HospUser.find_one({'reg_num': session.get('hosp_reg_no')})
+    facility_name = existing_hospital.get('facility_name') if existing_hospital else "Unknown Facility"
+
+    # Store the facility name in the session
+    session['facility_name'] = facility_name
+
     return render_template('Receivedbags.html', orders=order_list)
+
 
 
 
@@ -2020,19 +2031,23 @@ def Blood_bag_inProgress():
 
 @app.route('/Hosp_Pending_Req', methods=['GET'])
 def Hosp_Blood_bag_inProgress():
-    # Get the sort order from query parameters
+    redirect_to = check_session('HospSignIn')
+    if redirect_to:
+        return redirect_to
+
     sort_order = request.args.get('sort', 'desc')
-    
-    # Determine the sort direction
     sort_direction = -1 if sort_order == 'desc' else 1
 
-    # Query MongoDB to get all orders and sort by timestamp based on the sort direction
-    orders = Order.find({'User_ID': session.get('hosp_reg_no')}).sort('timestamp', sort_direction)
+    hosp_reg_no = session.get('hosp_reg_no')
 
-    # Prepare the results to be displayed
+    # Fetch hospital details to get the facility name
+    existing_hospital = HospUser.find_one({'reg_num': hosp_reg_no})
+    facility_name = existing_hospital.get('facility_name') if existing_hospital else "Unknown Facility"
+
+    orders = Order.find({'User_ID': hosp_reg_no}).sort('timestamp', sort_direction)
+
     order_list = []
     for order in orders:
-        # Query blood bank details
         blood_bank_details = BBUser.find_one({'reg_num': order.get('BloodBank_Id')})
 
         formatted_order = {
@@ -2058,7 +2073,11 @@ def Hosp_Blood_bag_inProgress():
 
         order_list.append(formatted_order)
 
-    return render_template('HospitalPendingReq.html', orders=order_list, sort_order=sort_order)
+    # Store the facility name in the session
+    session['facility_name'] = facility_name
+
+    return render_template('HospitalPendingReq.html', orders=order_list, sort_order=sort_order, facility_name=facility_name)
+
 
 
 
