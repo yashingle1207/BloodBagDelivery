@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Hospital Account</title>
+
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/LogoTT.png') }}">
+
+    <style>
+        p {
+            font-size: 20px; /* Changed font size to match other text */
+        }
+
+        h2 {
+            font-size: 24px;
+        }
+
+        /* Style for hr elements */
+        hr {
+            border: 0;
+            border-top: 2px solid #ccc;
+            margin: 20px 0;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+
+<header>
+
+    <a href="/" class="logo">Transfusio<span>Track</span></a>
+
+    <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
+
+    <nav class="navbar" id="navbar">
+        {% if 'hosp_reg_no' in session %}
+            <a>User ID: {{ session.get('facility_name') }}</a>
+        {% endif %}
+        <a href="/HospDashboard">Hospital Dashboard</a>
+        <a href="/">Logout</a>
+    </nav>
+
+</header>
+
+<script>
+    function toggleNavbar() {
+        var navbar = document.getElementById("navbar");
+        if (navbar.classList.contains("active")) {
+            navbar.classList.remove("active");
+        } else {
+            navbar.classList.add("active");
+        }
+    }
+</script>
+
+<section class="home">
+
+    <div class="content">
+        <h3>My Account</h3>
+
+    </div>
+</section>
+
+<section class="order-details">
+    <h2>Hospital Details</h2>
+    <hr>
+    <p><strong>Hospital Name:</strong> {{ order.facility_name }}</p>
+    <p><strong>Email:</strong> {{ order.email }}</p>
+    <p><strong>Password:</strong> {{ order.password }}</p>
+    <p><strong>Contact Number:</strong> {{ order.contact_num }}</p>
+    <p><strong>Address:</strong> {{ order.address }}</p>
+    <p><strong>Registration Number:</strong> {{ order.reg_num }}</p>
+    <p><strong>Email Verified:</strong> {{ "Yes" if order.email_verified else "No" }}</p>
+    <hr>
+</section>
+
+<section class="footer">
+    <div class="credit">created by <span>Team Transfusio</span> | All @rights reserved to Ingle Laboratory</div>
+</section>
+
+</body>
+</html>
