@@ -530,7 +530,7 @@ def patient_account():
     # Check if the user is logged in and has a registration number
     if patient_reg_no:
         # Fetch patient details from the database based on the patient ID (_id)
-        patient_details = Patient.find_one({'_id': patient_reg_no})
+        patient_details = PatientUser.find_one({'_id': patient_reg_no})
         
         if patient_details:
             account_details['patient_name'] = patient_details.get('patient_name')
