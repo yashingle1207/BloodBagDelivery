@@ -677,13 +677,14 @@ def HospsignIn():
         
         if existing_user:
             hosp_reg_no = existing_user.get('reg_num')
+            facility_name = existing_user.get('facility_name')  # Get the facility name
 
-            # Set the registration number in the session
-            session['hosp_reg_no'] = hosp_reg_no 
+            # Set the registration number and facility name in the session
+            session['hosp_reg_no'] = hosp_reg_no
+            session['facility_name'] = facility_name
 
             # Redirect to the hospital dashboard or render a template
-            # return redirect(url_for('HospDashboard'))
-            return render_template('HospitalDashboard.html',  hosp_reg_no=hosp_reg_no )
+            return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no, facility_name=facility_name)
 
         else:
             # If user login is unsuccessful due to unverified email
@@ -692,6 +693,7 @@ def HospsignIn():
     # If the request method is not POST, render the login page
     response = app.make_response(render_template('HospitalSignIn.html'))
     return response
+
 
 
 
