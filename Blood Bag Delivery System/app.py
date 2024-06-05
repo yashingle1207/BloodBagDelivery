@@ -716,6 +716,7 @@ def adminsignIn():
 
 #     return render_template('AdminDashboard.html', transactions=transactions)
 
+
 @app.route('/admin_dashboard')
 def admin_dashboard():
     # Fetch blood bank names
@@ -729,24 +730,21 @@ def admin_dashboard():
     filter_conditions = {'settlement_status': False}
 
     if date_from and date_to:
-        # Convert dates to the format YYYY-MM-DD for comparison
-        date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
-        date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
+        # Create regex pattern to match the date range
+        date_from_str = date_from
+        date_to_str = date_to
 
-        # Use regex to match the date part in the timeofdelivery string
-        date_from_str = date_from_dt.strftime("%Y-%m-%d")
-        date_to_str = date_to_dt.strftime("%Y-%m-%d")
+        # Define regex pattern to match date part of the timeofdelivery
+        date_regex = f"^{date_from_str}|^{date_to_str}"
 
-        # Create a regex pattern to match dates within the range
-        filter_conditions['$and'] = [
-            {'timeofdelivery': {'$regex': f'^{date_from_str}.*'}},
-            {'timeofdelivery': {'$regex': f'^{date_to_str}.*'}}
-        ]
-    else:
+        filter_conditions['timeofdelivery'] = {
+            '$regex': date_regex
+        }
+    elif not date_from and not date_to:
         # Set the filter for the current day if no date filters are provided
         today_str = datetime.today().strftime("%Y-%m-%d")
         filter_conditions['timeofdelivery'] = {
-            '$regex': f'^{today_str}.*'
+            '$regex': f'^{today_str}'
         }
 
     if blood_bank_id:
