@@ -5,88 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Account</title>
 
-    <!-- Font Awesome CDN link -->
+    <!-- font awesome cdn link  -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-    <!-- Custom CSS file link -->
+    <!-- custom css file link  -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/LogoTT.png') }}">
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f7f7f7;
-        }
-
-        header {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 10px;
-        }
-
-        .logo {
-            font-size: 24px;
-            text-decoration: none;
-            color: #fff;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
+        p {
+            font-size: 20px; /* Changed font size to match other text */
+            margin-left: 80px;
+            margin-top: 7px;
         }
 
         h2 {
-            font-size: 20px;
-            margin-top: 20px;
-            color: #333;
+            font-size: 24px;
         }
 
-        p {
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-
+        /* Style for hr elements */
         hr {
             border: 0;
             border-top: 2px solid #ccc;
             margin: 20px 0;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #333;
-            color: #fff;
         }
     </style>
 
 </head>
 <body>
 
+<div class="container">
+
 <header>
+
     <a href="/" class="logo">Transfusio<span>Track</span></a>
+
+    <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
+
+  
+       <nav class="navbar" id="navbar">
+              {% if '_id' in session %}
+                <a>User ID: {{ session['_id'] }}</a>
+            {% endif %}
+            <a href="/PatientDashboard">Patient Dashboard</a>
+              <a href="/">Logout</a>
+        </nav>
+
 </header>
+
+<script>
+    function toggleNavbar() {
+        var navbar = document.getElementById("navbar");
+        if (navbar.classList.contains("active")) {
+            navbar.classList.remove("active");
+        } else {
+            navbar.classList.add("active");
+        }
+    }
+</script>
 
 <section class="home">
 
     <div class="content">
-        <h3 align="center"> {{ session.get('patient_name') }}'s Account</h3>
+        <h3 align="center"> {{ session.get('patient_name') }} Account</h3>
 
     </div>
 </section>
 
-   <section class="order-details">
-        <h2>Patient Information</h2>
+<section class="order-details">
+   <h2>Patient Information</h2>
         <hr>
         <p><strong>Patient Name:</strong> {{ order.patient_name }}</p>
         <p><strong>Email:</strong> {{ order.email }}</p>
@@ -95,13 +82,13 @@
         <p><strong>City:</strong> {{ order.p_city }}</p>
         <p><strong>Email Verified:</strong> {{ "Yes" if order.email_verified else "No" }}</p>
     </section>
+</section>
 
-    <p><strong>Note:</strong> Your information is secured with TransfusioTrack and we do not share personal details with third parties. If you would like to update or change any information, please contact us at <a href="mailto:transfusiotrack@gmail.com">transfusiotrack@gmail.com</a></p>
-</div>
-
-<footer>
-    <div class="credit">Created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory</div>
-</footer>
+ <p><strong>Note:</strong> Your information is secured with TransfusioTrack and we do not share personal details with third parties.
+     <br> If you would like to update or change any information, please contact us at <a href="mailto:transfusiotrack@gmail.com">transfusiotrack@gmail.com</a>
+<section class="footer">
+    <div class="credit">created by <span>Team Transfusio</span> | All @rights reserved to Ingle Laboratory</div>
+</section>
 
 </body>
 </html>
