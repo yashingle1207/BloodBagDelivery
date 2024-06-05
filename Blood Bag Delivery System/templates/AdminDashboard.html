@@ -263,7 +263,8 @@
         maxDate: "today"
     });
 
-    document.getElementById("settlePaymentButton").addEventListener("click", function() {
+    document.getElementById("settlePaymentButton").addEventListener("click", function(event) {
+        event.preventDefault(); // Prevent default form submission behavior
         var selectedTransaction = document.querySelector('input[name="selected_transaction"]:checked');
 
         if (!selectedTransaction) {
@@ -276,6 +277,7 @@
             var form = document.getElementById("settlePaymentForm");
             var transactionIdInput = document.getElementById("transactionIdInput");
             transactionIdInput.value = selectedTransaction.value;
+            console.log("Submitting form with transaction ID:", selectedTransaction.value); // Debugging statement
             form.submit();
         }
     });
