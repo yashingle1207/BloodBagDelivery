@@ -1860,6 +1860,8 @@ def bloodbank_dispatched_orders():
 
 ####### Hospital delivered bags - delorder1 #########
 
+
+
 @app.route('/delorder1', methods=['GET'])
 def hosp_received_orders():
     redirect_to = check_session('HospSignIn')
@@ -1915,7 +1917,8 @@ def hosp_received_orders():
     # Store the facility name in the session
     session['facility_name'] = facility_name
 
-    return render_template('Receivedbags.html', orders=order_list, sort_order=sort_order)
+    return render_template('Receivedbags.html', orders=order_list, sort_order=sort_order, facility_name=facility_name)
+
 
 
 
