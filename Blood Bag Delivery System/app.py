@@ -409,6 +409,27 @@ def home():
 
 
 
+
+########## session check login ######################
+from flask import session, redirect, url_for
+
+# Function to check session variables and log out if not found
+def check_session(route):
+    if route == 'HospSignIn' and 'hosp_reg_no' not in session:
+        session.clear()  # Clear the session if hosp_reg_no is not found
+        return redirect(url_for('HospSignIn'))
+    elif route == 'BBSignIn' and 'bb_reg_no' not in session:
+        session.clear()  # Clear the session if bb_reg_no is not found
+        return redirect(url_for('BBSignIn'))
+    elif route == 'PatientSignIn' and '_id' not in session:
+        session.clear()  # Clear the session if _id is not found
+        return redirect(url_for('PatientSignIn'))
+    return
+
+
+
+
+
 ################# Settle Payment #############################
 @app.route('/settle_payment', methods=['POST'])
 def settle_payment():
@@ -2316,17 +2337,36 @@ def remove_blood_bag():
 
 ##############################################################################
 
+# @app.route('/HospDashboard')
+# def HospDashboard():
+#     # Retrieve the registration number from the session
+#     hosp_reg_no = session.get('hosp_reg_no')
+
+#     # Check if the user is logged in
+#     if hosp_reg_no:
+#         return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
+#     else:
+#         # Redirect to the login page if not logged in
+#          return render_template('HospSignup.html')
+
 @app.route('/HospDashboard')
 def HospDashboard():
     # Retrieve the registration number from the session
     hosp_reg_no = session.get('hosp_reg_no')
+    facility_name = None
 
     # Check if the user is logged in
     if hosp_reg_no:
-        return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no)
+        # Retrieve the hospital details from the database based on reg_num
+        hospital_details = HospUser.find_one({'reg_num': hosp_reg_no})
+        if hospital_details:
+            facility_name = hospital_details.get('facility_name')
+
+        return render_template('HospitalDashboard.html', hosp_reg_no=hosp_reg_no, facility_name=facility_name)
     else:
         # Redirect to the login page if not logged in
-         return render_template('HospSignup.html')
+        return render_template('HospSignup.html')
+
 
 
 
