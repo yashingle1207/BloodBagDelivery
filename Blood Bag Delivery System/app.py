@@ -524,7 +524,7 @@ def my_hospital_account():
 @app.route('/MyPatient_Acct')
 def patient_account():
     # Retrieve the patient registration number from the session
-    patient_reg_no = session.get('patient_reg_no')
+    patient_reg_no = session.get('_id') #email
     account_details = {}
 
     # Check if the user is logged in and has a registration number
