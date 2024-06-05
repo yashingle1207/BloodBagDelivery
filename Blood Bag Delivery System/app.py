@@ -545,7 +545,7 @@ def patient_account():
         return render_template('MyPatientAccount.html', order=account_details)
     else:
         # Redirect to the login page if the user is not logged in
-        return render_template('PatientSignIn.html')
+        return render_template('PatientLogin.html')
 
 
 
