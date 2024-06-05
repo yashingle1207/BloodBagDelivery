@@ -2386,7 +2386,7 @@ def PsearchBB():
 def set_selected_blood_bank():
     
     if request.method == 'POST':
-        session.clear() 
+     
         
         selected_blood_bank_reg_num = request.form.get('selected_blood_bank')
 
