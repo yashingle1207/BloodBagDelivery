@@ -11,6 +11,8 @@
 
     <!-- Custom CSS file link -->
     <link rel="stylesheet" href="static/style.css">
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+
 
     <style>
         /* Your existing styles here */
@@ -54,24 +56,18 @@
             <a href="/" class="logo">Transfusio<span>Track</span></a>
             <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
 
-        <nav class="navbar" id="navbar">
-             {% if patient_reg_no %}
-                <a>User ID: {{ patient_reg_no }}</a>
-                 <a href="/PDashboard">Patient Dashboard</a>
-            {% elif hosp_reg_no %}
-                <a>User ID: {{ hosp_reg_no }}</a>
-                 <a href="/HospDashboard">Hospital Dashboard</a>
+            <nav class="navbar" id="navbar">
+                {% if patient_reg_no %}
+                    <a>User ID: {{ patient_reg_no }}</a>
+                    <a href="/PDashboard">Patient Dashboard</a>
+                {% elif hosp_reg_no %}
+                    <a>User_ID: {{ session.get('facility_name', 'Unknown Facility') }}</a>
+                    <a href="/HospDashboard">Hospital Dashboard</a>
+                {% endif %}
+                <a href="/">Logout</a>
+            </nav>
 
-            {% endif %}
-
-
-          <a href="/">Logout</a>
-
-        </nav>
         </header>
-
- 
-
 
 
  <script>
