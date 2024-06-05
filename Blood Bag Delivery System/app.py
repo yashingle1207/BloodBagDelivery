@@ -523,14 +523,14 @@ def my_hospital_account():
 ####### My Patient acct ##########
 @app.route('/MyPatient_Acct')
 def patient_account():
-    # Retrieve the patient registration number from the session
-    patient_reg_no = session.get('_id') #email
+    # Retrieve the patient email from the session
+    patient_email = session.get('_id')  # email
     account_details = {}
 
-    # Check if the user is logged in and has a registration number
-    if patient_reg_no:
-        # Fetch patient details from the database based on the registration number
-        patient_details = PatientUser.find_one({'reg_num': patient_reg_no})
+    # Check if the user is logged in and has an email
+    if patient_email:
+        # Fetch patient details from the database based on the email
+        patient_details = PatientUser.find_one({'email': patient_email})
         
         if patient_details:
             account_details['patient_name'] = patient_details.get('patient_name')
@@ -538,7 +538,6 @@ def patient_account():
             account_details['password'] = patient_details.get('password')
             account_details['contact_num'] = patient_details.get('contact_num')
             account_details['address'] = patient_details.get('address')
-            account_details['reg_num'] = patient_details.get('reg_num')
             account_details['email_verified'] = patient_details.get('email_verified')
             account_details['p_city'] = patient_details.get('p_city')
 
@@ -546,6 +545,7 @@ def patient_account():
     else:
         # Redirect to the login page if the user is not logged in
         return render_template('PatientLogin.html')
+
 
 
 
