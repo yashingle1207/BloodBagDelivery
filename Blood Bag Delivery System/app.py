@@ -733,7 +733,7 @@ def admin_dashboard():
 
 @app.route('/HospSignIn', methods=['POST'])
 def HospsignIn():
-    check_session('HospSignIn')
+  
     if request.method == 'POST':
         hosp_email = request.form.get('hospEmailId')
         hosp_password = request.form.get('hospPassword')
