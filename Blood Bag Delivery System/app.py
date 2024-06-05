@@ -2381,7 +2381,10 @@ def PsearchBB():
 
 @app.route('/set_selected_blood_bank', methods=['POST'])
 def set_selected_blood_bank():
+    
     if request.method == 'POST':
+        session.clear() 
+        
         selected_blood_bank_reg_num = request.form.get('selected_blood_bank')
 
         # Fetch the price of the selected blood product from the database
