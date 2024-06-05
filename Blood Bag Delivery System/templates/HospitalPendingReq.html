@@ -144,6 +144,11 @@
     function toggleOrderDetails(event) {
         var orderDetails = event.currentTarget.parentElement.nextElementSibling;
         orderDetails.classList.toggle('active');
+
+         function changeSortOrder() {
+        var sortOrder = document.getElementById("sortOrder").value;
+        window.location.href = "/Hosp_Pending_Req?sort=" + sortOrder;
+    }
     }
 </script>
 
