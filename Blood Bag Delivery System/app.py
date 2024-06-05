@@ -1893,10 +1893,52 @@ def Blood_bag_inProgress():
 ##############################################
 
 
+# @app.route('/Hosp_Pending_Req', methods=['GET'])
+# def Hosp_Blood_bag_inProgress():
+#     # Query MongoDB to get all orders and sort by timestamp in descending order
+#     orders = Order.find({'User_ID': session.get('hosp_reg_no')}).sort('timestamp', -1)
+
+#     # Prepare the results to be displayed
+#     order_list = []
+#     for order in orders:
+#         # Query blood bank details
+#         blood_bank_details = BBUser.find_one({'reg_num': order.get('BloodBank_Id')})
+
+#         formatted_order = {
+#             '_id': order.get('_id'),
+#             'User_ID': order.get('User_ID'),
+#             'BloodBank_Id': order.get('BloodBank_Id'),
+#             'BloodGrp': order.get('BloodGrp'),
+#             'BloodComp': order.get('BloodComp'),
+#             'BloodQuantity': order.get('BloodQuantity'),
+#             'req_type': order.get('req_type'),
+#             'fname': order.get('fname'),
+#             'mname': order.get('mname'),
+#             'lname': order.get('lname'),
+#             'age': order.get('age'),
+#             'docname': order.get('docname'),
+#             'gender': order.get('gender'),
+#             'user_name': blood_bank_details.get('bb_name') if blood_bank_details else None,
+#             'user_address': blood_bank_details.get('address') if blood_bank_details else None,
+#             'phone_number': blood_bank_details.get('contact_num') if blood_bank_details else None,
+#             'status': order.get('status'),
+#             'timestamp': order.get('timestamp', '').split('.')[0] if 'timestamp' in order else None
+#         }
+
+#         order_list.append(formatted_order)
+
+#     return render_template('HospitalPendingReq.html', orders=order_list)
+
 @app.route('/Hosp_Pending_Req', methods=['GET'])
 def Hosp_Blood_bag_inProgress():
-    # Query MongoDB to get all orders and sort by timestamp in descending order
-    orders = Order.find({'User_ID': session.get('hosp_reg_no')}).sort('timestamp', -1)
+    # Get the sort order from query parameters
+    sort_order = request.args.get('sort', 'desc')
+    
+    # Determine the sort direction
+    sort_direction = -1 if sort_order == 'desc' else 1
+
+    # Query MongoDB to get all orders and sort by timestamp based on the sort direction
+    orders = Order.find({'User_ID': session.get('hosp_reg_no')}).sort('timestamp', sort_direction)
 
     # Prepare the results to be displayed
     order_list = []
@@ -1927,7 +1969,8 @@ def Hosp_Blood_bag_inProgress():
 
         order_list.append(formatted_order)
 
-    return render_template('HospitalPendingReq.html', orders=order_list)
+    return render_template('HospitalPendingReq.html', orders=order_list, sort_order=sort_order)
+
 
 
 
