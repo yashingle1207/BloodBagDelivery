@@ -315,7 +315,7 @@ def payment_response():
                                        blood_group=blood_group,
                                        blood_component=blood_component,
                                        requested_quantity=requested_quantity,
-                                       bb_price=bb_price)
+                                       bb_price=bb_price,facility_name=facility_name)
 
             else:
                 # Payment failed, log and redirect to payment failure page
