@@ -132,6 +132,7 @@
 </header>
 
 <script>
+ 
     function toggleNavbar() {
         var navbar = document.getElementById("navbar");
         if (navbar.classList.contains("active")) {
@@ -144,11 +145,11 @@
     function toggleOrderDetails(event) {
         var orderDetails = event.currentTarget.parentElement.nextElementSibling;
         orderDetails.classList.toggle('active');
+    }
 
-         function changeSortOrder() {
+    function changeSortOrder() {
         var sortOrder = document.getElementById("sortOrder").value;
         window.location.href = "/Hosp_Pending_Req?sort=" + sortOrder;
-    }
     }
 </script>
 
