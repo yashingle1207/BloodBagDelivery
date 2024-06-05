@@ -26,9 +26,9 @@
 
    
       <nav class="navbar" id="navbar">
-            {% if 'hosp_reg_no' in session %}
-            <a>User ID: {{ session['hosp_reg_no'] }}</a>
-        {% endif %}
+           {% if 'hosp_reg_no' in session %}
+                <a>User ID: {{ facility_name }}</a>
+            {% endif %}
         <a href="/">Logout</a>
 
     </nav>
