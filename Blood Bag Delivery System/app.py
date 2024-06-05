@@ -1837,10 +1837,12 @@ def hosp_received_orders():
     if redirect_to:
         return redirect_to
 
-    # Query MongoDB to get all orders with status 'delivered' for the hospital
-    orders = Order.find({'User_ID': session.get('hosp_reg_no'), 'status': 'delivered'})
+    sort_order = request.args.get('sort', 'desc')
+    sort_direction = -1 if sort_order == 'desc' else 1
 
-    # Prepare the results to be displayed
+    # Query MongoDB to get all orders with status 'delivered' for the hospital
+    orders = Order.find({'User_ID': session.get('hosp_reg_no'), 'status': 'delivered'}).sort('timestamp', sort_direction)
+
     order_list = []
 
     for order in orders:
@@ -1866,7 +1868,6 @@ def hosp_received_orders():
                 'phone_number': blood_bank_details.get('contact_num')
             }
 
-            # Handle timestamps as strings, split to remove milliseconds if present
             if 'timestamp' in order:
                 formatted_order['timestamp'] = order['timestamp'].split('.')[0]
 
@@ -1885,7 +1886,8 @@ def hosp_received_orders():
     # Store the facility name in the session
     session['facility_name'] = facility_name
 
-    return render_template('Receivedbags.html', orders=order_list)
+    return render_template('Receivedbags.html', orders=order_list, sort_order=sort_order)
+
 
 
 
