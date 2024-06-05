@@ -174,7 +174,8 @@ def payment_response():
             user_id = session['_id']
             template_name = 'Patientmap.html'
             # Fetch patient email from database and store it in session
-            patient_user = PatientUser.find_one({'_id': user_id})
+            # patient_email = PatientUser.find_one({'email': user_id})['email']
+            patient_user = PatientUser.find_one({'email': user_id})
             patient_email = patient_user['email']
             session['email'] = patient_email
 
