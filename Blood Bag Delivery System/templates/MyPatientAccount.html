@@ -77,10 +77,15 @@
     <a href="/" class="logo">Transfusio<span>Track</span></a>
 </header>
 
-<div class="container">
-    <h1>Session: {{patient_name}} Account</h1>
+<section class="home">
 
-    <section>
+    <div class="content">
+        <h3 align="center"> {{ session.get('patient_name') }}'s Account</h3>
+
+    </div>
+</section>
+
+   <section class="order-details">
         <h2>Patient Information</h2>
         <hr>
         <p><strong>Patient Name:</strong> {{ order.patient_name }}</p>
