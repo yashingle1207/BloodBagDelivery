@@ -738,14 +738,15 @@ def admin_dashboard():
         date_to_str = date_to_dt.strftime("%Y-%m-%d")
 
         # Create a regex pattern to match dates within the range
-        filter_conditions['timeofdelivery'] = {
-            '$regex': f"^({date_from_str}|{date_to_str})"
-        }
+        filter_conditions['$and'] = [
+            {'timeofdelivery': {'$regex': f'^{date_from_str}.*'}},
+            {'timeofdelivery': {'$regex': f'^{date_to_str}.*'}}
+        ]
     else:
         # Set the filter for the current day if no date filters are provided
         today_str = datetime.today().strftime("%Y-%m-%d")
         filter_conditions['timeofdelivery'] = {
-            '$regex': f"^{today_str}"
+            '$regex': f'^{today_str}.*'
         }
 
     if blood_bank_id:
@@ -783,7 +784,7 @@ def admin_dashboard():
             })
 
     return render_template('AdminDashboard.html', transactions=transactions, blood_banks=blood_banks)
-    
+
 ######## ###
 
 @app.route('/HospSignIn', methods=['POST'])
