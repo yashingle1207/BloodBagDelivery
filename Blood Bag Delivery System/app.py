@@ -1836,12 +1836,14 @@ def bloodbank_completed_orders():
     if redirect_to:
         return redirect_to
 
-    # Query MongoDB to get all orders
-    orders = Order.find({'BloodBank_Id': session.get('bb_reg_no'), 'status': 'delivered'})
+    sort_order = request.args.get('sort', 'desc')
+    sort_direction = -1 if sort_order == 'desc' else 1
+
+    # Query MongoDB to get all delivered orders and sort them by timestamp
+    orders = Order.find({'BloodBank_Id': session.get('bb_reg_no'), 'status': 'delivered'}).sort('timestamp', sort_direction)
 
     # Prepare the results to be displayed
     order_list = []
-
     for order in orders:
         user_id = order.get('User_ID')
         user_details = None
@@ -1888,8 +1890,7 @@ def bloodbank_completed_orders():
 
             order_list.append(formatted_order)
 
-    return render_template('DeliveredBags.html', orders=order_list)
-
+    return render_template('DeliveredBags.html', orders=order_list, sort_order=sort_order)
 
 
 ####### Dispatched bags Blood bank - #########
@@ -1900,12 +1901,14 @@ def bloodbank_dispatched_orders():
     if redirect_to:
         return redirect_to
 
-    # Query MongoDB to get all orders
-    orders = Order.find({'BloodBank_Id': session.get('bb_reg_no'), 'status': 'dispatched'})
+    sort_order = request.args.get('sort', 'desc')
+    sort_direction = -1 if sort_order == 'desc' else 1
+
+    # Query MongoDB to get all dispatched orders and sort them by timestamp
+    orders = Order.find({'BloodBank_Id': session.get('bb_reg_no'), 'status': 'dispatched'}).sort('timestamp', sort_direction)
 
     # Prepare the results to be displayed
     order_list = []
-
     for order in orders:
         user_id = order.get('User_ID')
         user_details = None
@@ -1949,8 +1952,9 @@ def bloodbank_dispatched_orders():
 
             order_list.append(formatted_order)
 
-    return render_template('BBDispatch.html', orders=order_list)
-    
+    return render_template('BBDispatch.html', orders=order_list, sort_order=sort_order)
+
+
 
 ####### Hospital delivered bags - delorder1 #########
 
@@ -2077,14 +2081,17 @@ def patient_received_orders():
 
 ################################################################
 
-@app.route('/BBNewReq', methods=['GET'])
+# @app.route('/BBNewReq', methods=['GET'])
 def Blood_bag_inProgress():
     redirect_to = check_session('BBSignIn')
-    if redirect_to:
+    if (redirect_to):
         return redirect_to
         
-    # Query MongoDB to get all orders
-    orders = Order.find({'BloodBank_Id': session.get('bb_reg_no'), 'status': 'undelivered'})
+    sort_order = request.args.get('sort', 'desc')
+    sort_direction = -1 if sort_order == 'desc' else 1
+
+    # Query MongoDB to get all orders and sort them by timestamp
+    orders = Order.find({'BloodBank_Id': session.get('bb_reg_no'), 'status': 'undelivered'}).sort('timestamp', sort_direction)
 
     # Prepare the results to be displayed
     order_list = []
@@ -2127,7 +2134,7 @@ def Blood_bag_inProgress():
                 'phone_number': user_details.get('contact_num')
             })
 
-    return render_template('BBNewReq.html', orders=order_list)
+    return render_template('BBNewReq.html', orders=order_list, sort_order=sort_order)
 
 
 ##############################################
