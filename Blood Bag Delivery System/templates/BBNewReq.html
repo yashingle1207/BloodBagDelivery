@@ -46,18 +46,18 @@
             }
         }
 
-        /* Sort Order Filter Styles */
-        .sort-order-container {
+              /* Filter and Sort Order Styles */
+        .filter-sort-container {
             text-align: left;
-            margin: 20px 70px 50px;
         }
 
-        .sort-order-container label {
+        .filter-sort-container label {
             font-size: 18px;
             margin-right: 10px;
         }
 
-        .sort-order-container select {
+        .filter-sort-container select,
+        .filter-sort-container input {
             padding: 8px 12px;
             font-size: 16px;
             border: 1px solid #dddddd;
@@ -66,9 +66,21 @@
             transition: background-color 0.3s ease;
         }
 
-        .sort-order-container select:focus {
+        .filter-sort-container select:focus,
+        .filter-sort-container input:focus {
             outline: none;
             background-color: #e2e2e2;
+        }
+
+        .filter-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-sort-container {
+            margin-right: 20px;
         }
 
         .date-filter-container {
@@ -172,22 +184,24 @@
             <h1 class="heading">New Blood Bag Orders</h1>
 
             <!-- Heading for order status -->
-            <div class="sort-order-container">
-                <label for="sortOrder">Sort By:</label>
-                <select id="sortOrder" onchange="changeSortOrder()">
-                    <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Newest Orders First</option>
-                    <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Oldest Orders First</option>
-                </select>
-            </div>
+            <div class="filter-container">
+                    <div class="filter-sort-container">
+                        <label for="sortOrder">Sort By:</label>
+                        <select id="sortOrder" onchange="changeSortOrder()">
+                            <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Newest Orders First</option>
+                            <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Oldest Orders First</option>
+                        </select>
+                    </div>
+        
+                     <div class="date-filter-container">
+                        <label for="dateFrom">From:</label>
+                        <input type="text" id="dateFrom" placeholder="Select date">
+                        <label for="dateTo">To:</label>
+                        <input type="text" id="dateTo" placeholder="Select date">
+                        <button class="btn" onclick="applyFilters()">Search</button>
+                    </div>
+             </div>
 
-                <div class="date-filter-container">
-                    <label for="dateFrom">From:</label>
-                    <input type="text" id="dateFrom" placeholder="Select date">
-                    <label for="dateTo">To:</label>
-                    <input type="text" id="dateTo" placeholder="Select date">
-                    <button class="btn" onclick="applyFilters()">Apply Filters</button>
-                </div>
-            </div>
 
             <table>
                 <tr>
