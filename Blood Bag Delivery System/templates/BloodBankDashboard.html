@@ -26,7 +26,8 @@
 
     <nav class="navbar" id="navbar">
           {% if 'bb_reg_no' in session %}
-                <a>Blood Bank ID: {{ session['bb_reg_no'] }}</a>
+                <a href="/MyBB_Acct">Blood Bank ID: {{ session['bb_name'] }}</a>
+                <a href="/BBDashboard">BloodBank Dashboard</a>
           {% endif %}  
 
          <a href="/">Logout</a>
