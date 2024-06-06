@@ -494,6 +494,10 @@ def check_session(route):
 
 @app.route('/MyHosp_Acct')
 def my_hospital_account():
+    redirect_to = check_session('HospSignIn')
+    if redirect_to:
+        return redirect_to
+        
     # Retrieve the hospital registration number from the session
     hosp_reg_no = session.get('hosp_reg_no')
     account_details = {}
@@ -521,6 +525,10 @@ def my_hospital_account():
 ####### My Patient acct ##########
 @app.route('/MyPatient_Acct')
 def patient_account():
+    redirect_to = check_session('PatientSignIn')
+    if redirect_to:
+        return redirect_to
+        
     # Retrieve the patient email from the session
     patient_email = session.get('_id')  # email
     account_details = {}
@@ -549,6 +557,11 @@ def patient_account():
 
 @app.route('/MyBB_Acct')
 def my_blood_bank_account():
+    redirect_to = check_session('BBSignIn')
+    if redirect_to:
+        return redirect_to
+
+    
     # Retrieve the blood bank registration number from the session
     bb_reg_no = session.get('bb_reg_no')
     account_details = {}
@@ -1711,6 +1724,10 @@ def send_dispatch_email(recipient_email, otp, order_id, callback=None):
 
 @app.route('/initiate_delivery', methods=['POST'])
 def initiate_delivery():
+    redirect_to = check_session('BBSignIn')
+    if redirect_to:
+        return redirect_to
+        
     if request.method == 'POST':
         order_id = request.form.get('selected_order')
 
@@ -1773,6 +1790,10 @@ def initiate_delivery():
 
 @app.route('/ViewStock')
 def viewstock():
+    redirect_to = check_session('BBSignIn')
+    if redirect_to:
+        return redirect_to
+
     # Query MongoDB to fetch all blood bags
     blood_bags = Searchbb.find({'reg_num': session.get('bb_reg_no')})
 
@@ -1811,6 +1832,10 @@ def viewstock():
 
 @app.route('/delorder', methods=['GET'])
 def bloodbank_completed_orders():
+    redirect_to = check_session('BBSignIn')
+    if redirect_to:
+        return redirect_to
+
     # Query MongoDB to get all orders
     orders = Order.find({'BloodBank_Id': session.get('bb_reg_no'), 'status': 'delivered'})
 
@@ -1871,6 +1896,10 @@ def bloodbank_completed_orders():
 
 @app.route('/dispatched', methods=['GET'])
 def bloodbank_dispatched_orders():
+    redirect_to = check_session('BBSignIn')
+    if redirect_to:
+        return redirect_to
+
     # Query MongoDB to get all orders
     orders = Order.find({'BloodBank_Id': session.get('bb_reg_no'), 'status': 'dispatched'})
 
@@ -1924,8 +1953,6 @@ def bloodbank_dispatched_orders():
     
 
 ####### Hospital delivered bags - delorder1 #########
-
-
 
 @app.route('/delorder1', methods=['GET'])
 def hosp_received_orders():
@@ -2052,6 +2079,10 @@ def patient_received_orders():
 
 @app.route('/BBNewReq', methods=['GET'])
 def Blood_bag_inProgress():
+    redirect_to = check_session('BBSignIn')
+    if redirect_to:
+        return redirect_to
+        
     # Query MongoDB to get all orders
     orders = Order.find({'BloodBank_Id': session.get('bb_reg_no'), 'status': 'undelivered'})
 
@@ -2340,7 +2371,9 @@ from flask import session
 
 @app.route('/searchbb_hosp', methods=['POST'])
 def search_blood_bag():
-    check_session('HospSignIn') 
+    redirect_to = check_session('HospSignIn')
+    if redirect_to:
+        return redirect_to
     
     if request.method == 'POST':
         # Get user input from the form
@@ -2526,6 +2559,10 @@ def get_blood_product_price(blood_product_name):
 
 @app.route('/addbb', methods=['POST'])
 def add_blood_bag():
+    redirect_to = check_session('BBSignIn')
+    if redirect_to:
+        return redirect_to
+
     if request.method == 'POST':
         # Get user input from the form
         blood_group = request.form.get('bloodgrp')
@@ -2666,6 +2703,10 @@ def Psign1():
 
 @app.route('/AddBB')
 def addbb():
+    redirect_to = check_session('BBSignIn')
+    if redirect_to:
+        return redirect_to
+
     return render_template('AddBloodBags.html')
 
 @app.route('/Stockadded')
@@ -2684,7 +2725,10 @@ def searchres():
 
 @app.route('/SearchBlood')
 def searchblood():
-    check_session('HospSignIn')
+    redirect_to = check_session('HospSignIn')
+    if redirect_to:
+        return redirect_to
+        
     reg_num = session.get('hosp_reg_no')
 
     if reg_num:
@@ -2707,6 +2751,7 @@ def searchblood():
 
 @app.route('/PatientSearchBB')
 def Psearchbb():
+    check_session('PatientSignIn')
     return render_template('PatientSearchBB.html')
 
 @app.route('/Blood order')
