@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +22,8 @@
             margin: 10px auto;
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
@@ -38,142 +40,166 @@
         /* Media query for smaller screens */
         @media (max-width: 768px) {
             /* Hide columns with data-hide="true" on smaller screens */
-            th[data-hide="true"], td[data-hide="true"] {
+            th[data-hide="true"],
+            td[data-hide="true"] {
                 display: none;
             }
+        }
+
+        /* Sort Order Filter Styles */
+        .sort-order-container {
+            text-align: left;
+            margin: 20px 70px 50px;
+        }
+
+        .sort-order-container label {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        .sort-order-container select {
+            padding: 8px 12px;
+            font-size: 16px;
+            border: 1px solid #dddddd;
+            border-radius: 4px;
+            background-color: #f2f2f2;
+            transition: background-color 0.3s ease;
+        }
+
+        .sort-order-container select:focus {
+            outline: none;
+            background-color: #e2e2e2;
         }
     </style>
 
 </head>
+
 <body>
 
-<div class="container">
+    <div class="container">
 
-<header>
-    <a href="/" class="logo">Transfusio<span>Track</span></a>
-    <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
-     <nav class="navbar" id="navbar">
-          {% if 'bb_reg_no' in session %}
+        <header>
+            <a href="/" class="logo">Transfusio<span>Track</span></a>
+            <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
+            <nav class="navbar" id="navbar">
+                {% if 'bb_reg_no' in session %}
                 <a href="/MyBB_Acct">Blood Bank ID: {{ session['bb_name'] }}</a>
                 <a href="/BBDashboard">BloodBank Dashboard</a>
-          {% endif %}  
+                {% endif %}
+                <a href="/">Logout</a>
+            </nav>
+        </header>
 
-         <a href="/">Logout</a>
-
-    </nav>
-</header>
-
-<script>
-    function toggleNavbar() {
-        var navbar = document.getElementById("navbar");
-        if (navbar.classList.contains("active")) {
-            navbar.classList.remove("active");
-        } else {
-            navbar.classList.add("active");
-        }
-    }
-    
-    function toggleOrderDetails(event) {
-        var orderDetails = event.currentTarget.parentElement.nextElementSibling;
-        orderDetails.classList.toggle('active');
-    }
-
-    function changeSortOrder() {
-        var sortOrder = document.getElementById("sortOrder").value;
-        window.location.href = "/BBNewReq?sort=" + sortOrder;
-    }
-
-    function validateForm() {
-        var radios = document.getElementsByName('selected_order');
-        var formValid = false;
-
-        for (var i = 0; i < radios.length; i++) {
-            if (radios[i].checked) {
-                formValid = true;
-                break;
+        <script>
+            // Toggling the navigation bar
+            function toggleNavbar() {
+                var navbar = document.getElementById("navbar");
+                navbar.classList.toggle("active");
             }
-        }
 
-        if (!formValid) {
-            alert("Please select a Blood Bag order.");
-            return false;
-        }
+            // Toggling the display of order details
+            function toggleOrderDetails(event) {
+                var orderDetails = event.currentTarget.parentElement.nextElementSibling;
+                orderDetails.classList.toggle('active');
+            }
 
-        // Show confirmation dialog
-        var confirmation = confirm("Are you sure you want to dispatch this blood bag? Please confirm that the patient's blood sample has been cross-matched with the blood bag. Note: This action is irreversible.");
-        return confirmation;
-    }
-</script>
+            // Changing the sort order of the table
+            function changeSortOrder() {
+                var sortOrder = document.getElementById("sortOrder").value;
+                window.location.href = "/BBNewReq?sort=" + sortOrder;
+            }
 
-<form action="/initiate_delivery" method="POST" onsubmit="return validateForm()">
-    <h1 class="heading">New Blood Bag Orders</h1>
-    
-    <!-- Heading for order status -->
-    <div class="sort-order-container">
-        <label for="sortOrder">Sort By:</label>
-        <select id="sortOrder" onchange="changeSortOrder()">
-            <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Newest Orders First</option>
-            <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Oldest Orders First</option>
-        </select>
+            // Validating the form before submission
+            function validateForm() {
+                var radios = document.getElementsByName('selected_order');
+                var formValid = false;
+
+                for (var i = 0; i < radios.length; i++) {
+                    if (radios[i].checked) {
+                        formValid = true;
+                        break;
+                    }
+                }
+
+                if (!formValid) {
+                    alert("Please select a Blood Bag order.");
+                    return false;
+                }
+
+                // Show confirmation dialog
+                var confirmation = confirm("Are you sure you want to dispatch this blood bag? Please confirm that the patient's blood sample has been cross-matched with the blood bag. Note: This action is irreversible.");
+                return confirmation;
+            }
+        </script>
+
+        <form action="/initiate_delivery" method="POST" onsubmit="return validateForm()">
+            <h1 class="heading">New Blood Bag Orders</h1>
+
+            <!-- Heading for order status -->
+            <div class="sort-order-container">
+                <label for="sortOrder">Sort By:</label>
+                <select id="sortOrder" onchange="changeSortOrder()">
+                    <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Newest Orders First</option>
+                    <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Oldest Orders First</option>
+                </select>
+            </div>
+
+            <table>
+                <tr>
+                    <th>Select</th>
+                    <th>User Name</th>
+                    <th>User Address</th>
+                    <th>User Contact No.</th>
+                    <th>Doctor Name</th>
+                    <th>Blood Group</th>
+                    <th>Blood Component</th>
+                    <th>Blood Quantity</th>
+                    <th>Request Type</th>
+                    <th>First Name</th>
+                    <th data-hide="true">Middle Name</th>
+                    <th>Last Name</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Time of Placing Order</th>
+                </tr>
+
+                {% for order in orders %}
+                <tr>
+                    <td><input type="radio" name="selected_order" value="{{ order._id }}"></td>
+                    <td>{{ order.user_name }}</td>
+                    <td>{{ order.user_address }}</td>
+                    <td>{{ order.phone_number }}</td>
+                    <td>{{ order.docname }}</td>
+                    <td>{{ order.BloodGrp }}</td>
+                    <td>{{ order.BloodComp }}</td>
+                    <td>{{ order.BloodQuantity }}</td>
+                    <td>{{ order.req_type }}</td>
+                    <td>{{ order.fname }}</td>
+                    <td data-hide="true">{{ order.mname }}</td>
+                    <td>{{ order.lname }}</td>
+                    <td>{{ order.age }}</td>
+                    <td>{{ order.gender }}</td>
+                    <td>{{ order.timestamp }}</td>
+                </tr>
+                {% endfor %}
+
+                <tr>
+                    <td colspan="15" style="text-align: center;">
+                        <input class="btn" type="submit" value="Initiate Blood Bag Delivery">
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+        <!-- Footer section -->
+        <section class="footer">
+            <div class="credit">Created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory
+            </div>
+        </section>
+
     </div>
 
-    <table>
-        <tr>
-            <th>Select</th>
-            <th>User Name</th>
-            <th>User Address</th>
-            <th>User Contact No.</th>
-            <th>Doctor Name</th>
-            <th>Blood Group</th>
-            <th>Blood Component</th>
-            <th>Blood Quantity</th>
-            <th>Request Type</th>
-            <th>First Name</th>
-            <th data-hide="true">Middle Name</th>
-            <th>Last Name</th>
-            <th>Age</th>
-            <th>Gender</th>
-            <th>Time of Placing Order</th>
-          
-            
-        </tr>
-
-        {% for order in orders %}
-            <tr>
-                <td>
-                    <input type="radio" name="selected_order" id="selected_order" value="{{ order._id }}">
-                </td>
-                <td>{{ order.user_name }}</td>
-                <td>{{ order.user_address }}</td>
-                <td>{{ order.phone_number }}</td>
-                <td>{{ order.docname }}</td>
-                <td>{{ order.BloodGrp }}</td>
-                <td>{{ order.BloodComp }}</td>
-                <td>{{ order.BloodQuantity }}</td>
-                <td>{{ order.req_type }}</td>
-                <td>{{ order.fname }}</td>
-                <td data-hide="true">{{ order.mname }}</td>
-                <td>{{ order.lname }}</td>
-                <td>{{ order.age }}</td>
-                <td>{{ order.gender }}</td>
-                <td>{{ order.timestamp }}</td>
-            </tr>
-        {% endfor %}
-
-        <tr>
-            <td colspan="16" style="text-align: center;">
-                <input class='btn' type="submit" value="Initiate Blood Bag Delivery">
-            </td>
-        </tr>
-    </table>
-</form>
-
-<!-- Footer section -->
-<section class="footer">
-    <div class="credit">created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory</div>
-</section>
-
-</div>
-
 </body>
+
 </html>
+
