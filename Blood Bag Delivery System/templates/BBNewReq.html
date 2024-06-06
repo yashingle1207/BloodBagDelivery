@@ -72,6 +72,16 @@
             navbar.classList.add("active");
         }
     }
+    
+    function toggleOrderDetails(event) {
+        var orderDetails = event.currentTarget.parentElement.nextElementSibling;
+        orderDetails.classList.toggle('active');
+    }
+
+    function changeSortOrder() {
+        var sortOrder = document.getElementById("sortOrder").value;
+        window.location.href = "/BBNewReq?sort=" + sortOrder;
+    }
 
     function validateForm() {
         var radios = document.getElementsByName('selected_order');
@@ -97,6 +107,15 @@
 
 <form action="/initiate_delivery" method="POST" onsubmit="return validateForm()">
     <h1 class="heading">New Blood Bag Orders</h1>
+    
+    <!-- Heading for order status -->
+    <div class="sort-order-container">
+        <label for="sortOrder">Sort By:</label>
+        <select id="sortOrder" onchange="changeSortOrder()">
+            <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Newest Orders First</option>
+            <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Oldest Orders First</option>
+        </select>
+    </div>
 
     <table>
         <tr>
