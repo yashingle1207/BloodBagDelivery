@@ -545,6 +545,34 @@ def patient_account():
         return render_template('PatientLogin.html')
 
 
+######## My BB Acct ######### 
+
+@app.route('/MyBB_Acct')
+def my_blood_bank_account():
+    # Retrieve the blood bank registration number from the session
+    bb_reg_no = session.get('bb_reg_no')
+    account_details = {}
+
+    # Check if the user is logged in and has a registration number
+    if bb_reg_no:
+        # Fetch blood bank details from the database based on the registration number
+        blood_bank_details = BloodBankUser.find_one({'reg_num': bb_reg_no})
+        
+        if blood_bank_details:
+            account_details['bb_name'] = blood_bank_details.get('bb_name')
+            account_details['email'] = blood_bank_details.get('email')
+            account_details['password'] = blood_bank_details.get('password')
+            account_details['contact_num'] = blood_bank_details.get('contact_num')
+            account_details['address'] = blood_bank_details.get('address')
+            account_details['reg_num'] = blood_bank_details.get('reg_num')
+        
+        return render_template('MyBloodBankAccount.html', order=account_details)
+    else:
+        # Redirect to the signup page if the user is not logged in
+        return render_template('BBSignup.html')
+
+
+
 
 
 ################# Settle Payment #############################
@@ -835,7 +863,10 @@ def BBsignIn():
         existing_user = BBUser.find_one({'email': bb_email, 'password': bb_password})
         if existing_user:
             bb_reg_no = existing_user.get('reg_num')
+            bb_name = existing_user.get('bb_name')
+            
             session['bb_reg_no'] = bb_reg_no
+            session['bb_name'] = bb_name
 
             return redirect(url_for('BBDashboard'))
 
@@ -870,6 +901,8 @@ def PsignIn():
     response = app.make_response(render_template('PatientSignIn.html'))
 
     return response
+
+
 
 
 
