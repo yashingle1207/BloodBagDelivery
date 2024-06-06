@@ -1993,6 +1993,10 @@ def hosp_received_orders():
 
 @app.route('/delorder2', methods=['GET'])
 def patient_received_orders():
+    redirect_to = check_session('PatientSignIn')
+    if redirect_to:
+        return redirect_to
+        
     # Get the sort order from query parameters
     sort_order = request.args.get('sort', 'desc')
     
@@ -2230,6 +2234,10 @@ def Hosp_Blood_bag_inProgress():
 
 @app.route('/Patient_Pending_Req', methods=['GET'])
 def Patient_Blood_bag_inProgress():
+    redirect_to = check_session('PatientSignIn')
+    if redirect_to:
+        return redirect_to
+        
     # Get the sort order from query parameters
     sort_order = request.args.get('sort', 'desc')
     
@@ -2380,10 +2388,13 @@ def search_blood_bag():
     return render_template('SearchResults.html', results=results, hosp_reg_no=hosp_reg_no, facility_name=facility_name)
 
 
-
 @app.route('/PatientSearchBB', methods=['POST'])
 def PsearchBB():
     if request.method == 'POST':
+        redirect_to = check_session('PatientSignIn')
+        if redirect_to:
+            return redirect_to
+            
         # Get user input from the form
         blood_group = request.form.get('bloodgrp1')
         blood_component = request.form.get('comptype1')
