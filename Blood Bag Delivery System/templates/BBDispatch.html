@@ -52,13 +52,15 @@
         <header>
             <a href="/" class="logo">Transfusio<span>Track</span></a>
             <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
-            <nav class="navbar" id="navbar">
-                {% if 'bb_reg_no' in session %}
-                <a>Blood Bank ID: {{ session['bb_reg_no'] }}</a>
-                {% endif %}
-                <a href="/BBDashboard">BloodBank Dashboard</a>
-                <a href="/">Logout</a>
-            </nav>
+             <nav class="navbar" id="navbar">
+              {% if 'bb_reg_no' in session %}
+                    <a href="/MyBB_Acct">Blood Bank ID: {{ session['bb_name'] }}</a>
+                    <a href="/BBDashboard">BloodBank Dashboard</a>
+              {% endif %}  
+
+         <a href="/">Logout</a>
+
+    </nav>
         </header>
 
 
