@@ -556,7 +556,7 @@ def my_blood_bank_account():
     # Check if the user is logged in and has a registration number
     if bb_reg_no:
         # Fetch blood bank details from the database based on the registration number
-        blood_bank_details = BloodBankUser.find_one({'reg_num': bb_reg_no})
+        blood_bank_details = BBUser.find_one({'reg_num': bb_reg_no})
         
         if blood_bank_details:
             account_details['bb_name'] = blood_bank_details.get('bb_name')
