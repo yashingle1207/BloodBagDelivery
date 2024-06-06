@@ -70,6 +70,42 @@
             outline: none;
             background-color: #e2e2e2;
         }
+
+        .date-filter-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .date-filter-container label {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        .date-filter-container input {
+            padding: 8px 12px;
+            font-size: 16px;
+            border: 1px solid #dddddd;
+            border-radius: 4px;
+            background-color: #f2f2f2;
+            transition: background-color 0.3s ease;
+            width: 150px; /* Adjust width if needed */
+            box-sizing: border-box; /* Ensure input width includes padding and border */
+        }
+
+        .date-filter-container input:focus {
+            outline: none;
+            background-color: #e2e2e2;
+        }
+
+        .btn {
+            background-color: #ff4757;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
     </style>
 
 </head>
@@ -142,6 +178,15 @@
                     <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Newest Orders First</option>
                     <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Oldest Orders First</option>
                 </select>
+            </div>
+
+                <div class="date-filter-container">
+                    <label for="dateFrom">From:</label>
+                    <input type="text" id="dateFrom" placeholder="Select date">
+                    <label for="dateTo">To:</label>
+                    <input type="text" id="dateTo" placeholder="Select date">
+                    <button class="btn" onclick="applyFilters()">Apply Filters</button>
+                </div>
             </div>
 
             <table>
