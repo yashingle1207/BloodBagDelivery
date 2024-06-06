@@ -2081,17 +2081,14 @@ def patient_received_orders():
 
 ################################################################
 
-# @app.route('/BBNewReq', methods=['GET'])
+@app.route('/BBNewReq', methods=['GET'])
 def Blood_bag_inProgress():
     redirect_to = check_session('BBSignIn')
-    if (redirect_to):
+    if redirect_to:
         return redirect_to
         
-    sort_order = request.args.get('sort', 'desc')
-    sort_direction = -1 if sort_order == 'desc' else 1
-
-    # Query MongoDB to get all orders and sort them by timestamp
-    orders = Order.find({'BloodBank_Id': session.get('bb_reg_no'), 'status': 'undelivered'}).sort('timestamp', sort_direction)
+    # Query MongoDB to get all orders
+    orders = Order.find({'BloodBank_Id': session.get('bb_reg_no'), 'status': 'undelivered'})
 
     # Prepare the results to be displayed
     order_list = []
@@ -2134,7 +2131,62 @@ def Blood_bag_inProgress():
                 'phone_number': user_details.get('contact_num')
             })
 
-    return render_template('BBNewReq.html', orders=order_list, sort_order=sort_order)
+    return render_template('BBNewReq.html', orders=order_list)
+
+# # @app.route('/BBNewReq', methods=['GET'])
+# def Blood_bag_inProgress():
+#     redirect_to = check_session('BBSignIn')
+#     if (redirect_to):
+#         return redirect_to
+        
+#     sort_order = request.args.get('sort', 'desc')
+#     sort_direction = -1 if sort_order == 'desc' else 1
+
+#     # Query MongoDB to get all orders and sort them by timestamp
+#     orders = Order.find({'BloodBank_Id': session.get('bb_reg_no'), 'status': 'undelivered'}).sort('timestamp', sort_direction)
+
+#     # Prepare the results to be displayed
+#     order_list = []
+#     for order in orders:
+#         user_id = order.get('User_ID')
+#         user_details = None
+
+#         # Search for user details in the hospital collection
+#         hospital_details = HospUser.find_one({'reg_num': user_id})
+#         if hospital_details:
+#             user_details = hospital_details
+#         else:
+#             # Search for user details in the patient collection
+#             patient_details = PatientUser.find_one({'email': user_id})
+#             if patient_details:
+#                 user_details = patient_details
+
+#         if user_details:
+#             # Handle the timestamp, remove milliseconds
+#             timestamp = order.get('timestamp', '')
+#             formatted_timestamp = timestamp.split('.')[0] if timestamp else None
+
+#             order_list.append({
+#                 '_id': order.get('_id'),
+#                 'User_ID': user_id,
+#                 'BloodBank_Id': order.get('BloodBank_Id'),
+#                 'BloodGrp': order.get('BloodGrp'),
+#                 'BloodComp': order.get('BloodComp'),
+#                 'BloodQuantity': order.get('BloodQuantity'),
+#                 'req_type': order.get('req_type'),
+#                 'fname': order.get('fname'),
+#                 'mname': order.get('mname'),
+#                 'lname': order.get('lname'),
+#                 'age': order.get('age'),
+#                 'docname': order.get('docname'),
+#                 'gender': order.get('gender'),
+#                 'timestamp': formatted_timestamp,
+#                 'user_name': user_details.get('facility_name') or user_details.get('patient_name'),
+#                 'user_address': user_details.get('address'),
+#                 'phone_number': user_details.get('contact_num')
+#             })
+
+#     return render_template('BBNewReq.html', orders=order_list, sort_order=sort_order)
 
 
 ##############################################
