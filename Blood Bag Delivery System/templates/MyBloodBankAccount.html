@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bank Account</title>
+
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/LogoTT.png') }}">
+
+    <style>
+        p {
+            font-size: 20px;
+            margin-left: 80px;
+            margin-top: 7px;
+        }
+
+        h2 {
+            font-size: 24px;
+        }
+
+        hr {
+            border: 0;
+            border-top: 2px solid #ccc;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+<header>
+    <a href="/" class="logo">Transfusio<span>Track</span></a>
+
+    <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
+
+    <nav class="navbar" id="navbar">
+        {% if 'bb_reg_no' in session %}
+            <a href="/MyBB_Acct">Blood Bank ID: {{ session['bb_reg_no'] }}</a>
+        {% endif %}
+        <a href="/">Logout</a>
+    </nav>
+</header>
+
+<script>
+    function toggleNavbar() {
+        var navbar = document.getElementById("navbar");
+        if (navbar.classList.contains("active")) {
+            navbar.classList.remove("active");
+        } else {
+            navbar.classList.add("active");
+        }
+    }
+</script>
+
+<section class="home">
+    <div class="content">
+        <h3 align="center">{{ session.get('bb_name') }}'s Account</h3>
+    </div>
+</section>
+
+<section class="order-details">
+    <h2>Blood Bank Information</h2>
+    <hr>
+    <p><strong>Blood Bank Name:</strong> {{ order.bb_name }}</p>
+    <p><strong>Email:</strong> {{ order.email }}</p>
+    <p><strong>Contact Number:</strong> {{ order.contact_num }}</p>
+    <p><strong>Address:</strong> {{ order.address }}</p>
+    <p><strong>Registration Number:</strong> {{ order.reg_num }}</p>
+    <p><strong>Email Verified:</strong> {{ "Yes" if order.email_verified else "No" }}</p>
+    <hr>
+</section>
+
+<p><strong>Note:</strong> Your information is secured with TransfusioTrack and we do not share personal details with third parties.
+    <br> If you would like to update or change any information, please contact us at <a href="mailto:transfusiotrack@gmail.com">transfusiotrack@gmail.com</a>
+</p>
+
+<section class="footer">
+    <div class="credit">created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory</div>
+</section>
+
+</body>
+</html>
