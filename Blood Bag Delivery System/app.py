@@ -457,10 +457,28 @@ def payment_invoice():
 
 
 ################# Login Session##########################
+# @app.route('/logout')
+# def logout():
+#     # Clear the session
+#     session.clear()
+
+#     # Redirect to the home page
+#     return redirect(url_for('home'))
+
+# # Home route
+# @app.route('/')
+# def home():
+#     return render_template('home.html')
+
+
+from flask import session, redirect, url_for, render_template
+
 @app.route('/logout')
 def logout():
-    # Clear the session
-    session.clear()
+    # Clear all session variables
+    session.pop('hosp_reg_no', None)
+    session.pop('bb_reg_no', None)
+    session.pop('_id', None)
 
     # Redirect to the home page
     return redirect(url_for('home'))
@@ -468,7 +486,12 @@ def logout():
 # Home route
 @app.route('/')
 def home():
-    return render_template('home.html')
+    # Set cache-control header to prevent caching
+    response = make_response(render_template('home.html'))
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 
 
