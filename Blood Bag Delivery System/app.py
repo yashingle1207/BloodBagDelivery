@@ -1832,9 +1832,6 @@ def viewstock():
 
 @app.route('/delorder', methods=['GET'])
 def bloodbank_completed_orders():
-    redirect_to = check_session('BBSignIn')
-    if redirect_to:
-        return redirect_to
 
     sort_order = request.args.get('sort', 'desc')
     sort_direction = -1 if sort_order == 'desc' else 1
