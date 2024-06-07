@@ -474,20 +474,20 @@ def home():
 
 
 ########## check - session check login ######################
-from flask import session, redirect, url_for
+from flask import session, render_template
 
-# Function to check session variables and log out if not found
 def check_session(route):
     if route == 'HospSignIn' and 'hosp_reg_no' not in session:
         session.clear()  # Clear the session if hosp_reg_no is not found
-        return redirect(url_for('HospSignIn'))
+        return render_template('HospSignup.html')
     elif route == 'BBSignIn' and 'bb_reg_no' not in session:
         session.clear()  # Clear the session if bb_reg_no is not found
-        return redirect(url_for('BBsignIn'))
+        return render_template('BBSignup.html')
     elif route == 'PatientSignIn' and '_id' not in session:
         session.clear()  # Clear the session if _id is not found
-        return redirect(url_for('PatientSignIn'))
+        return render_template('PatientLogin.html')
     return
+
 
 
 ############################ My account hospital ##############################
