@@ -1897,7 +1897,7 @@ def bloodbank_completed_orders():
 
 @app.route('/dispatched', methods=['GET'])
 def bloodbank_dispatched_orders():
-    redirect_to = check_session('BBsignIn')
+    redirect_to = check_session('BBSignIn')
     if redirect_to:
         return redirect_to
 
