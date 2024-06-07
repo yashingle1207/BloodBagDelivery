@@ -483,7 +483,7 @@ def check_session(route):
         return redirect(url_for('HospSignIn'))
     elif route == 'BBSignIn' and 'bb_reg_no' not in session:
         session.clear()  # Clear the session if bb_reg_no is not found
-        return redirect(url_for('BBSignIn'))
+        return redirect(url_for('BBsignIn'))
     elif route == 'PatientSignIn' and '_id' not in session:
         session.clear()  # Clear the session if _id is not found
         return redirect(url_for('PatientSignIn'))
@@ -1894,7 +1894,7 @@ def bloodbank_completed_orders():
 
 @app.route('/dispatched', methods=['GET'])
 def bloodbank_dispatched_orders():
-    redirect_to = check_session('BBSignIn')
+    redirect_to = check_session('BBsignIn')
     if redirect_to:
         return redirect_to
 
