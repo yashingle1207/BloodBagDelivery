@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="static/style.css">
       <link rel="icon" type="image/png" href="static/images/LogoTT.png">
 
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
          <style>
         /* General table styles */
         table {
@@ -44,19 +46,18 @@
             }
         }
         
-        /* Sort Order Filter Styles */
-        .sort-order-container {
+           /* Filter and Sort Order Styles */
+        .filter-sort-container {
             text-align: left;
-            margin: 20px;
-            margin-left:70px;
-            margin-bottom:50px;
-
         }
-        .sort-order-container label {
+
+        .filter-sort-container label {
             font-size: 18px;
             margin-right: 10px;
         }
-        .sort-order-container select {
+
+        .filter-sort-container select,
+        .filter-sort-container input {
             padding: 8px 12px;
             font-size: 16px;
             border: 1px solid #dddddd;
@@ -64,9 +65,104 @@
             background-color: #f2f2f2;
             transition: background-color 0.3s ease;
         }
-        .sort-order-container select:focus {
+
+        .filter-sort-container select:focus,
+        .filter-sort-container input:focus {
             outline: none;
             background-color: #e2e2e2;
+        }
+
+        .filter-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+              margin-top:20px;
+        }
+
+        .filter-sort-container {
+            margin-right: 20px;
+        }
+
+        .date-filter-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .date-filter-container label {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        .date-filter-container input {
+            padding: 8px 12px;
+            font-size: 16px;
+            border: 1px solid #dddddd;
+            border-radius: 4px;
+            background-color: #f2f2f2;
+            transition: background-color 0.3s ease;
+            width: 150px; /* Adjust width if needed */
+            box-sizing: border-box; /* Ensure input width includes padding and border */
+        }
+
+        .date-filter-container input:focus {
+            outline: none;
+            background-color: #e2e2e2;
+        }
+
+        .btn {
+            background-color: #ff4757;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        /* Custom Flatpickr styles */
+        .flatpickr-calendar {
+            border: 1px solid
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .flatpickr-month {
+            background-color: #ff4757;
+            color: #ffffff;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .flatpickr-weekday {
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .flatpickr-day {
+            color: #333333;
+            border-radius: 4px;
+            transition: background-color 0.2s, color 0.2s;
+             border-radius: 50%;
+        }
+
+        .flatpickr-day:hover {
+            background-color: #808080;
+            color: #ffffff;
+            border-radius: 50%;
+        }
+
+
+        .flatpickr-day.today {
+            background-color: transparent; /* Transparent background for today's date */
+            color: #333333; /* Text color for today's date */
+            border: 1px solid #000000; /* Black border for today's date */
+            border-radius: 50%; /* Circular shape for today's date */
+        }
+
+        .flatpickr-day.selected {
+            background-color:  #ff4757;
+            color: #ffffff;
+            border-radius: 50%;
         }
     </style>
 
@@ -92,38 +188,53 @@
 </header>
     
 
-<script>
-    function toggleNavbar() {
-        var navbar = document.getElementById("navbar");
-        if (navbar.classList.contains("active")) {
-            navbar.classList.remove("active");
-        } else {
-            navbar.classList.add("active");
-        }
-    }
+ <script>
+            function toggleNavbar() {
+                var navbar = document.getElementById("navbar");
+                if (navbar.classList.contains("active")) {
+                    navbar.classList.remove("active");
+                } else {
+                    navbar.classList.add("active");
+                }
+            }
 
-    function toggleOrderDetails(event) {
-        var orderDetails = event.currentTarget.parentElement.nextElementSibling;
-        orderDetails.classList.toggle('active');
-    }
+            function changeSortOrder() {
+                var sortOrder = document.getElementById("sortOrder").value;
+                window.location.href = "/dispatched?sort=" + sortOrder;
+            }
 
-    function changeSortOrder() {
-        var sortOrder = document.getElementById("sortOrder").value;
-        window.location.href = "/delorder2?sort=" + sortOrder;
-    }
-</script>
+            function applyFilters() {
+                var dateFrom = document.getElementById("dateFrom").value;
+                var dateTo = document.getElementById("dateTo").value;
+                var url = new URL(window.location.href);
+                url.searchParams.set('dateFrom', dateFrom);
+                url.searchParams.set('dateTo', dateTo);
+                window.location.href = url.toString();
+            }
+        </script>
 
 
-     <h1 class="heading">Received Blood Bags</h1>
+     <h1 class="heading">Order History</h1>
 
     <!-- Sort Order Filter -->
-<div class="sort-order-container">
-    <label for="sortOrder">Sort By:</label>
-    <select id="sortOrder" onchange="changeSortOrder()">
-        <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Newest Orders First</option>
-        <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Oldest Orders First</option>
-    </select>
-</div>
+    <div class="filter-container">
+                <div class="filter-sort-container">
+                    <label for="sortOrder">Sort By:</label>
+                    <select id="sortOrder" onchange="changeSortOrder()">
+                        <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Newest Orders First</option>
+                        <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Oldest Orders First</option>
+                    </select>
+                </div>
+    
+                <div class="date-filter-container">
+                    <label for="dateFrom">From:</label>
+                    <input type="text" id="dateFrom" placeholder="Select date">
+                    <label for="dateTo">To:</label>
+                    <input type="text" id="dateTo" placeholder="Select date">
+                    <button class="btn" onclick="applyFilters()">Search</button>
+                </div>
+            </div>
+
 
 
         <table>
@@ -174,6 +285,28 @@
             <div class="credit">Created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory</div>
         </section>
     </div>
+
+      <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script>
+        flatpickr("#dateFrom", {
+            dateFormat: "Y-m-d",
+            maxDate: "today",
+            onChange: function(selectedDates, dateStr, instance) {
+                flatpickr("#dateTo", {
+                    minDate: dateStr,
+                    dateFormat: "Y-m-d",
+                    maxDate: "today"
+                });
+            }
+        });
+
+        flatpickr("#dateTo", {
+            dateFormat: "Y-m-d",
+            maxDate: "today"
+        });
+    </script>
 </body>
 
 </html>
