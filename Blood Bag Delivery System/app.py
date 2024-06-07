@@ -471,7 +471,7 @@ def payment_invoice():
 #     return render_template('home.html')
 
 
-from flask import session, redirect, url_for, render_template
+from flask import session, redirect, url_for, render_template, make_response
 
 @app.route('/logout')
 def logout():
