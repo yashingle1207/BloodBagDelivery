@@ -188,55 +188,55 @@
     </div>
 </div>
 
-<table>
-    <tr>
-        <th>Blood Bank Name</th>
-        <th>Address</th>
-        <th>Contact No.</th>
-        <th>Blood Component</th>
-        <th>Quantity Sold (Units)</th>
-        <th>Price per Unit</th>
-        <th>Total Amount per Component</th>
-        <th>Time of Delivery</th>
-        <th class="commission-fee">Commission fee in (%)</th>
-        <th>Select</th>
-        <th>Total Amount Payable</th>
-    </tr>
-
-    {% for transaction in transactions %}
+<form id="settlePaymentForm" method="post" action="/settle_payment" onsubmit="return validateForm()">
+    <table>
         <tr>
-            <td>{{ transaction.blood_bank_name }}</td>
-            <td>{{ transaction.address }}</td>
-            <td>{{ transaction.contact_no }}</td>
-            <td>{{ transaction.component }}</td>
-            <td>{{ transaction.quantity_sold }}</td>
-            <td>{{ transaction.price_per_unit }}</td>
-            <td>{{ transaction.total_amount_per_component }}</td>
-            <td>{{ transaction.timeofdelivery }}</td>
-            <td class="commission-fee">
-                <input type="number" min="0" max="100" step="0.01"
-                    oninput="updateTotalAmountPayable(this, {{ transaction.total_amount_per_component }}, document.getElementById('total-{{ transaction._id }}'))">
-            </td>
-            <td>
-                <input type="radio" name="selected_transaction" value="{{ transaction._id }}">
-            </td>
-            <td id="total-{{ transaction._id }}">{{ transaction.total_amount_per_component }}</td>
+            <th>Blood Bank Name</th>
+            <th>Address</th>
+            <th>Contact No.</th>
+            <th>Blood Component</th>
+            <th>Quantity Sold (Units)</th>
+            <th>Price per Unit</th>
+            <th>Total Amount per Component</th>
+            <th>Time of Delivery</th>
+            <th class="commission-fee">Commission fee in (%)</th>
+            <th>Select</th>
+            <th>Total Amount Payable</th>
         </tr>
-    {% endfor %}
 
-    <tr>
-        <td colspan="11" style="text-align: center;">
-            <input class='btn' type="submit" value="Settle Payment" onclick="return validateForm()">
-        </td>
-    </tr>
-</table>
+        {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.blood_bank_name }}</td>
+                <td>{{ transaction.address }}</td>
+                <td>{{ transaction.contact_no }}</td>
+                <td>{{ transaction.component }}</td>
+                <td>{{ transaction.quantity_sold }}</td>
+                <td>{{ transaction.price_per_unit }}</td>
+                <td>{{ transaction.total_amount_per_component }}</td>
+                <td>{{ transaction.timeofdelivery }}</td>
+                <td class="commission-fee">
+                    <input type="number" min="0" max="100" step="0.01"
+                        oninput="updateTotalAmountPayable(this, {{ transaction.total_amount_per_component }}, document.getElementById('total-{{ transaction._id }}'))">
+                </td>
+                <td>
+                    <input type="radio" name="selected_transaction" value="{{ transaction._id }}">
+                </td>
+                <td id="total-{{ transaction._id }}">{{ transaction.total_amount_per_component }}</td>
+            </tr>
+        {% endfor %}
 
-</div>
+        <tr>
+            <td colspan="11" style="text-align: center;">
+                <input class='btn' type="submit" value="Settle Payment">
+            </td>
+        </tr>
+    </table>
 
-<!-- Hidden form to submit selected transaction ID -->
-<form id="settlePaymentForm" method="post" action="/settle_payment" style="display: none;">
+    <!-- Hidden input to store selected transaction ID -->
     <input type="hidden" name="transaction_id" id="transactionIdInput">
 </form>
+
+</div>
 
 <!-- Flatpickr JS -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -284,11 +284,9 @@
             }
 
             var selectedTransaction = document.querySelector('input[name="selected_transaction"]:checked');
-            var form = document.getElementById("settlePaymentForm");
             var transactionIdInput = document.getElementById("transactionIdInput");
             transactionIdInput.value = selectedTransaction.value;
             console.log("Submitting form with transaction ID:", selectedTransaction.value);
-            form.submit();
             return true;
         }
 
