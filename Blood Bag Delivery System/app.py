@@ -609,24 +609,24 @@ def my_blood_bank_account():
 
 
 
-
-
 ################# Settle Payment #############################
 @app.route('/settle_payment', methods=['POST'])
 def settle_payment():
     transaction_id = request.form.get('selected_transaction')
 
     if transaction_id:
-        # Update the settlement status of the selected transaction in the 'Orders' collection
+        # Update the settlement status and settlement date of the selected transaction in the 'Orders' collection
+        settlement_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         Order.update_one(
             {'_id': ObjectId(transaction_id)},
-            {'$set': {'settlement_status': True}}
+            {'$set': {'settlement_status': True, 'settlement_date': settlement_date}}
         )
         flash("Payment settled successfully.", "success")
     else:
         flash("No transaction selected.", "danger")
 
     return redirect(url_for('admin_dashboard'))
+
 
 
 ################# Settled Payments Admin #############################
@@ -682,14 +682,14 @@ def settlepayments():
     date_to_filter = request.args.get('dateTo')
 
     # Build query for orders
-    query = {'settlement_status': True, 'timeofdelivery': {'$gte': start_of_day, '$lte': end_of_day}}
+    query = {'settlement_status': True}
 
     # Apply date filter if provided
     if date_from_filter and date_to_filter:
         try:
             date_from = datetime.strptime(date_from_filter, '%Y-%m-%d')
             date_to = datetime.strptime(date_to_filter, '%Y-%m-%d') + timedelta(days=1) - timedelta(seconds=1)
-            query['timeofdelivery'] = {'$gte': date_from, '$lte': date_to}
+            query['settlement_date'] = {'$gte': date_from.strftime('%Y-%m-%d %H:%M:%S'), '$lte': date_to.strftime('%Y-%m-%d %H:%M:%S')}
         except ValueError:
             pass  # Ignore invalid dates, fallback to default current day
 
