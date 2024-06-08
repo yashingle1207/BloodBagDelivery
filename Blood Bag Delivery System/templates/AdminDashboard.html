@@ -9,11 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <!-- Custom CSS file link -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/LogoTT.png') }}">
-
-    <!-- Flatpickr CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
 
     <style>
         /* General table styles */
@@ -80,7 +77,6 @@
             background-color: #e84347;
         }
 
-        /* Filter and Sort Order Styles */
         .filter-sort-container {
             text-align: left;
         }
@@ -134,8 +130,8 @@
             border-radius: 4px;
             background-color: #f2f2f2;
             transition: background-color 0.3s ease;
-            width: 150px; /* Adjust width if needed */
-            box-sizing: border-box; /* Ensure input width includes padding and border */
+            width: 150px;
+            box-sizing: border-box;
         }
 
         .date-filter-container input:focus {
@@ -230,7 +226,7 @@
 
     <tr>
         <td colspan="11" style="text-align: center;">
-            <button class='btn' id="settlePaymentButton">Settle Payment</button>
+            <input class='btn' type="submit" value="Settle Payment" onclick="return validateForm()">
         </td>
     </tr>
 </table>
@@ -246,40 +242,57 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
-    flatpickr("#dateFrom", {
-        dateFormat: "Y-m-d",
-        maxDate: "today",
-        onChange: function(selectedDates, dateStr, instance) {
-            flatpickr("#dateTo", {
-                minDate: dateStr,
-                dateFormat: "Y-m-d",
-                maxDate: "today"
-            });
-        }
-    });
+    document.addEventListener("DOMContentLoaded", function() {
+        console.log("Document loaded");
 
-    flatpickr("#dateTo", {
-        dateFormat: "Y-m-d",
-        maxDate: "today"
-    });
+        flatpickr("#dateFrom", {
+            dateFormat: "Y-m-d",
+            maxDate: "today",
+            onChange: function(selectedDates, dateStr, instance) {
+                flatpickr("#dateTo", {
+                    minDate: dateStr,
+                    dateFormat: "Y-m-d",
+                    maxDate: "today"
+                });
+            }
+        });
 
-    document.getElementById("settlePaymentButton").addEventListener("click", function(event) {
-        event.preventDefault(); // Prevent default form submission behavior
-        var selectedTransaction = document.querySelector('input[name="selected_transaction"]:checked');
+        flatpickr("#dateTo", {
+            dateFormat: "Y-m-d",
+            maxDate: "today"
+        });
 
-        if (!selectedTransaction) {
-            alert("Please select a transaction to settle.");
-            return;
-        }
+        function validateForm() {
+            var radios = document.getElementsByName('selected_transaction');
+            var formValid = false;
 
-        var confirmation = confirm("Are you sure you want to settle this payment?");
-        if (confirmation) {
+            for (var i = 0; i < radios.length; i++) {
+                if (radios[i].checked) {
+                    formValid = true;
+                    break;
+                }
+            }
+
+            if (!formValid) {
+                alert("Please select a transaction to settle.");
+                return false;
+            }
+
+            var confirmation = confirm("Are you sure you want to settle this payment?");
+            if (!confirmation) {
+                return false;
+            }
+
+            var selectedTransaction = document.querySelector('input[name="selected_transaction"]:checked');
             var form = document.getElementById("settlePaymentForm");
             var transactionIdInput = document.getElementById("transactionIdInput");
             transactionIdInput.value = selectedTransaction.value;
-            console.log("Submitting form with transaction ID:", selectedTransaction.value); // Debugging statement
+            console.log("Submitting form with transaction ID:", selectedTransaction.value);
             form.submit();
+            return true;
         }
+
+        document.querySelector('input[type="submit"]').addEventListener("click", validateForm);
     });
 
     function applyFilters() {
