@@ -667,22 +667,38 @@ def settle_payment():
 #     return render_template('AdminSettled_payments.html', transactions=transactions)
 
 
-@app.route('/settled',methods=['POST'])
+@app.route('/settled')
 def settlepayments():
-    # Fetch orders where settlement_status is True
-    orders = list(Order.find({'settlement_status': True}))
-
-    # Fetch blood bank names for dropdown
+    # Fetch all blood banks for the dropdown
     blood_banks = BBUser.find({}, {'reg_num': 1, 'bb_name': 1})
 
+    # Default to current day
+    start_of_day = datetime.combine(datetime.today(), datetime.min.time())
+    end_of_day = datetime.combine(datetime.today(), datetime.max.time())
+
+    # Get filters from request
+    blood_bank_filter = request.args.get('bloodBank')
+    date_from_filter = request.args.get('dateFrom')
+    date_to_filter = request.args.get('dateTo')
+
+    # Build query for orders
+    query = {'settlement_status': True, 'timeofdelivery': {'$gte': start_of_day, '$lte': end_of_day}}
+
     # Apply date filter if provided
-    date_filter = request.args.get('dateFilter')
-    if date_filter:
-        if date_filter == 'today':
-            start_of_day = datetime.combine(datetime.today(), datetime.min.time())
-            end_of_day = datetime.combine(datetime.today(), datetime.max.time())
-            orders = Order.find({'settlement_status': True, 'timeofdelivery': {'$gte': start_of_day, '$lte': end_of_day}})
-        # Add more conditions for other date filters if needed
+    if date_from_filter and date_to_filter:
+        try:
+            date_from = datetime.strptime(date_from_filter, '%Y-%m-%d')
+            date_to = datetime.strptime(date_to_filter, '%Y-%m-%d') + timedelta(days=1) - timedelta(seconds=1)
+            query['timeofdelivery'] = {'$gte': date_from, '$lte': date_to}
+        except ValueError:
+            pass  # Ignore invalid dates, fallback to default current day
+
+    # Apply blood bank filter if provided
+    if blood_bank_filter:
+        query['BloodBank_Id'] = blood_bank_filter
+
+    # Fetch orders based on query
+    orders = list(Order.find(query))
 
     # Organize orders by blood bank and blood component
     organized_orders = defaultdict(lambda: defaultdict(list))
