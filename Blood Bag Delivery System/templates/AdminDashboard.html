@@ -7,6 +7,8 @@
 
     <!-- Font Awesome CDN link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <!-- Custom CSS file link -->
     <link rel="stylesheet" href="static/style.css">
@@ -283,14 +285,13 @@
                 return false;
             }
 
-            var selectedTransaction = document.querySelector('input[name="selected_transaction"]:checked');
-            var transactionIdInput = document.getElementById("transactionIdInput");
-            transactionIdInput.value = selectedTransaction.value;
-            console.log("Submitting form with transaction ID:", selectedTransaction.value);
+            var selectedTransactionId = document.querySelector('input[name="selected_transaction"]:checked').value;
+            document.getElementById('transactionIdInput').value = selectedTransactionId;
+
             return true;
         }
 
-        document.querySelector('input[type="submit"]').addEventListener("click", validateForm);
+        document.getElementById('settlePaymentForm').addEventListener('submit', validateForm);
     });
 
     function applyFilters() {
