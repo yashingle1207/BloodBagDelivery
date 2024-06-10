@@ -164,6 +164,7 @@
         <th>Price per Unit</th>
         <th>Total Amount per Component</th>
         <th>Total Amount Payable</th>
+        <th>Settlement Date</th>
     </tr>
     {% for transaction in transactions %}
         <tr>
@@ -175,6 +176,7 @@
             <td>{{ transaction.price_per_unit }}</td>
             <td>{{ transaction.total_amount_per_component }}</td>
             <td>{{ transaction.total_amount_payable }}</td>
+            <td>{{ transaction.settlement_date }}</td>
         </tr>
     {% endfor %}
 </table>
