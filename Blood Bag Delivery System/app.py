@@ -721,6 +721,7 @@ def settlepayments():
             price_per_unit = orders[0]['total_amount'] / orders[0]['BloodQuantity']  # Assuming total_amount is for the quantity sold
             total_amount_per_component = quantity_sold * price_per_unit
             total_amount_payable = sum(order['total_amount'] for order in orders)
+            settlement_date = orders[0]['settlement_date']
 
             transactions.append({
                 'blood_bank_name': blood_bank['bb_name'],
@@ -731,6 +732,7 @@ def settlepayments():
                 'price_per_unit': price_per_unit,
                 'total_amount_per_component': total_amount_per_component,
                 'total_amount_payable': total_amount_payable,
+                'settlement_date': settlement_date,
                 '_id': str(orders[0]['_id'])  # Assuming each order has a unique '_id'
             })
 
