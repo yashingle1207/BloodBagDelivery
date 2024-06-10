@@ -1965,25 +1965,25 @@ def bloodbank_dispatched_orders():
             # Filter based on the date part of the string
             filter_conditions['$expr'] = {
                 '$and': [
-                    {'$gte': [{'$substr': ['$timestamp', 0, 10]}, date_from]},
-                    {'$lte': [{'$substr': ['$timestamp', 0, 10]}, date_to]}
+                    {'$gte': [{'$substr': ['$timeofdispatch', 0, 10]}, date_from]},
+                    {'$lte': [{'$substr': ['$timeofdispatch', 0, 10]}, date_to]}
                 ]
             }
         except ValueError:
             # Handle invalid date format by setting the filter to current day
             date_from = date_to = datetime.today().strftime("%Y-%m-%d")
             filter_conditions['$expr'] = {
-                '$eq': [{'$substr': ['$timestamp', 0, 10]}, date_from]
+                '$eq': [{'$substr': ['$timeofdispatch', 0, 10]}, date_from]
             }
     else:
         # Set the filter for the current day if no date filters are provided
         today_str = datetime.today().strftime("%Y-%m-%d")
         filter_conditions['$expr'] = {
-            '$eq': [{'$substr': ['$timestamp', 0, 10]}, today_str]
+            '$eq': [{'$substr': ['$timeofdispatch', 0, 10]}, today_str]
         }
 
     # Query MongoDB to get all dispatched orders and sort them by timestamp
-    orders = Order.find(filter_conditions).sort('timestamp', sort_direction)
+    orders = Order.find(filter_conditions).sort('timeofdispatch', sort_direction)
 
     # Prepare the results to be displayed
     order_list = []
