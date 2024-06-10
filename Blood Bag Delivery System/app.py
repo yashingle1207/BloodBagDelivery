@@ -1957,8 +1957,8 @@ def bloodbank_dispatched_orders():
     filter_conditions = {'BloodBank_Id': blood_bank_id, 'status': 'dispatched'}
 
     if date_from and date_to:
-        # Convert date_from and date_to to datetime objects
         try:
+            # Convert date_from and date_to to datetime objects
             date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
             date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
 
@@ -1970,8 +1970,11 @@ def bloodbank_dispatched_orders():
                 ]
             }
         except ValueError:
-            # Handle invalid date format
-            pass
+            # Handle invalid date format by setting the filter to current day
+            date_from = date_to = datetime.today().strftime("%Y-%m-%d")
+            filter_conditions['$expr'] = {
+                '$eq': [{'$substr': ['$timestamp', 0, 10]}, date_from]
+            }
     else:
         # Set the filter for the current day if no date filters are provided
         today_str = datetime.today().strftime("%Y-%m-%d")
