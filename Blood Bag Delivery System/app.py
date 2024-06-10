@@ -1950,8 +1950,35 @@ def bloodbank_dispatched_orders():
     sort_order = request.args.get('sort', 'desc')
     sort_direction = -1 if sort_order == 'desc' else 1
 
+    date_from_filter = request.args.get('dateFrom')
+    date_to_filter = request.args.get('dateTo')
+
+    # Default to current day if no date filters are provided
+    if not date_from_filter or not date_to_filter:
+        today = datetime.today()
+        date_from_filter = today.strftime('%Y-%m-%d')
+        date_to_filter = today.strftime('%Y-%m-%d')
+
+    # Build query for orders
+    query = {
+        'BloodBank_Id': session.get('bb_reg_no'),
+        'status': 'dispatched'
+    }
+
+    # Apply date filter
+    try:
+        date_from = datetime.strptime(date_from_filter, '%Y-%m-%d')
+        date_to = datetime.strptime(date_to_filter, '%Y-%m-%d') + timedelta(days=1) - timedelta(seconds=1)
+        query['timestamp'] = {'$gte': date_from, '$lte': date_to}
+    except ValueError:
+        # If date parsing fails, fallback to current day
+        today = datetime.today()
+        start_of_day = datetime.combine(today, datetime.min.time())
+        end_of_day = datetime.combine(today, datetime.max.time())
+        query['timestamp'] = {'$gte': start_of_day, '$lte': end_of_day}
+
     # Query MongoDB to get all dispatched orders and sort them by timestamp
-    orders = Order.find({'BloodBank_Id': session.get('bb_reg_no'), 'status': 'dispatched'}).sort('timestamp', sort_direction)
+    orders = Order.find(query).sort('timestamp', sort_direction)
 
     # Prepare the results to be displayed
     order_list = []
@@ -1998,7 +2025,7 @@ def bloodbank_dispatched_orders():
 
             order_list.append(formatted_order)
 
-    return render_template('BBDispatch.html', orders=order_list, sort_order=sort_order)
+    return render_template('BBDispatch.html', orders=order_list, sort_order=sort_order, date_from=date_from_filter, date_to=date_to_filter)
 
 
 
