@@ -152,25 +152,24 @@
         }
 
         .flatpickr-day.today {
-            background-color: transparent; /* Transparent background for today's date */
-            color: #333333; /* Text color for today's date */
-            border: 1px solid #000000; /* Black border for today's date */
-            border-radius: 50%; /* Circular shape for today's date */
+            background-color: #ff4757;
+            color: #ffffff;
+            font-weight: bold;
+            border-radius: 50%;
         }
 
         .flatpickr-day.selected {
-            background-color:  #ff4757;
+            background-color: #ffa07a;
             color: #ffffff;
+            font-weight: bold;
             border-radius: 50%;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
-            <a href="/" class="logo">Transfusio<span>Track</span></a>
-            <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
-
             <nav class="navbar" id="navbar">
                 {% if 'bb_reg_no' in session %}
                     <a href="/MyBB_Acct">Blood Bank ID: {{ session['bb_name'] }}</a>
@@ -265,33 +264,4 @@
 
         <!-- Footer section -->
         <section class="footer">
-            <div class="credit">created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory</div>
-        </section>
-    </div>
-
-    <!-- Flatpickr JS -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-    <script>
-        flatpickr("#dateFrom", {
-            dateFormat: "Y-m-d",
-            maxDate: "today",
-            defaultDate: "{{ date_from }}",
-            onChange: function(selectedDates, dateStr, instance) {
-                flatpickr("#dateTo", {
-                    minDate: dateStr,
-                    dateFormat: "Y-m-d",
-                    maxDate: "today",
-                    defaultDate: "{{ date_to }}"
-                });
-            }
-        });
-
-        flatpickr("#dateTo", {
-            dateFormat: "Y-m-d",
-            maxDate: "today",
-            defaultDate: "{{ date_to }}"
-        });
-    </script>
-</body>
-</html>
+           
