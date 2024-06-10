@@ -140,16 +140,16 @@
         <select id="bloodBank">
             <option value="">All Blood Banks</option>
             {% for bank in blood_banks %}
-                <option value="{{ bank.reg_num }}">{{ bank.bb_name }}</option>
+                <option value="{{ bank.reg_num }}" {% if bank.reg_num == selected_blood_bank %}selected{% endif %}>{{ bank.bb_name }}</option>
             {% endfor %}
         </select>
     </div>
 
     <div class="date-filter-container">
         <label for="dateFrom">From:</label>
-        <input type="text" id="dateFrom" placeholder="Select date">
+        <input type="text" id="dateFrom" value="{{ date_from }}" placeholder="Select date">
         <label for="dateTo">To:</label>
-        <input type="text" id="dateTo" placeholder="Select date">
+        <input type="text" id="dateTo" value="{{ date_to }}" placeholder="Select date">
         <button class="btn" onclick="applyFilters()">Apply Filters</button>
     </div>
 </div>
@@ -184,24 +184,26 @@
 </section>
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         flatpickr("#dateFrom", {
             dateFormat: "Y-m-d",
             maxDate: "today",
+            defaultDate: "{{ date_from }}",
             onChange: function(selectedDates, dateStr, instance) {
                 flatpickr("#dateTo", {
                     minDate: dateStr,
                     dateFormat: "Y-m-d",
-                    maxDate: "today"
+                    maxDate: "today",
+                    defaultDate: "{{ date_to }}"
                 });
             }
         });
 
         flatpickr("#dateTo", {
             dateFormat: "Y-m-d",
-            maxDate: "today"
+            maxDate: "today",
+            defaultDate: "{{ date_to }}"
         });
     });
 </script>
