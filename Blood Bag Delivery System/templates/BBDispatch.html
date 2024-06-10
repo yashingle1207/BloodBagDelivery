@@ -264,4 +264,33 @@
 
         <!-- Footer section -->
         <section class="footer">
-           
+            <div class="credit">created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory</div>
+        </section>
+    </div>
+
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script>
+        flatpickr("#dateFrom", {
+            dateFormat: "Y-m-d",
+            maxDate: "today",
+            defaultDate: "{{ date_from }}",
+            onChange: function(selectedDates, dateStr, instance) {
+                flatpickr("#dateTo", {
+                    minDate: dateStr,
+                    dateFormat: "Y-m-d",
+                    maxDate: "today",
+                    defaultDate: "{{ date_to }}"
+                });
+            }
+        });
+
+        flatpickr("#dateTo", {
+            dateFormat: "Y-m-d",
+            maxDate: "today",
+            defaultDate: "{{ date_to }}"
+        });
+    </script>
+</body>
+</html>
