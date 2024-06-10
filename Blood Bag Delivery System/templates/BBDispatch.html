@@ -77,7 +77,7 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 20px;
-              margin-top:20px;
+            margin-top:20px;
         }
 
         .filter-sort-container {
@@ -142,7 +142,7 @@
             color: #333333;
             border-radius: 4px;
             transition: background-color 0.2s, color 0.2s;
-             border-radius: 50%;
+            border-radius: 50%;
         }
 
         .flatpickr-day:hover {
@@ -150,7 +150,6 @@
             color: #ffffff;
             border-radius: 50%;
         }
-
 
         .flatpickr-day.today {
             background-color: transparent; /* Transparent background for today's date */
@@ -218,9 +217,9 @@
 
             <div class="date-filter-container">
                 <label for="dateFrom">From:</label>
-                <input type="text" id="dateFrom" placeholder="Select date">
+                <input type="text" id="dateFrom" value="{{ date_from }}" placeholder="Select date">
                 <label for="dateTo">To:</label>
-                <input type="text" id="dateTo" placeholder="Select date">
+                <input type="text" id="dateTo" value="{{ date_to }}" placeholder="Select date">
                 <button class="btn" onclick="applyFilters()">Search</button>
             </div>
         </div>
@@ -276,18 +275,21 @@
         flatpickr("#dateFrom", {
             dateFormat: "Y-m-d",
             maxDate: "today",
+            defaultDate: "{{ date_from }}",
             onChange: function(selectedDates, dateStr, instance) {
                 flatpickr("#dateTo", {
                     minDate: dateStr,
                     dateFormat: "Y-m-d",
-                    maxDate: "today"
+                    maxDate: "today",
+                    defaultDate: "{{ date_to }}"
                 });
             }
         });
 
         flatpickr("#dateTo", {
             dateFormat: "Y-m-d",
-            maxDate: "today"
+            maxDate: "today",
+            defaultDate: "{{ date_to }}"
         });
     </script>
 </body>
