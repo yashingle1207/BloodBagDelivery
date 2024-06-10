@@ -672,26 +672,31 @@ def settlepayments():
     # Fetch all blood banks for the dropdown
     blood_banks = BBUser.find({}, {'reg_num': 1, 'bb_name': 1})
 
-    # Default to current day
-    start_of_day = datetime.combine(datetime.today(), datetime.min.time())
-    end_of_day = datetime.combine(datetime.today(), datetime.max.time())
-
     # Get filters from request
     blood_bank_filter = request.args.get('bloodBank')
     date_from_filter = request.args.get('dateFrom')
     date_to_filter = request.args.get('dateTo')
 
+    # Default to current day if no date filters are provided
+    if not date_from_filter or not date_to_filter:
+        today = datetime.today()
+        date_from_filter = today.strftime('%Y-%m-%d')
+        date_to_filter = today.strftime('%Y-%m-%d')
+
     # Build query for orders
     query = {'settlement_status': True}
 
-    # Apply date filter if provided
-    if date_from_filter and date_to_filter:
-        try:
-            date_from = datetime.strptime(date_from_filter, '%Y-%m-%d')
-            date_to = datetime.strptime(date_to_filter, '%Y-%m-%d') + timedelta(days=1) - timedelta(seconds=1)
-            query['settlement_date'] = {'$gte': date_from.strftime('%Y-%m-%d %H:%M:%S'), '$lte': date_to.strftime('%Y-%m-%d %H:%M:%S')}
-        except ValueError:
-            pass  # Ignore invalid dates, fallback to default current day
+    # Apply date filter
+    try:
+        date_from = datetime.strptime(date_from_filter, '%Y-%m-%d')
+        date_to = datetime.strptime(date_to_filter, '%Y-%m-%d') + timedelta(days=1) - timedelta(seconds=1)
+        query['settlement_date'] = {'$gte': date_from.strftime('%Y-%m-%d %H:%M:%S'), '$lte': date_to.strftime('%Y-%m-%d %H:%M:%S')}
+    except ValueError:
+        # If date parsing fails, fallback to current day
+        today = datetime.today()
+        start_of_day = datetime.combine(today, datetime.min.time())
+        end_of_day = datetime.combine(today, datetime.max.time())
+        query['settlement_date'] = {'$gte': start_of_day.strftime('%Y-%m-%d %H:%M:%S'), '$lte': end_of_day.strftime('%Y-%m-%d %H:%M:%S')}
 
     # Apply blood bank filter if provided
     if blood_bank_filter:
@@ -719,8 +724,8 @@ def settlepayments():
 
             transactions.append({
                 'blood_bank_name': blood_bank['bb_name'],
-                'address': blood_bank['address'],
-                'contact_no': blood_bank['contact_num'],
+                'address': blood_bank.get('address', 'N/A'),
+                'contact_no': blood_bank.get('contact_num', 'N/A'),
                 'component': component,
                 'quantity_sold': quantity_sold,
                 'price_per_unit': price_per_unit,
@@ -729,7 +734,7 @@ def settlepayments():
                 '_id': str(orders[0]['_id'])  # Assuming each order has a unique '_id'
             })
 
-    return render_template('AdminSettled_payments.html', transactions=transactions, blood_banks=blood_banks)
+    return render_template('AdminSettled_payments.html', transactions=transactions, blood_banks=blood_banks, date_from=date_from_filter, date_to=date_to_filter, selected_blood_bank=blood_bank_filter)
     
 ################# Admin Login ############################
 
