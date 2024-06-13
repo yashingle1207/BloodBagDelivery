@@ -1883,10 +1883,36 @@ def bloodbank_completed_orders():
         return redirect_to
 
     sort_order = request.args.get('sort', 'desc')
-    sort_direction = -1 if sort_order == 'desc' else 1
+    sort_direction = DESCENDING if sort_order == 'desc' else ASCENDING
 
-    # Query MongoDB to get all delivered orders and sort them by timestamp
-    orders = Order.find({'BloodBank_Id': session.get('bb_reg_no'), 'status': 'delivered'}).sort('timestamp', sort_direction)
+    # Get date filters from the query parameters
+    date_from_str = request.args.get('dateFrom')
+    date_to_str = request.args.get('dateTo')
+
+    # Get the current date in the local timezone
+    local_tz = pytz.timezone("Asia/Kolkata")  # Replace with your local timezone
+    today = datetime.now(local_tz).date()
+
+    # Parse the date strings and set default values if necessary
+    if date_from_str:
+        date_from = datetime.strptime(date_from_str, '%Y-%m-%d').date()
+    else:
+        date_from = today
+
+    if date_to_str:
+        date_to = datetime.strptime(date_to_str, '%Y-%m-%d').date()
+    else:
+        date_to = today
+
+    # Ensure date_to is inclusive by adding one day and then using less than comparison
+    date_to_next_day = date_to + timedelta(days=1)
+
+    # Query MongoDB to get all delivered orders within the date range and sort them by timestamp
+    orders = Order.find({
+        'BloodBank_Id': session.get('bb_reg_no'),
+        'status': 'delivered',
+        'timestamp': {'$gte': datetime.combine(date_from, datetime.min.time()), '$lt': datetime.combine(date_to_next_day, datetime.min.time())}
+    }).sort('timestamp', sort_direction)
 
     # Prepare the results to be displayed
     order_list = []
@@ -1936,7 +1962,7 @@ def bloodbank_completed_orders():
 
             order_list.append(formatted_order)
 
-    return render_template('DeliveredBags.html', orders=order_list, sort_order=sort_order)
+    return render_template('DeliveredBags.html', orders=order_list, sort_order=sort_order, date_from=date_from_str, date_to=date_to_str)
 
 
 ####### Dispatched bags Blood bank - #########
