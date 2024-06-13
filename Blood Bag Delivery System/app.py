@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from bson import ObjectId
 import os
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
-from pymongo import MongoClient
+from pymongo import MongoClient, DESCENDING, ASCENDING
 import uuid
 import requests
 import base64
@@ -1948,7 +1948,7 @@ def bloodbank_dispatched_orders():
         return redirect_to
 
     sort_order = request.args.get('sort', 'desc')
-    sort_direction = -1 if sort_order == 'desc' else 1
+    sort_direction = DESCENDING if sort_order == 'desc' else ASCENDING
 
     date_from = request.args.get('dateFrom')
     date_to = request.args.get('dateTo')
@@ -1982,7 +1982,7 @@ def bloodbank_dispatched_orders():
             '$eq': [{'$substr': ['$timeofdispatch', 0, 10]}, today_str]
         }
 
-    # Query MongoDB to get all dispatched orders and sort them by timestamp
+    # Query MongoDB to get all dispatched orders and sort them by time of dispatch
     orders = Order.find(filter_conditions).sort('timeofdispatch', sort_direction)
 
     # Prepare the results to be displayed
