@@ -223,11 +223,11 @@
                 </div>
     
                 <div class="date-filter-container">
-                    <label for="dateFrom">From:</label>
-                    <input type="text" id="dateFrom" placeholder="Select date">
-                    <label for="dateTo">To:</label>
-                    <input type="text" id="dateTo" placeholder="Select date">
-                    <button class="btn" onclick="applyFilters()">Search</button>
+                <label for="dateFrom">From:</label>
+                <input type="text" id="dateFrom" placeholder="Select date" value="{{ date_from }}">
+                <label for="dateTo">To:</label>
+                <input type="text" id="dateTo" placeholder="Select date" value="{{ date_to }}">
+                <button class="btn" onclick="applyFilters()">Search</button>
                 </div>
             </div>
 
