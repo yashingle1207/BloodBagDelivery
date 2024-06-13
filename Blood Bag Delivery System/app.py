@@ -1879,40 +1879,46 @@ def viewstock():
 @app.route('/delorder', methods=['GET'])
 def bloodbank_completed_orders():
     redirect_to = check_session('BBSignIn')
-    if redirect_to:
+    if (redirect_to):
         return redirect_to
 
     sort_order = request.args.get('sort', 'desc')
     sort_direction = DESCENDING if sort_order == 'desc' else ASCENDING
 
-    # Get date filters from the query parameters
-    date_from_str = request.args.get('dateFrom')
-    date_to_str = request.args.get('dateTo')
+    date_from = request.args.get('dateFrom')
+    date_to = request.args.get('dateTo')
+    blood_bank_id = session.get('bb_reg_no')  # Assuming blood bank ID is taken from session
 
-    # Get the current date in the local timezone
-    local_tz = pytz.timezone("Asia/Kolkata")  # Replace with your local timezone
-    today = datetime.now(local_tz).date()
+    filter_conditions = {'BloodBank_Id': blood_bank_id, 'status': 'delivered'}
 
-    # Parse the date strings and set default values if necessary
-    if date_from_str:
-        date_from = datetime.strptime(date_from_str, '%Y-%m-%d').date()
+    if date_from and date_to:
+        try:
+            # Convert date_from and date_to to datetime objects
+            date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
+            date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
+
+            # Filter based on the date part of the string
+            filter_conditions['$expr'] = {
+                '$and': [
+                    {'$gte': [{'$substr': ['$timeofdelivery', 0, 10]}, date_from]},
+                    {'$lte': [{'$substr': ['$timeofdelivery', 0, 10]}, date_to]}
+                ]
+            }
+        except ValueError:
+            # Handle invalid date format by setting the filter to current day
+            date_from = date_to = datetime.today().strftime("%Y-%m-%d")
+            filter_conditions['$expr'] = {
+                '$eq': [{'$substr': ['$timeofdelivery', 0, 10]}, date_from]
+            }
     else:
-        date_from = today
+        # Set the filter for the current day if no date filters are provided
+        today_str = datetime.today().strftime("%Y-%m-%d")
+        filter_conditions['$expr'] = {
+            '$eq': [{'$substr': ['$timeofdelivery', 0, 10]}, today_str]
+        }
 
-    if date_to_str:
-        date_to = datetime.strptime(date_to_str, '%Y-%m-%d').date()
-    else:
-        date_to = today
-
-    # Ensure date_to is inclusive by adding one day and then using less than comparison
-    date_to_next_day = date_to + timedelta(days=1)
-
-    # Query MongoDB to get all delivered orders within the date range and sort them by timestamp
-    orders = Order.find({
-        'BloodBank_Id': session.get('bb_reg_no'),
-        'status': 'delivered',
-        'timestamp': {'$gte': datetime.combine(date_from, datetime.min.time()), '$lt': datetime.combine(date_to_next_day, datetime.min.time())}
-    }).sort('timestamp', sort_direction)
+    # Query MongoDB to get all delivered orders and sort them by time of delivery
+    orders = Order.find(filter_conditions).sort('timeofdelivery', sort_direction)
 
     # Prepare the results to be displayed
     order_list = []
@@ -1947,22 +1953,14 @@ def bloodbank_completed_orders():
                 'gender': order.get('gender'),
                 'user_name': user_details.get('facility_name') or user_details.get('patient_name'),
                 'user_address': user_details.get('address'),
-                'phone_number': user_details.get('contact_num')
+                'phone_number': user_details.get('contact_num'),
+                'timestamp': order.get('timestamp'),
+                'timeofdispatch': order.get('timeofdispatch'),
+                'timeofdelivery': order.get('timeofdelivery')
             }
-
-            # Handle timestamps as strings, split to remove milliseconds if present
-            if 'timestamp' in order:
-                formatted_order['timestamp'] = order['timestamp'].split('.')[0]
-
-            if 'timeofdispatch' in order:
-                formatted_order['timeofdispatch'] = order['timeofdispatch'].split('.')[0]
-
-            if 'timeofdelivery' in order:
-                formatted_order['timeofdelivery'] = order['timeofdelivery'].split('.')[0]
-
             order_list.append(formatted_order)
 
-    return render_template('DeliveredBags.html', orders=order_list, sort_order=sort_order, date_from=date_from_str, date_to=date_to_str)
+    return render_template('DeliveredBags.html', orders=order_list, sort_order=sort_order, date_from=date_from, date_to=date_to)
 
 
 ####### Dispatched bags Blood bank - #########
