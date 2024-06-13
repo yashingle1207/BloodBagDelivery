@@ -1,121 +1,272 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dispatched Blood Bags</title>
+    <title>New Orders</title>
+
+    <!-- Font Awesome CDN link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Custom CSS file link -->
     <link rel="stylesheet" href="static/style.css">
     <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
     <style>
-        /* Styles omitted for brevity */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: #ff6b6b;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .heading {
+            text-align: center;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 90%;
+            margin: 10px auto;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+            font-size: 16px;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            width: 150px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        @media (max-width: 768px) {
+            th[data-hide="true"],
+            td[data-hide="true"] {
+                display: none;
+            }
+        }
+
+        .sort-order-container {
+            text-align: left;
+            margin: 20px;
+            margin-left: 70px;
+            margin-bottom: 50px;
+        }
+
+        .sort-order-container label {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        .sort-order-container select {
+            padding: 8px 12px;
+            font-size: 16px;
+            border: 1px solid #dddddd;
+            border-radius: 4px;
+            background-color: #f2f2f2;
+            transition: background-color 0.3s ease;
+        }
+
+        .sort-order-container select:focus {
+            outline: none;
+            background-color: #e2e2e2;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            background-color: #ff6b6b;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #ff4b4b;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #ff6b6b;
+            color: #fff;
+        }
+
+        .footer .credit {
+            margin: 0;
+        }
+
+        .footer .credit span {
+            font-weight: bold;
+        }
     </style>
+
 </head>
+
 <body>
+
     <div class="container">
+
         <header>
+            <a href="/" class="logo">Transfusio<span>Track</span></a>
+            <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
             <nav class="navbar" id="navbar">
                 {% if 'bb_reg_no' in session %}
-                    <a href="/MyBB_Acct">Blood Bank ID: {{ session['bb_name'] }}</a>
-                    <a href="/BBDashboard">BloodBank Dashboard</a>
+                <a href="/MyBB_Acct">Blood Bank ID: {{ session['bb_name'] }}</a>
+                <a href="/BBDashboard">BloodBank Dashboard</a>
                 {% endif %}
                 <a href="/">Logout</a>
             </nav>
         </header>
+
         <script>
-            function changeSortOrder() {
-                var sortOrder = document.getElementById("sortOrder").value;
-                window.location.href = "/dispatched?sort=" + sortOrder;
+            // Toggling the navigation bar
+            function toggleNavbar() {
+                var navbar = document.getElementById("navbar");
+                navbar.classList.toggle("active");
             }
 
-            function applyFilters() {
-                var dateFrom = document.getElementById("dateFrom").value;
-                var dateTo = document.getElementById("dateTo").value;
-                var url = new URL(window.location.href);
-                url.searchParams.set('dateFrom', dateFrom);
-                url.searchParams.set('dateTo', dateTo);
-                window.location.href = url.toString();
+            // Changing the sort order of the table
+            function changeSortOrder() {
+                var sortOrder = document.getElementById("sortOrder").value;
+                window.location.href = "/BBNewReq?sort=" + sortOrder;
+            }
+
+            // Validating the form before submission
+            function validateForm() {
+                var radios = document.getElementsByName('selected_order');
+                var formValid = false;
+
+                for (var i = 0; i < radios.length; i++) {
+                    if (radios[i].checked) {
+                        formValid = true;
+                        break;
+                    }
+                }
+
+                if (!formValid) {
+                    alert("Please select a Blood Bag order.");
+                    return false;
+                }
+
+                // Show confirmation dialog
+                var confirmation = confirm("Are you sure you want to dispatch this blood bag? Please confirm that the patient's blood sample has been cross-matched with the blood bag. Note: This action is irreversible.");
+                return confirmation;
             }
         </script>
-        <h1 class="heading">Dispatched Blood Bags</h1>
-        <div class="filter-container">
-            <div class="filter-sort-container">
+
+        <form action="/initiate_delivery" method="POST" onsubmit="return validateForm()">
+            <h1 class="heading">New Blood Bag Orders</h1>
+
+            <!-- Heading for order status -->
+            <div class="sort-order-container">
                 <label for="sortOrder">Sort By:</label>
                 <select id="sortOrder" onchange="changeSortOrder()">
                     <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Newest Orders First</option>
                     <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Oldest Orders First</option>
                 </select>
             </div>
-            <div class="date-filter-container">
-                <label for="dateFrom">From:</label>
-                <input type="text" id="dateFrom" value="{{ date_from }}" placeholder="Select date">
-                <label for="dateTo">To:</label>
-                <input type="text" id="dateTo" value="{{ date_to }}" placeholder="Select date">
-                <button class="btn" onclick="applyFilters()">Search</button>
-            </div>
-        </div>
-        <table>
-            <tr>
-                <th style="width: 150px;">User Name</th>
-                <th style="width: 150px;">User Address</th>
-                <th style="width: 150px;">User Contact No.</th>
-                <th style="width: 150px;">Blood Group</th>
-                <th style="width: 150px;">Component</th>
-                <th style="width: 150px;">Quantity</th>
-                <th style="width: 150px;" data-hide="true">Request Type</th>
-                <th style="width: 150px;">First Name</th>
-                <th style="width: 150px;" data-hide="true">Middle Name</th>
-                <th style="width: 150px;">Last Name</th>
-                <th style="width: 150px;">Age</th>
-                <th style="width: 150px;">Gender</th>
-                <th style="width: 150px;" data-hide="true">Time of Placing Order</th>
-                <th style="width: 150px;" data-hide="true">Time of Dispatch</th>
-            </tr>
-            {% for order in orders %}
-            <tr>
-                <td>{{ order.user_name }}</td>
-                <td>{{ order.user_address }}</td>
-                <td>{{ order.phone_number }}</td>
-                <td>{{ order.BloodGrp }}</td>
-                <td>{{ order.BloodComp }}</td>
-                <td>{{ order.BloodQuantity }}</td>
-                <td data-hide="true">{{ order.req_type }}</td>
-                <td>{{ order.fname }}</td>
-                <td data-hide="true">{{ order.mname }}</td>
-                <td>{{ order.lname }}</td>
-                <td>{{ order.age }}</td>
-                <td>{{ order.gender }}</td>
-                <td data-hide="true">{{ order.timestamp }}</td>
-                <td data-hide="true">{{ order.timeofdispatch }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-        <section class="footer">
-            <div class="credit">created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory</div>
-        </section>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script>
-        flatpickr("#dateFrom", {
-            dateFormat: "Y-m-d",
-            maxDate: "today",
-            defaultDate: "{{ date_from }}",
-            onChange: function(selectedDates, dateStr, instance) {
-                flatpickr("#dateTo", {
-                    minDate: dateStr,
-                    dateFormat: "Y-m-d",
-                    maxDate: "today",
-                    defaultDate: "{{ date_to }}"
-                });
-            }
-        });
 
-        flatpickr("#dateTo", {
-            dateFormat: "Y-m-d",
-            maxDate: "today",
-            defaultDate: "{{ date_to }}"
-        });
-    </script>
+            <table>
+                <tr>
+                    <th>Select</th>
+                    <th>User Name</th>
+                    <th>User Address</th>
+                    <th>User Contact No.</th>
+                    <th>Doctor Name</th>
+                    <th>Blood Group</th>
+                    <th>Blood Component</th>
+                    <th>Blood Quantity</th>
+                    <th>Request Type</th>
+                    <th>First Name</th>
+                    <th data-hide="true">Middle Name</th>
+                    <th>Last Name</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Time of Placing Order</th>
+                </tr>
+
+                {% for order in orders %}
+                <tr>
+                    <td><input type="radio" name="selected_order" value="{{ order._id }}"></td>
+                    <td>{{ order.user_name }}</td>
+                    <td>{{ order.user_address }}</td>
+                    <td>{{ order.phone_number }}</td>
+                    <td>{{ order.docname }}</td>
+                    <td>{{ order.BloodGrp }}</td>
+                    <td>{{ order.BloodComp }}</td>
+                    <td>{{ order.BloodQuantity }}</td>
+                    <td>{{ order.req_type }}</td>
+                    <td>{{ order.fname }}</td>
+                    <td data-hide="true">{{ order.mname }}</td>
+                    <td>{{ order.lname }}</td>
+                    <td>{{ order.age }}</td>
+                    <td>{{ order.gender }}</td>
+                    <td>{{ order.timestamp }}</td>
+                </tr>
+                {% endfor %}
+
+                <tr>
+                    <td colspan="15" style="text-align: center;">
+                        <input class="btn" type="submit" value="Initiate Blood Bag Delivery">
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+        <!-- Footer section -->
+        <section class="footer">
+            <div class="credit">Created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory
+            </div>
+        </section>
+
+    </div>
+
 </body>
+
 </html>
