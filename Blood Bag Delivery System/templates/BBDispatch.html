@@ -168,16 +168,20 @@
 </head>
 
 <body>
-    <div class="container">
+     <div class="container">
         <header>
+            <a href="/" class="logo">Transfusio<span>Track</span></a>
+            <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
+         
             <nav class="navbar" id="navbar">
-                {% if 'bb_reg_no' in session %}
+              {% if 'bb_reg_no' in session %}
                     <a href="/MyBB_Acct">Blood Bank ID: {{ session['bb_name'] }}</a>
                     <a href="/BBDashboard">BloodBank Dashboard</a>
-                {% endif %}
-                <a href="/">Logout</a>
+              {% endif %}  
+    
+             <a href="/">Logout</a>
             </nav>
-        </header>
+    </header>
 
         <script>
             function toggleNavbar() {
