@@ -804,6 +804,7 @@ def adminsignIn():
 #     return render_template('AdminDashboard.html', transactions=transactions)
 
 
+
 @app.route('/admin_dashboard')
 def admin_dashboard():
     # Fetch blood bank names
@@ -817,21 +818,24 @@ def admin_dashboard():
     filter_conditions = {'settlement_status': False}
 
     if date_from and date_to:
-        # Create filter to match date range
-        date_from_str = date_from
-        date_to_str = date_to
+        try:
+            # Convert date_from and date_to to datetime objects
+            date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
+            date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
 
-        # Convert date_from and date_to to datetime objects
-        date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
-        date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
-
-        # Filter based on the date part of the string
-        filter_conditions['$expr'] = {
-            '$and': [
-                {'$gte': [{'$substr': ['$timeofdelivery', 0, 10]}, date_from_str]},
-                {'$lte': [{'$substr': ['$timeofdelivery', 0, 10]}, date_to_str]}
-            ]
-        }
+            # Filter based on the date part of the string
+            filter_conditions['$expr'] = {
+                '$and': [
+                    {'$gte': [{'$substr': ['$timeofdelivery', 0, 10]}, date_from]},
+                    {'$lte': [{'$substr': ['$timeofdelivery', 0, 10]}, date_to]}
+                ]
+            }
+        except ValueError:
+            # Handle invalid date format by setting the filter to current day
+            date_from = date_to = datetime.today().strftime("%Y-%m-%d")
+            filter_conditions['$expr'] = {
+                '$eq': [{'$substr': ['$timeofdelivery', 0, 10]}, date_from]
+            }
     else:
         # Set the filter for the current day if no date filters are provided
         today_str = datetime.today().strftime("%Y-%m-%d")
@@ -862,6 +866,9 @@ def admin_dashboard():
             total_amount_payable = sum(order['total_amount'] for order in orders)
 
             for order in orders:
+                # Format the timestamp
+                timeofdelivery_formatted = datetime.strptime(order['timeofdelivery'], "%Y-%m-%d %H:%M:%S.%f%z").strftime("%Y-%m-%d %H:%M:%S")
+
                 transactions.append({
                     'blood_bank_name': blood_bank['bb_name'],
                     'address': blood_bank['address'],
@@ -872,10 +879,87 @@ def admin_dashboard():
                     'total_amount_per_component': total_amount_per_component,
                     'total_amount_payable': order['total_amount'],
                     '_id': str(order['_id']),  # Assuming each order has a unique '_id'
-                    'timeofdelivery': order['timeofdelivery']  # Include time of delivery
+                    'timeofdelivery': timeofdelivery_formatted  # Include time of delivery
                 })
 
     return render_template('AdminDashboard.html', transactions=transactions, blood_banks=blood_banks)
+
+
+# @app.route('/admin_dashboard')
+# def admin_dashboard():
+#     # Fetch blood bank names
+#     blood_banks = BBUser.find({}, {'reg_num': 1, 'bb_name': 1})
+
+#     # Fetch orders
+#     date_from = request.args.get('dateFrom')
+#     date_to = request.args.get('dateTo')
+#     blood_bank_id = request.args.get('bloodBank')
+
+#     filter_conditions = {'settlement_status': False}
+
+#     if date_from and date_to:
+#         # Create filter to match date range
+#         date_from_str = date_from
+#         date_to_str = date_to
+
+#         # Convert date_from and date_to to datetime objects
+#         date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
+#         date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
+
+#         # Filter based on the date part of the string
+#         filter_conditions['$expr'] = {
+#             '$and': [
+#                 {'$gte': [{'$substr': ['$timeofdelivery', 0, 10]}, date_from_str]},
+#                 {'$lte': [{'$substr': ['$timeofdelivery', 0, 10]}, date_to_str]}
+#             ]
+#         }
+#     else:
+#         # Set the filter for the current day if no date filters are provided
+#         today_str = datetime.today().strftime("%Y-%m-%d")
+#         filter_conditions['$expr'] = {
+#             '$eq': [{'$substr': ['$timeofdelivery', 0, 10]}, today_str]
+#         }
+
+#     if blood_bank_id:
+#         filter_conditions['BloodBank_Id'] = blood_bank_id
+
+#     orders = Order.find(filter_conditions)
+
+#     # Organize orders by blood bank and blood component
+#     organized_orders = defaultdict(lambda: defaultdict(list))
+#     for order in orders:
+#         blood_bank_id = order['BloodBank_Id']
+#         component = order['BloodComp']
+#         organized_orders[blood_bank_id][component].append(order)
+
+#     # Prepare the transactions data for the template
+#     transactions = []
+#     for blood_bank_id, components in organized_orders.items():
+#         blood_bank = BBUser.find_one({'reg_num': blood_bank_id})
+#         for component, orders in components.items():
+#             quantity_sold = sum(order['BloodQuantity'] for order in orders)
+#             price_per_unit = orders[0]['total_amount'] / orders[0]['BloodQuantity']  # Assuming total_amount is for the quantity sold
+#             total_amount_per_component = quantity_sold * price_per_unit
+#             total_amount_payable = sum(order['total_amount'] for order in orders)
+
+#             for order in orders:
+                
+#                 timeofdelivery_formatted = datetime.strptime(order['timeofdelivery'], "%Y-%m-%d %H:%M:%S.%f%z").strftime("%Y-%m-%d %H:%M:%S")
+                
+#                 transactions.append({
+#                     'blood_bank_name': blood_bank['bb_name'],
+#                     'address': blood_bank['address'],
+#                     'contact_no': blood_bank['contact_num'],
+#                     'component': component,
+#                     'quantity_sold': order['BloodQuantity'],
+#                     'price_per_unit': price_per_unit,
+#                     'total_amount_per_component': total_amount_per_component,
+#                     'total_amount_payable': order['total_amount'],
+#                     '_id': str(order['_id']),  # Assuming each order has a unique '_id'
+#                     'timeofdelivery': order['timeofdelivery']  # Include time of delivery
+#                 })
+
+#     return render_template('AdminDashboard.html', transactions=transactions, blood_banks=blood_banks)
 
 ######## ###
 
