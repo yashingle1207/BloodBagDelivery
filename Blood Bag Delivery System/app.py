@@ -2068,7 +2068,7 @@ def hosp_received_orders():
     date_to = request.args.get('dateTo')
 
     # If dateFrom or dateTo is not provided, use the current day
-    today_date = datetime.datetime.now().strftime('%Y-%m-%d')
+    today_date = datetime.now().strftime('%Y-%m-%d')
     if not date_from:
         date_from = today_date
     if not date_to:
