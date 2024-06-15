@@ -4,62 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order History</title>
-    
-    <!-- Font Awesome CDN link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
-    <!-- Link to CSS files -->
     <link rel="stylesheet" href="static/style.css">
     <link rel="icon" href="static/images/LogoTT.png" type="image/png">
-    
-    <!-- Flatpickr CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
     <style>
-        /* General table styles */
         table {
             border-collapse: collapse;
             width: 100%;
             max-width: 90%;
             margin: 10px auto;
         }
-
-        th,
-        td {
+        th, td {
             border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
             font-size: 16px;
-            white-space: normal; /* Allow text to wrap */
-            word-wrap: break-word; /* Wrap text in data cells */
+            white-space: normal;
+            word-wrap: break-word;
         }
-
         th {
             background-color: #f2f2f2;
-            width: 150px; /* Allow the width to adjust based on content */
+            width: 150px;
         }
-
-        /* Media query for smaller screens */
         @media (max-width: 768px) {
-            /* Hide columns with data-hide="true" on smaller screens */
-            th[data-hide="true"],
-            td[data-hide="true"] {
+            th[data-hide="true"], td[data-hide="true"] {
                 display: none;
             }
         }
-
         .sort-order-container {
             text-align: left;
             margin: 20px;
             margin-left: 70px;
             margin-bottom: 50px;
         }
-
         .sort-order-container label {
             font-size: 18px;
             margin-right: 10px;
         }
-
         .sort-order-container select {
             padding: 8px 12px;
             font-size: 16px;
@@ -68,38 +49,10 @@
             background-color: #f2f2f2;
             transition: background-color 0.3s ease;
         }
-
         .sort-order-container select:focus {
             outline: none;
             background-color: #e2e2e2;
         }
-
-        /* Filter and Sort Order Styles */
-        .filter-sort-container {
-            text-align: left;
-        }
-
-        .filter-sort-container label {
-            font-size: 18px;
-            margin-right: 10px;
-        }
-
-        .filter-sort-container select,
-        .filter-sort-container input {
-            padding: 8px 12px;
-            font-size: 16px;
-            border: 1px solid #dddddd;
-            border-radius: 4px;
-            background-color: #f2f2f2;
-            transition: background-color 0.3s ease;
-        }
-
-        .filter-sort-container select:focus,
-        .filter-sort-container input:focus {
-            outline: none;
-            background-color: #e2e2e2;
-        }
-
         .filter-container {
             display: flex;
             align-items: center;
@@ -107,21 +60,17 @@
             margin-bottom: 20px;
             margin-top: 20px;
         }
-
         .filter-sort-container {
             margin-right: 20px;
         }
-
         .date-filter-container {
             display: flex;
             align-items: center;
         }
-
         .date-filter-container label {
             font-size: 18px;
             margin-right: 10px;
         }
-
         .date-filter-container input {
             padding: 8px 12px;
             font-size: 16px;
@@ -129,15 +78,13 @@
             border-radius: 4px;
             background-color: #f2f2f2;
             transition: background-color 0.3s ease;
-            width: 150px; /* Adjust width if needed */
-            box-sizing: border-box; /* Ensure input width includes padding and border */
+            width: 150px;
+            box-sizing: border-box;
         }
-
         .date-filter-container input:focus {
             outline: none;
             background-color: #e2e2e2;
         }
-
         .btn {
             background-color: #ff4757;
             color: white;
@@ -146,48 +93,6 @@
             border-radius: 5px;
             cursor: pointer;
             margin: 10px;
-        }
-
-        /* Custom Flatpickr styles */
-        .flatpickr-calendar {
-            border: 1px solid;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .flatpickr-month {
-            background-color: #ff4757;
-            color: #ffffff;
-            border-radius: 8px 8px 0 0;
-        }
-
-        .flatpickr-weekday {
-            color: #ffffff;
-            font-weight: bold;
-        }
-
-        .flatpickr-day {
-            color: #333333;
-            border-radius: 4px;
-            transition: background-color 0.2s, color 0.2s;
-            border-radius: 50%;
-        }
-
-        .flatpickr-day:hover {
-            background-color: #808080;
-            color: #ffffff;
-            border-radius: 50%;
-        }
-
-        .flatpickr-day.today {
-            background-color: transparent; /* Transparent background for today's date */
-            color: red; /* Red color for today's date */
-        }
-
-        .flatpickr-day.selected {
-            background-color: #ff4757;
-            color: #ffffff;
-            border-radius: 50%;
         }
     </style>
 </head>
@@ -209,9 +114,9 @@
             <form id="filterForm">
                 <div class="date-filter-container">
                     <label for="dateFrom">Date From:</label>
-                    <input type="text" id="dateFrom" name="dateFrom" class="flatpickr" value="{{ date_from }}">
+                    <input type="date" id="dateFrom" name="dateFrom" value="{{ date_from }}">
                     <label for="dateTo">Date To:</label>
-                    <input type="text" id="dateTo" name="dateTo" class="flatpickr" value="{{ date_to }}">
+                    <input type="date" id="dateTo" name="dateTo" value="{{ date_to }}">
                     <button type="button" onclick="updateDateFilter()" class="btn">Filter</button>
                 </div>
             </form>
@@ -266,7 +171,6 @@
         </table>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         function updateSortOrder() {
             const sortOrder = document.getElementById('sort').value;
@@ -283,12 +187,6 @@
             urlParams.set('dateTo', dateTo);
             window.location.search = urlParams.toString();
         }
-
-        // Initialize Flatpickr
-        flatpickr('.flatpickr', {
-            dateFormat: 'Y-m-d',
-            defaultDate: '{{ date_from }}' // Set the default date
-        });
     </script>
 </body>
 </html>
