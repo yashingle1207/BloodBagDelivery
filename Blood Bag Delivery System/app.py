@@ -2063,8 +2063,33 @@ def hosp_received_orders():
     sort_order = request.args.get('sort', 'desc')
     sort_direction = -1 if sort_order == 'desc' else 1
 
-    # Query MongoDB to get all orders with status 'delivered' for the hospital
-    orders = Order.find({'User_ID': session.get('hosp_reg_no'), 'status': 'delivered'}).sort('timestamp', sort_direction)
+    # Get date filters from query parameters
+    date_from = request.args.get('dateFrom')
+    date_to = request.args.get('dateTo')
+
+    # If dateFrom or dateTo is not provided, use the current day
+    today_date = datetime.datetime.now().strftime('%Y-%m-%d')
+    if not date_from:
+        date_from = today_date
+    if not date_to:
+        date_to = today_date
+
+    # Build the date range filter
+    date_filter = {
+        '$expr': {
+            '$and': [
+                {'$gte': [{'$substr': ['$timestamp', 0, 10]}, date_from]},
+                {'$lte': [{'$substr': ['$timestamp', 0, 10]}, date_to]}
+            ]
+        }
+    }
+
+    # Query MongoDB to get all orders with status 'delivered' for the hospital within the date range
+    orders = Order.find({
+        'User_ID': session.get('hosp_reg_no'),
+        'status': 'delivered',
+        **date_filter
+    }).sort('timestamp', sort_direction)
 
     order_list = []
 
@@ -2109,7 +2134,7 @@ def hosp_received_orders():
     # Store the facility name in the session
     session['facility_name'] = facility_name
 
-    return render_template('Receivedbags.html', orders=order_list, sort_order=sort_order, facility_name=facility_name)
+    return render_template('Receivedbags.html', orders=order_list, sort_order=sort_order, facility_name=facility_name, date_from=date_from, date_to=date_to)
 
 
 
