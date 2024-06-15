@@ -2148,15 +2148,46 @@ def patient_received_orders():
     redirect_to = check_session('PatientSignIn')
     if redirect_to:
         return redirect_to
-        
+
     # Get the sort order from query parameters
     sort_order = request.args.get('sort', 'desc')
-    
-    # Determine the sort direction
-    sort_direction = -1 if sort_order == 'desc' else 1
+    sort_direction = DESCENDING if sort_order == 'desc' else ASCENDING
+
+    # Get the date filters from query parameters
+    date_from = request.args.get('dateFrom')
+    date_to = request.args.get('dateTo')
+    user_id = session.get('_id')
+
+    filter_conditions = {'User_ID': user_id, 'status': 'delivered'}
+
+    if date_from and date_to:
+        try:
+            # Convert date_from and date_to to datetime objects
+            date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
+            date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
+
+            # Filter based on the date part of the string
+            filter_conditions['$expr'] = {
+                '$and': [
+                    {'$gte': [{'$substr': ['$timestamp', 0, 10]}, date_from]},
+                    {'$lte': [{'$substr': ['$timestamp', 0, 10]}, date_to]}
+                ]
+            }
+        except ValueError:
+            # Handle invalid date format by setting the filter to the current day
+            date_from = date_to = datetime.today().strftime("%Y-%m-%d")
+            filter_conditions['$expr'] = {
+                '$eq': [{'$substr': ['$timestamp', 0, 10]}, date_from]
+            }
+    else:
+        # Set the filter for the current day if no date filters are provided
+        today_str = datetime.today().strftime("%Y-%m-%d")
+        filter_conditions['$expr'] = {
+            '$eq': [{'$substr': ['$timestamp', 0, 10]}, today_str]
+        }
 
     # Query MongoDB to get all orders and sort by timestamp
-    orders = Order.find({'User_ID': session.get('_id'), 'status': 'delivered'}).sort('timestamp', sort_direction)
+    orders = Order.find(filter_conditions).sort('timestamp', sort_direction)
 
     # Prepare the results to be displayed
     order_list = []
@@ -2164,40 +2195,32 @@ def patient_received_orders():
     for order in orders:
         # Query blood bank details
         blood_bank_details = BBUser.find_one({'reg_num': order.get('BloodBank_Id')})
-        
-        if blood_bank_details:
-            formatted_order = {
-                '_id': order.get('_id'),
-                'User_ID': order.get('User_ID'),
-                'BloodBank_Id': order.get('BloodBank_Id'),
-                'BloodGrp': order.get('BloodGrp'),
-                'BloodComp': order.get('BloodComp'),
-                'BloodQuantity': order.get('BloodQuantity'),
-                'req_type': order.get('req_type'),
-                'fname': order.get('fname'),
-                'mname': order.get('mname'),
-                'lname': order.get('lname'),
-                'age': order.get('age'),
-                'docname': order.get('docname'),
-                'gender': order.get('gender'),
-                'user_name': blood_bank_details.get('bb_name'),
-                'user_address': blood_bank_details.get('address'),
-                'phone_number': blood_bank_details.get('contact_num')
-            }
 
-            # Handle timestamps as strings, split to remove milliseconds if present
-            if 'timestamp' in order:
-                formatted_order['timestamp'] = order['timestamp'].split('.')[0]
+        formatted_order = {
+            '_id': order.get('_id'),
+            'User_ID': order.get('User_ID'),
+            'BloodBank_Id': order.get('BloodBank_Id'),
+            'BloodGrp': order.get('BloodGrp'),
+            'BloodComp': order.get('BloodComp'),
+            'BloodQuantity': order.get('BloodQuantity'),
+            'req_type': order.get('req_type'),
+            'fname': order.get('fname'),
+            'mname': order.get('mname'),
+            'lname': order.get('lname'),
+            'age': order.get('age'),
+            'docname': order.get('docname'),
+            'gender': order.get('gender'),
+            'user_name': blood_bank_details.get('bb_name') if blood_bank_details else None,
+            'user_address': blood_bank_details.get('address') if blood_bank_details else None,
+            'phone_number': blood_bank_details.get('contact_num') if blood_bank_details else None,
+            'timestamp': order.get('timestamp', '').split('.')[0] if 'timestamp' in order else None,
+            'timeofdispatch': order.get('timeofdispatch', '').split('.')[0] if 'timeofdispatch' in order else None,
+            'timeofdelivery': order.get('timeofdelivery', '').split('.')[0] if 'timeofdelivery' in order else None
+        }
 
-            if 'timeofdispatch' in order:
-                formatted_order['timeofdispatch'] = order['timeofdispatch'].split('.')[0]
+        order_list.append(formatted_order)
 
-            if 'timeofdelivery' in order:
-                formatted_order['timeofdelivery'] = order['timeofdelivery'].split('.')[0]
-
-            order_list.append(formatted_order)
-
-    return render_template('PatientReceivedbags.html', orders=order_list)
+    return render_template('PatientReceivedbags.html', orders=order_list, sort_order=sort_order, date_from=date_from, date_to=date_to)
 
 
 ################################################################
