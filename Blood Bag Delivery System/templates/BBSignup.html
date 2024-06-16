@@ -1,72 +1,126 @@
-<!-- sign up section  -->
-
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Blood Bank SignIn</title>
-    
-        <!-- font awesome cdn link  -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    
-        <!-- custom css file link  -->
-        <link rel="stylesheet" href="static/style1.css">
-		<link rel="stylesheet" href="static/style.css">
-	      <link rel="icon" type="image/png" href="static/images/LogoTT.png">
-    
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bank SignIn</title>
+
+    <!-- Font Awesome CDN link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Custom CSS file links -->
+    <link rel="stylesheet" href="static/style1.css">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+
+  <style>
+        /* Custom CSS styles */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px; /* Adjust margin as needed */
+            margin-bottom:15px;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            margin-right: 10px; /* Space between checkbox and text */
+            width: 20px; /* Adjust size of the checkbox */
+            height: 20px; /* Adjust size of the checkbox */
+        }
+
+        .checkbox-container label {
+            font-size: 16px;
+            display: inline-block; /* Ensure the label takes up the necessary space */
+            
+        }
+
+        .checkbox-container a {
+            color: #007bff; /* Link color */
+            text-decoration: underline;
+            margin-left: 5px; /* Space between links */
+        }
+
+         .form-container input {
+        background-color: #eee;
+        border: none;
+        font-size: 18px;
+        padding: 12px 15px; /* Adjusted padding for input fields */
+        margin: 8px 0; /* Adjusted margin between input fields */
+        width: 100%;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    /* Adjusted style for smaller screens */
+    @media only screen and (max-width: 768px) {
+        .form-container input {
+            padding: 10px 13px; /* Adjusted padding for smaller screens */
+            margin: 6px 0; /* Adjusted margin for smaller screens */
+            font-size: 16px; /* Adjusted font size for smaller screens */
+        }
+    }
+
+
+    </style>
+</head>
+
 <body>
 
 <section class="home">
 
-	<div class="container" id="container">
-		<div class="form-container sign-up-container">
-			<form action="/BBSignUp" method="POST" onsubmit="return validateForm();">
-				<h1>Create Blood Bank Account</h1>
+    <div class="container" id="container">
+        <div class="form-container sign-up-container">
+            <form action="/BBSignUp" method="POST" onsubmit="return validateForm();">
+                <h1>Create Blood Bank Account</h1>
 
+                <input type="text" id="BBName" name="BBName" placeholder="Blood Bank Name" required />
+                <input type="email" id="BBEmail" name="BBEmail" placeholder="Blood Bank Email ID" required />
+                <input type="tel" id="ContactNum" name="ContactNum" placeholder="Contact Number" required />
+                <input type="text" id="Address" name="Address" placeholder="Address" required />
+                <input type="text" id="City" name="City" placeholder="City" required />
+                <input type="text" id="RegNum" name="RegNum" placeholder="Registration Number" required />
 
-				<input type="text" id="BBName" name="BBName" placeholder="Blood Bank Name" required />
-				<input type="email" id="BBEmail" name="BBEmail" placeholder="Blood Bank Email ID" required />
-<!-- 				<input type="password" id="BBPass" name="BBPass" placeholder="Password" required /> -->
-				<input type="tel" id="ContactNum" name="ContactNum" placeholder="Contact Number" required />
-				<input type="text" id="Address" name="Address" placeholder="Address" required />
-				<input type="text" id="City" name="City" placeholder="City" required />
-				<input type="text" id="RegNum" name="RegNum" placeholder="Registration Number" required />
-				<button>Sign Up</button>
-			</form>
-		</div>
-		<div class="form-container sign-in-container">
-			<form action="/BBSignIn" method="POST">
-				<h1>Blood Bank Sign in</h1>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="termsCheckbox" name="termsCheckbox" required />
+                    <label for="termsCheckbox">I accept the TransfusioTrack's <a href="/terms">terms & conditions</a>, <a href="/privacy">privacy</a>, <a href="/refund">return & refund</a>, and <a href="/pricing">pricing policies</a></label>
+                </div>
 
-				<span>or Create your account</span>
-				<input type="email" id="BBemail1" name="BBemail1" placeholder="Blood Bank ID" />
-				<input type="password" id="BBpass1" name="BBpass1" placeholder="Password" />
-				<a href="#">Forgot your password?</a>
-				<button>Sign In</button>
-			</form>
-		</div>
-		<div class="overlay-container">
-			<div class="overlay">
-				<div class="overlay-panel overlay-left">
-					<h1>Welcome Back!</h1>
-					<p>To keep connected with us please login with your personal info</p>
-					<button class="ghost" id="signIn">Sign In</button>
-				</div>
-				<div class="overlay-panel overlay-right">
-					<h1>Hello, Blood Provider!</h1>
-					<p>Enter your Blood Bank details and start journey with us</p>
-					<button class="ghost" id="signUp">Sign Up</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	
+                <button>Sign Up</button>
+            </form>
+        </div>
 
-<script src="static/js/script1.js"></script>
+        <div class="form-container sign-in-container">
+            <form action="/BBSignIn" method="POST">
+                <h1>Blood Bank Sign in</h1>
+
+                <span>or Create your account</span>
+                <input type="email" id="BBemail1" name="BBemail1" placeholder="Blood Bank ID" />
+                <input type="password" id="BBpass1" name="BBpass1" placeholder="Password" />
+                <a href="#">Forgot your password?</a>
+                <button>Sign In</button>
+            </form>
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Welcome Back!</h1>
+                    <p>To keep connected with us please login with your personal info</p>
+                    <button class="ghost" id="signIn">Sign In</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Hello, Blood Provider!</h1>
+                    <p>Enter your Blood Bank details and start journey with us</p>
+                    <button class="ghost" id="signUp">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/js/script1.js"></script>
+
+</section>
 
 </body>
-</html>
 
+</html>
