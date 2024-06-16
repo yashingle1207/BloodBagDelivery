@@ -1,75 +1,126 @@
-<!-- sign up section  -->
-
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Patient SignIn</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient SignIn</title>
 
-        <!-- font awesome cdn link  -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Font Awesome CDN link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-        <!-- custom css file link  -->
-        <link rel="stylesheet" href="static/style1.css">
-		<link rel="stylesheet" href="static/style.css">
-	      <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+    <!-- Custom CSS file links -->
+    <link rel="stylesheet" href="static/style1.css">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
 
-    </head>
+    <style>
+        /* Custom CSS styles */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px; /* Adjust margin as needed */
+            margin-bottom: 15px; /* Add bottom margin for spacing */
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            margin-right: 10px; /* Space between checkbox and text */
+            width: 20px; /* Adjust size of the checkbox */
+            height: 20px; /* Adjust size of the checkbox */
+        }
+
+        .checkbox-container label {
+            font-size: 16px;
+            display: inline-block; /* Ensure the label takes up the necessary space */
+        }
+
+        .checkbox-container a {
+            color: #007bff; /* Link color */
+            text-decoration: underline;
+            margin-left: 5px; /* Space between links */
+        }
+
+        .form-container input {
+            background-color: #eee;
+            border: none;
+            font-size: 18px;
+            padding: 12px 15px; /* Adjusted padding for input fields */
+            margin: 8px 0; /* Adjusted margin between input fields */
+            width: 100%;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        /* Adjusted style for smaller screens */
+        @media only screen and (max-width: 768px) {
+            .form-container input {
+                padding: 10px 13px; /* Adjusted padding for smaller screens */
+                margin: 6px 0; /* Adjusted margin for smaller screens */
+                font-size: 16px; /* Adjusted font size for smaller screens */
+            }
+        }
+
+    </style>
+</head>
+
 <body>
 
-<section class="home">
+    <section class="home">
 
-	<div class="container" id="container">
-		<div class="form-container sign-up-container">
-			<form  id="signup-form" action="/Patientsignup" method="POST" onsubmit="return validateForm();">
-				<h1>Create Your Account</h1>
+        <div class="container" id="container">
+            <div class="form-container sign-up-container">
+                <form id="signup-form" action="/Patientsignup" method="POST" onsubmit="return validateForm();">
+                    <h1>Create Your Account</h1>
 
+                    <input type="text" id="patientName" name="patientName" placeholder="Your Full Name" required />
+                    <input type="email" id="patientEmailId" name="patientEmailId" placeholder="Email ID" required />
+                    <input type="password" id="patientPassword" name="patientPassword" placeholder="Password" required />
+                    <input type="tel" id="patientContactNum" name="patientContactNum" placeholder="Contact Number" required />
+                    <input type="text" id="patientAddress" name="patientAddress" placeholder="Address" required />
+                    <input type="text" id="patientCity" name="patientCity" placeholder="City" required />
 
-				<input type="text" id="patientName" name="patientName" placeholder="Your Full Name" required />
-				<input type="email" id="patientEmailId" name="patientEmailId" placeholder="Email ID" required />
-				<input type="password" id="patientPassword" name="patientPassword" placeholder="Password" required />
-				<input type="tel" id="patientContactNum" name="patientContactNum" placeholder="Contact Number" required />
-				<input type="text" id="patientAddress" name="patientAddress" placeholder="Address" required />
-				<input type="text" id="patientCity" name="patientCity" placeholder="City" required />
-				<button onclick="signUp()" >Sign Up</button>
-			</form>
-		</div>
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="termsCheckbox" name="termsCheckbox" required />
+                        <label for="termsCheckbox">I accept the TransfusioTrack's <a href="/terms">terms & conditions</a>, <a href="/privacy">privacy</a>, <a href="/refund">return & refund</a>, and <a href="/pricing">pricing policies</a></label>
+                    </div>
 
-		<div class="form-container sign-in-container">
-			<form id="signin-form" action="/PatientSignIn" method="POST" >
-				<h1>Patient Sign in</h1>
+                    <button onclick="signUp()">Sign Up</button>
+                </form>
+            </div>
 
-				<span>or Create your account</span>
+            <div class="form-container sign-in-container">
+                <form id="signin-form" action="/PatientSignIn" method="POST">
+                    <h1>Patient Sign in</h1>
 
-				<input type="email"  id="patientEmailId1"  name="patientEmailId1" placeholder="Enter EmailID" required/>
-				<input type="password" id="patientPassword1" name="patientPassword1" placeholder="Enter Password" required/>
+                    <span>or Create your account</span>
 
-				<a href="#">Forgot your password?</a>
-				<button>Sign In</button>
-			</form>
-		</div>
-		<div class="overlay-container">
-			<div class="overlay">
-				<div class="overlay-panel overlay-left">
-					<h1>Welcome Back!</h1>
-					<p>To keep connected with us please login with your personal info</p>
-					<button class="ghost" id="signIn">Sign In</button>
-				</div>
-				<div class="overlay-panel overlay-right">
-					<h1>Hello, Blood Receiver!</h1>
-					<p>Enter your details and start journey with us</p>
-					<button class="ghost" id="signUp">Sign Up</button>
-				</div>
-			</div>
-		</div>
-	</div>
+                    <input type="email" id="patientEmailId1" name="patientEmailId1" placeholder="Enter EmailID" required />
+                    <input type="password" id="patientPassword1" name="patientPassword1" placeholder="Enter Password" required />
 
+                    <a href="#">Forgot your password?</a>
+                    <button>Sign In</button>
+                </form>
+            </div>
+            <div class="overlay-container">
+                <div class="overlay">
+                    <div class="overlay-panel overlay-left">
+                        <h1>Welcome Back!</h1>
+                        <p>To keep connected with us please login with your personal info</p>
+                        <button class="ghost" id="signIn">Sign In</button>
+                    </div>
+                    <div class="overlay-panel overlay-right">
+                        <h1>Hello, Blood Receiver!</h1>
+                        <p>Enter your details and start journey with us</p>
+                        <button class="ghost" id="signUp">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<script src="static/js/script1.js"></script>
+        <script src="static/js/script1.js"></script>
 
+    </section>
 
 </body>
-</html>
 
+</html>
