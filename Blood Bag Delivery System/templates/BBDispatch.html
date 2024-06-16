@@ -46,7 +46,7 @@
             }
         }
 
-        /* Filter and Sort Order Styles */
+       /* Filter and Sort Order Styles */
         .filter-sort-container {
             text-align: left;
         }
@@ -152,16 +152,15 @@
         }
 
         .flatpickr-day.today {
-            background-color: #ff4757;
-            color: #ffffff;
-            font-weight: bold;
-            border-radius: 50%;
+            background-color: transparent; /* Transparent background for today's date */
+            color: #333333; /* Text color for today's date */
+            border: 1px solid #000000; /* Black border for today's date */
+            border-radius: 50%; /* Circular shape for today's date */
         }
 
         .flatpickr-day.selected {
-            background-color: #ffa07a;
+            background-color:  #ff4757;
             color: #ffffff;
-            font-weight: bold;
             border-radius: 50%;
         }
     </style>
@@ -210,7 +209,7 @@
 
         <h1 class="heading">Dispatched Blood Bags</h1>
 
-        <div class="filter-container">
+          <div class="filter-container">
 <!--             <div class="filter-sort-container">
                 <label for="sortOrder">Sort By:</label>
                 <select id="sortOrder">
@@ -219,11 +218,12 @@
                 </select>
             </div> -->
 
+      
             <div class="date-filter-container">
                 <label for="dateFrom">From:</label>
-                <input type="text" id="dateFrom" value="{{ date_from }}" placeholder="Select date">
+                <input type="text" id="dateFrom" placeholder="Select date">
                 <label for="dateTo">To:</label>
-                <input type="text" id="dateTo" value="{{ date_to }}" placeholder="Select date">
+                <input type="text" id="dateTo" placeholder="Select date">
                 <button class="btn" onclick="applyFilters()">Search</button>
             </div>
         </div>
