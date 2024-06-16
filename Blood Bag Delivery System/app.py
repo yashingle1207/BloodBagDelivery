@@ -1960,10 +1960,96 @@ def viewstock():
 
 ####### Delivered bags Blood bank - delorder #########
 
+# @app.route('/delorder', methods=['GET'])
+# def bloodbank_completed_orders():
+#     redirect_to = check_session('BBSignIn')
+#     if (redirect_to):
+#         return redirect_to
+
+#     sort_order = request.args.get('sort', 'desc')
+#     sort_direction = DESCENDING if sort_order == 'desc' else ASCENDING
+
+#     date_from = request.args.get('dateFrom')
+#     date_to = request.args.get('dateTo')
+#     blood_bank_id = session.get('bb_reg_no')  # Assuming blood bank ID is taken from session
+
+#     filter_conditions = {'BloodBank_Id': blood_bank_id, 'status': 'delivered'}
+
+#     if date_from and date_to:
+#         try:
+#             # Convert date_from and date_to to datetime objects
+#             date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
+#             date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
+
+#             # Filter based on the date part of the string
+#             filter_conditions['$expr'] = {
+#                 '$and': [
+#                     {'$gte': [{'$substr': ['$timeofdelivery', 0, 10]}, date_from]},
+#                     {'$lte': [{'$substr': ['$timeofdelivery', 0, 10]}, date_to]}
+#                 ]
+#             }
+#         except ValueError:
+#             # Handle invalid date format by setting the filter to current day
+#             date_from = date_to = datetime.today().strftime("%Y-%m-%d")
+#             filter_conditions['$expr'] = {
+#                 '$eq': [{'$substr': ['$timeofdelivery', 0, 10]}, date_from]
+#             }
+#     else:
+#         # Set the filter for the current day if no date filters are provided
+#         today_str = datetime.today().strftime("%Y-%m-%d")
+#         filter_conditions['$expr'] = {
+#             '$eq': [{'$substr': ['$timeofdelivery', 0, 10]}, today_str]
+#         }
+
+#     # Query MongoDB to get all delivered orders and sort them by time of delivery
+#     orders = Order.find(filter_conditions).sort('timeofdelivery', sort_direction)
+
+#     # Prepare the results to be displayed
+#     order_list = []
+#     for order in orders:
+#         user_id = order.get('User_ID')
+#         user_details = None
+
+#         # Search for user details in the hospital collection
+#         hospital_details = HospUser.find_one({'reg_num': user_id})
+#         if hospital_details:
+#             user_details = hospital_details
+#         else:
+#             # Search for user details in the patient collection
+#             patient_details = PatientUser.find_one({'email': user_id})
+#             if patient_details:
+#                 user_details = patient_details
+
+#         if user_details:
+#             formatted_order = {
+#                 '_id': order.get('_id'),
+#                 'User_ID': order.get('User_ID'),
+#                 'BloodBank_Id': order.get('BloodBank_Id'),
+#                 'BloodGrp': order.get('BloodGrp'),
+#                 'BloodComp': order.get('BloodComp'),
+#                 'BloodQuantity': order.get('BloodQuantity'),
+#                 'req_type': order.get('req_type'),
+#                 'fname': order.get('fname'),
+#                 'mname': order.get('mname'),
+#                 'lname': order.get('lname'),
+#                 'age': order.get('age'),
+#                 'docname': order.get('docname'),
+#                 'gender': order.get('gender'),
+#                 'user_name': user_details.get('facility_name') or user_details.get('patient_name'),
+#                 'user_address': user_details.get('address'),
+#                 'phone_number': user_details.get('contact_num'),
+#                 'timestamp': order.get('timestamp'),
+#                 'timeofdispatch': order.get('timeofdispatch'),
+#                 'timeofdelivery': order.get('timeofdelivery')
+#             }
+#             order_list.append(formatted_order)
+
+#     return render_template('DeliveredBags.html', orders=order_list, sort_order=sort_order, date_from=date_from, date_to=date_to)
+
 @app.route('/delorder', methods=['GET'])
 def bloodbank_completed_orders():
     redirect_to = check_session('BBSignIn')
-    if (redirect_to):
+    if redirect_to:
         return redirect_to
 
     sort_order = request.args.get('sort', 'desc')
@@ -2038,13 +2124,14 @@ def bloodbank_completed_orders():
                 'user_name': user_details.get('facility_name') or user_details.get('patient_name'),
                 'user_address': user_details.get('address'),
                 'phone_number': user_details.get('contact_num'),
-                'timestamp': order.get('timestamp'),
-                'timeofdispatch': order.get('timeofdispatch'),
-                'timeofdelivery': order.get('timeofdelivery')
+                'timestamp': order.get('timestamp', '').split('.')[0] if 'timestamp' in order else None,
+                'timeofdispatch': order.get('timeofdispatch', '').split('.')[0] if 'timeofdispatch' in order else None,
+                'timeofdelivery': order.get('timeofdelivery', '').split('.')[0] if 'timeofdelivery' in order else None
             }
             order_list.append(formatted_order)
 
     return render_template('DeliveredBags.html', orders=order_list, sort_order=sort_order, date_from=date_from, date_to=date_to)
+
 
 
 ####### Dispatched bags Blood bank - #########
