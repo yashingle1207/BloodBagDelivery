@@ -47,7 +47,7 @@
             }
         }
 
-         /* Filter and Sort Order Styles */
+        /* Filter and Sort Order Styles */
         .filter-sort-container {
             text-align: left;
         }
@@ -78,7 +78,7 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 20px;
-              margin-top:20px;
+            margin-top:20px;
         }
 
         .filter-sort-container {
@@ -143,7 +143,7 @@
             color: #333333;
             border-radius: 4px;
             transition: background-color 0.2s, color 0.2s;
-             border-radius: 50%;
+            border-radius: 50%;
         }
 
         .flatpickr-day:hover {
@@ -151,7 +151,6 @@
             color: #ffffff;
             border-radius: 50%;
         }
-
 
         .flatpickr-day.today {
             background-color: transparent; /* Transparent background for today's date */
@@ -213,7 +212,7 @@
 
         <h1 class="heading">Delivered Blood Bags</h1>
         <!-- Heading for order status -->
-            <div class="filter-container">
+             <div class="filter-container">
 <!--                 <div class="filter-sort-container">
                     <label for="sortOrder">Sort By:</label>
                     <select id="sortOrder">
@@ -222,15 +221,15 @@
                     </select>
                 </div> -->
     
-                <div class="date-filter-container">
+      
+            <div class="date-filter-container">
                 <label for="dateFrom">From:</label>
-                <input type="text" id="dateFrom" placeholder="Select date" value="{{ date_from }}">
+                <input type="text" id="dateFrom" placeholder="Select date">
                 <label for="dateTo">To:</label>
-                <input type="text" id="dateTo" placeholder="Select date" value="{{ date_to }}">
+                <input type="text" id="dateTo" placeholder="Select date">
                 <button class="btn" onclick="applyFilters()">Search</button>
             </div>
-
-            </div>
+        </div>
 
 
         <table>
