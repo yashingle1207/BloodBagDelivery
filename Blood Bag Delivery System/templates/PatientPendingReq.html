@@ -12,8 +12,7 @@
     <link rel="stylesheet" href="static/style.css">
     <link rel="icon" type="image/png" href="static/images/LogoTT.png">
     
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <!-- Inline CSS -->
     <style>
@@ -121,7 +120,7 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 20px;
-              margin-top:20px;
+            margin-top:20px;
         }
 
         .filter-sort-container {
@@ -195,7 +194,6 @@
             border-radius: 50%;
         }
 
-
         .flatpickr-day.today {
             background-color: transparent; /* Transparent background for today's date */
             color: #333333; /* Text color for today's date */
@@ -217,42 +215,40 @@
 <header>
     <a href="/" class="logo">Transfusio<span>Track</span></a>
     <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
-        <nav class="navbar" id="navbar">
-              {% if '_id' in session %}
+    <nav class="navbar" id="navbar">
+        {% if '_id' in session %}
             <a href="/MyPatient_Acct">User ID: {{ session['_id'] }}</a>
         {% endif %}
         <a href="/PatientDashboard">Patient Dashboard</a>
-          <a href="/">Logout</a>
-        </nav>
+        <a href="/">Logout</a>
+    </nav>
 </header>
 
+<script>
+    function toggleNavbar() {
+        var navbar = document.getElementById("navbar");
+        if (navbar.classList.contains("active")) {
+            navbar.classList.remove("active");
+        } else {
+            navbar.classList.add("active");
+        }
+    }
 
-        <script>
-            function toggleNavbar() {
-                var navbar = document.getElementById("navbar");
-                if (navbar.classList.contains("active")) {
-                    navbar.classList.remove("active");
-                } else {
-                    navbar.classList.add("active");
-                }
-            }
+    function changeSortOrder() {
+        var sortOrder = document.getElementById("sortOrder").value;
+        window.location.href = "/dispatched?sort=" + sortOrder;
+    }
 
-            function changeSortOrder() {
-                var sortOrder = document.getElementById("sortOrder").value;
-                window.location.href = "/dispatched?sort=" + sortOrder;
-            }
+    function applyFilters() {
+        var dateFrom = document.getElementById("dateFrom").value;
+        var dateTo = document.getElementById("dateTo").value;
+        var url = new URL(window.location.href);
+        url.searchParams.set('dateFrom', dateFrom);
+        url.searchParams.set('dateTo', dateTo);
+        window.location.href = url.toString();
+    }
 
-            function applyFilters() {
-                var dateFrom = document.getElementById("dateFrom").value;
-                var dateTo = document.getElementById("dateTo").value;
-                var url = new URL(window.location.href);
-                url.searchParams.set('dateFrom', dateFrom);
-                url.searchParams.set('dateTo', dateTo);
-                window.location.href = url.toString();
-            }
-
-            
-      function toggleOrderDetails(event) {
+    function toggleOrderDetails(event) {
         var row = event.currentTarget;
         var detailsRow = row.nextElementSibling;
 
@@ -260,29 +256,20 @@
             detailsRow.classList.toggle('active');
         }
     }
-        </script>
+</script>
     
 <h1 class="heading">Order Status</h1>
 
 <!-- Sort Order Filter -->
-    
-         <div class="filter-container">
-<!--                 <div class="filter-sort-container">
-                    <label for="sortOrder">Sort By:</label>
-                    <select id="sortOrder">
-                        <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Newest Orders First</option>
-                        <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Oldest Orders First</option>
-                    </select>
-                </div> -->
-    
-                <div class="date-filter-container">
-                    <label for="dateFrom">From:</label>
-                    <input type="text" id="dateFrom" placeholder="Select date">
-                    <label for="dateTo">To:</label>
-                    <input type="text" id="dateTo" placeholder="Select date">
-                    <button class="btn" onclick="applyFilters()">Search</button>
-                </div>
-            </div>
+<div class="filter-container">
+    <div class="date-filter-container">
+        <label for="dateFrom">From:</label>
+        <input type="text" id="dateFrom" placeholder="Select date">
+        <label for="dateTo">To:</label>
+        <input type="text" id="dateTo" placeholder="Select date">
+        <button class="btn" onclick="applyFilters()">Search</button>
+    </div>
+</div>
 
 <table>
     <tr>
@@ -303,79 +290,55 @@
     </tr>
 
     {% for order in orders %}
-        <tr>
-            <td onclick="toggleOrderDetails(event)">{{ order.user_name }}</td>
-            <td onclick="toggleOrderDetails(event)">{{ order.user_address }}</td>
-            <td onclick="toggleOrderDetails(event)">{{ order.phone_number }}</td>
-            <td onclick="toggleOrderDetails(event)">{{ order.BloodGrp }}</td>
-            <td onclick="toggleOrderDetails(event)">{{ order.BloodComp }}</td>
-            <td onclick="toggleOrderDetails(event)">{{ order.BloodQuantity }}</td>
-            <td onclick="toggleOrderDetails(event)">{{ order.req_type }}</td>
-            <td onclick="toggleOrderDetails(event)">{{ order.docname }}</td>
-            <td onclick="toggleOrderDetails(event)">{{ order.fname }}</td>
-            <td onclick="toggleOrderDetails(event)" data-hide="true">{{ order.mname }}</td>
-            <td onclick="toggleOrderDetails(event)">{{ order.lname }}</td>
-            <td onclick="toggleOrderDetails(event)">{{ order.age }}</td>
-            <td onclick="toggleOrderDetails(event)">{{ order.gender }}</td>
-            <td onclick="toggleOrderDetails(event)">{{ order.timestamp }}</td>
-        </tr>
-        <tr class="order-details">
-            <td colspan="14">
-                <div class="status-icons-container">
-                    <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">Order Status</h2>
-
-                    <div class="status-icons">
-                        <i class="fas fa-check{% if order.status == 'undelivered' or order.status == 'dispatched' or order.status == 'delivered' %} green{% endif %}"></i>
-                        <i class="fas fa-minus line{% if order.status == 'dispatched' or order.status == 'delivered' %} green{% endif %}"></i>
-                        <i class="fas fa-truck{% if order.status == 'dispatched' or order.status == 'delivered' %} green{% endif %}"></i>
-                        <i class="fas fa-minus line{% if order.status == 'delivered' %} green{% endif %}"></i>
-                        <i class="fas fa-check-circle{% if order.status == 'delivered' %} green{% endif %}"></i>
-                    </div>
-                    <!-- Description for order status -->
-                    <div style="display: flex; justify-content: center;">
-                        <p style="margin: 5px; margin-right: 250px;  margin-left: 20px;">
-                            <span style="font-weight: bold;">Order Placed</span>
-                        </p>
-                        <p style="margin: 5px; margin-right: 280px; margin-left: 60px;">
-                            <span style="font-weight: bold;">Order Dispatched</span>
-                        </p>
-                        <p style="margin: 5px;">
-                            <span style="font-weight: bold;">Order Delivered</span>
-                        </p>
-                    </div>
+    <tr onclick="toggleOrderDetails(event)">
+        <td>{{ order.bloodBankName }}</td>
+        <td>{{ order.bloodBankAddress }}</td>
+        <td>{{ order.bloodBankContact }}</td>
+        <td>{{ order.bloodGroup }}</td>
+        <td>{{ order.bloodComponent }}</td>
+        <td>{{ order.bloodQuantity }}</td>
+        <td>{{ order.requestType }}</td>
+        <td>{{ order.doctorName }}</td>
+        <td>{{ order.firstName }}</td>
+        <td data-hide="true">{{ order.middleName }}</td>
+        <td>{{ order.lastName }}</td>
+        <td>{{ order.age }}</td>
+        <td>{{ order.gender }}</td>
+        <td>{{ order.timeOfPlacingOrder }}</td>
+    </tr>
+    <tr class="order-details">
+        <td colspan="14">
+            <div class="status-icons-container">
+                <h3>Order Status</h3>
+                <div class="status-icons">
+                    <i class="fas fa-check-circle green"></i> <!-- Example icon, replace with dynamic status -->
+                    <div class="line green"></div> <!-- Example line, replace with dynamic status -->
+                    <i class="fas fa-truck green"></i> <!-- Example icon, replace with dynamic status -->
+                    <div class="line green"></div> <!-- Example line, replace with dynamic status -->
+                    <i class="fas fa-warehouse green"></i> <!-- Example icon, replace with dynamic status -->
                 </div>
-            </td>
-        </tr>
+                <p>Order status details go here...</p> <!-- Replace with dynamic status details -->
+            </div>
+        </td>
+    </tr>
     {% endfor %}
 </table>
 
-<!-- Footer section -->
-<section class="footer">
-    <div class="credit">Created by <span>Team Transfusio</span> | All rights reserved to Ingle Laboratory</div>
-</section>
+<!-- Include Flatpickr JS library -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    // Initialize Flatpickr
+    flatpickr("#dateFrom", {
+        dateFormat: "Y-m-d",
+        maxDate: new Date()
+    });
+
+    flatpickr("#dateTo", {
+        dateFormat: "Y-m-d",
+        maxDate: new Date()
+    });
+</script>
 
 </div>
-    <!-- Flatpickr JS -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-    <script>
-        flatpickr("#dateFrom", {
-            dateFormat: "Y-m-d",
-            maxDate: "today",
-            onChange: function(selectedDates, dateStr, instance) {
-                flatpickr("#dateTo", {
-                    minDate: dateStr,
-                    dateFormat: "Y-m-d",
-                    maxDate: "today"
-                });
-            }
-        });
-
-        flatpickr("#dateTo", {
-            dateFormat: "Y-m-d",
-            maxDate: "today"
-        });
-    </script>
-
 </body>
 </html>
