@@ -526,11 +526,15 @@ def HBPForgotPassword():
 # Function to find user in any of the collections by reset token
 def find_user_by_reset_token(token):
     user = HospUser.find_one({'reset_token': token})
-    if not user:
-        user = BBUser.find_one({'reset_token': token})
-    if not user:
-        user = PatientUser.find_one({'reset_token': token})
-    return user
+    if user:
+        return user, HospUser
+    user = BBUser.find_one({'reset_token': token})
+    if user:
+        return user, BBUser
+    user = PatientUser.find_one({'reset_token': token})
+    if user:
+        return user, PatientUser
+    return None, None
 
 # Route to handle password reset form submission
 @app.route('/submitNewPassword', methods=['POST'])
@@ -544,22 +548,16 @@ def submit_new_password():
             flash('Passwords do not match!', 'error')
             return redirect(request.referrer)
 
-        # Retrieve user based on reset token from any of the collections
-        user = find_user_by_reset_token(reset_token)
+        # Retrieve user and the corresponding collection based on reset token from any of the collections
+        user, collection = find_user_by_reset_token(reset_token)
 
-        if user:
+        if user and collection:
+            user_id = user['_id']
             # Update user's password in the appropriate collection
-            if user in HospUser.find({'email': user['email']}):
-                HospUser.update_one({'email': user['email']}, {'$set': {'password': password}})
-            elif user in BBUser.find({'email': user['email']}):
-                BBUser.update_one({'email': user['email']}, {'$set': {'password': password}})
-            elif user in PatientUser.find({'email': user['email']}):
-                PatientUser.update_one({'email': user['email']}, {'$set': {'password': password}})
+            collection.update_one({'_id': user_id}, {'$set': {'password': password}})
 
             # Optional: Clear/reset the reset_token and token_expiration fields
-            if 'reset_token' in user:
-                collection = determine_collection(user['email'])
-                collection.update_one({'email': user['email']}, {'$unset': {'reset_token': '', 'token_expiration': ''}})
+            collection.update_one({'_id': user_id}, {'$unset': {'reset_token': '', 'token_expiration': ''}})
 
             return render_template('PasswordResetSuccess.html')  # Redirect to password reset success page
         else:
