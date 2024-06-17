@@ -552,7 +552,7 @@ def submit_new_password():
     if request.method == 'POST':
         password = request.form.get('password')
         confirm_password = request.form.get('confirmPassword')
-        reset_token = request.args.get('token')
+        reset_token = request.form.get('token')
 
         print(f"Reset token received: {reset_token}")
         print(f"Password entered: {password}")
