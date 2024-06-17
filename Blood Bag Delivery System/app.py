@@ -594,9 +594,9 @@ def determine_collection(email):
         return PatientUser
 
 
-@app.route('/ResetPassword')
-def ResetPassword():
-    return render_template('NewPasswordReset.html')
+@app.route('/ResetPassword/<token>')
+def ResetPassword(token):
+    return render_template('NewPasswordReset.html', token=token)
 
 
 ########################################################################
