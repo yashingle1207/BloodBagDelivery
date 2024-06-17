@@ -579,7 +579,7 @@ def determine_collection(email):
 
 
 @app.route('/ResetPassword')
-def PassReset():
+def ResetPassword():
     return render_template('NewPasswordReset.html')
 
 
