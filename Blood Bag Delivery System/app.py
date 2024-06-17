@@ -518,7 +518,7 @@ def HBPForgotPassword():
         else:
             return render_template('UserNotFound.html')
 
-    return render_template('HospitalForgotPassword.html')
+    return render_template('ForgotPassword.html')
     
 ########################################################################
 
