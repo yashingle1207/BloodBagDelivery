@@ -527,14 +527,14 @@ def HBPForgotPassword():
 def find_user_by_reset_token(token):
     user = HospUser.find_one({'reset_token': token})
     if user:
-        return user, HospUser
+        return user
     user = BBUser.find_one({'reset_token': token})
     if user:
-        return user, BBUser
+        return user
     user = PatientUser.find_one({'reset_token': token})
     if user:
-        return user, PatientUser
-    return None, None
+        return user
+    return None
 
 # Route to handle password reset form submission
 @app.route('/submitNewPassword', methods=['POST'])
