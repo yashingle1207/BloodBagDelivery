@@ -501,7 +501,7 @@ def HBPForgotPassword():
 
         if existing_user:
             reset_token = str(uuid.uuid4())
-            reset_link = url_for('HospResetPassword', token=reset_token, _external=True)
+            reset_link = url_for('ResetPassword', token=reset_token, _external=True)
 
             # Determine which collection to update
             if existing_user in HospUser.find({'email': EmailId}):
