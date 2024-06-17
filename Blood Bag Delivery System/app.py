@@ -454,6 +454,73 @@ def payment_invoice():
 
 ###############################################################
 
+######################## Forget Password logic ##########################
+
+def send_password_reset_email(email, reset_link):
+    subject = 'Password Reset Request'
+    body = f'''<p>Dear User,</p>
+        <p>Forgot your password? Don't worry, you can reset it using the link provided below and following the instructions:</p>
+        <p>Click the link to reset your password: <a href="{reset_link}">{reset_link}</a></p>
+        <p>Instructions:</p>
+        <ol>
+            <li>Enter a new password of your choice.</li>
+            <li>Confirm the new password by entering it again.</li>
+            <li>Press Enter or click the reset button to complete the password reset process.</li>
+        </ol>
+        <p>Please note:</p>
+        <p>If this password reset request was not initiated by you, please do not click on the reset link. Contact us immediately for further assistance.</p>
+        <p>Best regards,<br>Team TransfusioTrack</p>
+    '''
+
+    message = MIMEMultipart()
+    message['From'] = EMAIL_FROM
+    message['To'] = email
+    message['Subject'] = subject
+    message.attach(MIMEText(body, 'html'))
+
+    with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+        server.starttls()
+        server.login(EMAIL_FROM, EMAIL_PASSWORD)
+        server.send_message(message)
+
+@app.route('/ForgotPassword', methods=['GET', 'POST'])
+def HBPForgotPassword():
+    if request.method == 'POST':
+        EmailId = request.form.get('EmailId')
+
+        # Check in Hospital Users
+        existing_user = HospUser.find_one({'email': EmailId})
+        
+        # If not found, check in Blood Bank Users
+        if not existing_user:
+            existing_user = BBUser.find_one({'email': EmailId})
+        
+        # If not found, check in Patient Users
+        if not existing_user:
+            existing_user = PatientUser.find_one({'email': EmailId})
+
+        if existing_user:
+            reset_token = str(uuid.uuid4())
+            reset_link = url_for('HospResetPassword', token=reset_token, _external=True)
+
+            # Determine which collection to update
+            if existing_user in HospUser.find({'email': EmailId}):
+                HospUser.update_one({'email': EmailId}, {'$set': {'reset_token': reset_token, 'token_expiration': datetime.now() + timedelta(hours=1)}})
+            elif existing_user in BBUser.find({'email': EmailId}):
+                BBUser.update_one({'email': EmailId}, {'$set': {'reset_token': reset_token, 'token_expiration': datetime.now() + timedelta(hours=1)}})
+            elif existing_user in PatientUser.find({'email': EmailId}):
+                PatientUser.update_one({'email': EmailId}, {'$set': {'reset_token': reset_token, 'token_expiration': datetime.now() + timedelta(hours=1)}})
+
+            # Send email with reset link and instructions
+            send_password_reset_email(EmailId, reset_link)
+
+            return render_template('PasswordResetEmailSent.html')
+        else:
+            return render_template('UserNotFound.html')
+
+    return render_template('HospitalForgotPassword.html')
+    
+########################################################################
 
 
 ################# Login Session##########################
