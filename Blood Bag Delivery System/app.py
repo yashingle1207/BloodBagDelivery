@@ -519,7 +519,70 @@ def HBPForgotPassword():
             return render_template('UserNotFound.html')
 
     return render_template('ForgotPassword.html')
-    
+
+
+######## submit new password logic ###################################
+
+# Function to find user in any of the collections by reset token
+def find_user_by_reset_token(token):
+    user = HospUser.find_one({'reset_token': token})
+    if not user:
+        user = BBUser.find_one({'reset_token': token})
+    if not user:
+        user = PatientUser.find_one({'reset_token': token})
+    return user
+
+# Route to handle password reset form submission
+@app.route('/submitNewPassword', methods=['POST'])
+def submit_new_password():
+    if request.method == 'POST':
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirmPassword')
+        reset_token = request.args.get('token')
+
+        if password != confirm_password:
+            flash('Passwords do not match!', 'error')
+            return redirect(request.referrer)
+
+        # Retrieve user based on reset token from any of the collections
+        user = find_user_by_reset_token(reset_token)
+
+        if user:
+            # Update user's password in the appropriate collection
+            if user in HospUser.find({'email': user['email']}):
+                HospUser.update_one({'email': user['email']}, {'$set': {'password': password}})
+            elif user in BBUser.find({'email': user['email']}):
+                BBUser.update_one({'email': user['email']}, {'$set': {'password': password}})
+            elif user in PatientUser.find({'email': user['email']}):
+                PatientUser.update_one({'email': user['email']}, {'$set': {'password': password}})
+
+            # Optional: Clear/reset the reset_token and token_expiration fields
+            if 'reset_token' in user:
+                collection = determine_collection(user['email'])
+                collection.update_one({'email': user['email']}, {'$unset': {'reset_token': '', 'token_expiration': ''}})
+
+            return render_template('PasswordResetSuccess.html')  # Redirect to password reset success page
+        else:
+            flash('Invalid or expired reset token!', 'error')
+            return redirect(request.referrer)
+
+    return redirect(url_for('index'))  # Redirect to homepage if not a POST request
+
+# Function to determine the collection based on the user email
+def determine_collection(email):
+    if HospUser.find({'email': email}):
+        return HospUser
+    elif BBUser.find({'email': email}):
+        return BBUser
+    elif PatientUser.find({'email': email}):
+        return PatientUser
+
+
+@app.route('/ResetPassword')
+def PassReset():
+    return render_template('NewPasswordReset.html')
+
+
 ########################################################################
 
 
