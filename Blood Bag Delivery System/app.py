@@ -527,14 +527,14 @@ def HBPForgotPassword():
 def find_user_by_reset_token(token):
     user = HospUser.find_one({'reset_token': token})
     if user:
-        return user
+        return user, HospUser
     user = BBUser.find_one({'reset_token': token})
     if user:
-        return user
+        return user, BBUser
     user = PatientUser.find_one({'reset_token': token})
     if user:
-        return user
-    return None
+        return user, PatientUser
+    return None, None
 
 # Route to handle password reset form submission
 @app.route('/submitNewPassword', methods=['POST'])
@@ -551,7 +551,7 @@ def submit_new_password():
         # Retrieve user and the corresponding collection based on reset token from any of the collections
         user, collection = find_user_by_reset_token(reset_token)
 
-        if user and collection:
+        if user is not None and collection is not None:
             user_id = user['_id']
             # Update user's password in the appropriate collection
             collection.update_one({'_id': user_id}, {'$set': {'password': password}})
@@ -565,7 +565,7 @@ def submit_new_password():
             return redirect(request.referrer)
 
     return redirect(url_for('index'))  # Redirect to homepage if not a POST request
-
+    
 # Function to determine the collection based on the user email
 def determine_collection(email):
     if HospUser.find({'email': email}):
