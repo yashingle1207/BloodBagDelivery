@@ -487,21 +487,27 @@ def send_password_reset_email(email, reset_link):
 def HBPForgotPassword():
     if request.method == 'POST':
         EmailId = request.form.get('EmailId')
+        print(f"Email entered: {EmailId}")
 
         # Check in Hospital Users
         existing_user = HospUser.find_one({'email': EmailId})
+        print(f"Existing user in Hospital Users: {existing_user}")
         
         # If not found, check in Blood Bank Users
         if not existing_user:
             existing_user = BBUser.find_one({'email': EmailId})
+            print(f"Existing user in Blood Bank Users: {existing_user}")
         
         # If not found, check in Patient Users
         if not existing_user:
             existing_user = PatientUser.find_one({'email': EmailId})
+            print(f"Existing user in Patient Users: {existing_user}")
 
         if existing_user:
             reset_token = str(uuid.uuid4())
             reset_link = url_for('ResetPassword', token=reset_token, _external=True)
+            print(f"Reset token generated: {reset_token}")
+            print(f"Reset link generated: {reset_link}")
 
             # Determine which collection to update
             if existing_user in HospUser.find({'email': EmailId}):
@@ -510,15 +516,20 @@ def HBPForgotPassword():
                 BBUser.update_one({'email': EmailId}, {'$set': {'reset_token': reset_token, 'token_expiration': datetime.now() + timedelta(hours=1)}})
             elif existing_user in PatientUser.find({'email': EmailId}):
                 PatientUser.update_one({'email': EmailId}, {'$set': {'reset_token': reset_token, 'token_expiration': datetime.now() + timedelta(hours=1)}})
+            
+            print("User found and reset token updated.")
 
             # Send email with reset link and instructions
             send_password_reset_email(EmailId, reset_link)
+            print("Password reset email sent.")
 
             return render_template('PasswordResetEmailSent.html')
         else:
+            print("User not found.")
             return render_template('UserNotFound.html')
 
     return render_template('ForgotPassword.html')
+
 
 
 ######## submit new password logic ###################################
@@ -536,13 +547,15 @@ def find_user_by_reset_token(token):
         return user, PatientUser
     return None, None
 
-# Route to handle password reset form submission
 @app.route('/submitNewPassword', methods=['POST'])
 def submit_new_password():
     if request.method == 'POST':
         password = request.form.get('password')
         confirm_password = request.form.get('confirmPassword')
         reset_token = request.args.get('token')
+
+        print(f"Reset token received: {reset_token}")
+        print(f"Password entered: {password}")
 
         if password != confirm_password:
             flash('Passwords do not match!', 'error')
@@ -553,11 +566,15 @@ def submit_new_password():
 
         if user is not None and collection is not None:
             user_id = user['_id']
+            print(f"User found with ID: {user_id}")
+
             # Update user's password in the appropriate collection
             collection.update_one({'_id': user_id}, {'$set': {'password': password}})
+            print("Password updated successfully.")
 
             # Optional: Clear/reset the reset_token and token_expiration fields
             collection.update_one({'_id': user_id}, {'$unset': {'reset_token': '', 'token_expiration': ''}})
+            print("Reset token and expiration cleared.")
 
             return render_template('PasswordResetSuccess.html')  # Redirect to password reset success page
         else:
@@ -565,6 +582,7 @@ def submit_new_password():
             return redirect(request.referrer)
 
     return redirect(url_for('index'))  # Redirect to homepage if not a POST request
+
     
 # Function to determine the collection based on the user email
 def determine_collection(email):
