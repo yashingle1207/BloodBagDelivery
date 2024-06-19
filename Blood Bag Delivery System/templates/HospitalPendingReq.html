@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <!-- custom css file link  -->
-    <link rel="stylesheet" href="static/style.css">
-    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/LogoTT.png') }}">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
@@ -347,21 +347,27 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
+    // Get today's date
+    const today = new Date().toISOString().split('T')[0];
+
     flatpickr("#dateFrom", {
         dateFormat: "Y-m-d",
         maxDate: "today",
+        defaultDate: today, // Set default date to today
         onChange: function(selectedDates, dateStr, instance) {
             flatpickr("#dateTo", {
                 minDate: dateStr,
                 dateFormat: "Y-m-d",
-                maxDate: "today"
+                maxDate: "today",
+                defaultDate: today // Set default date to today
             });
         }
     });
 
     flatpickr("#dateTo", {
         dateFormat: "Y-m-d",
-        maxDate: "today"
+        maxDate: "today",
+        defaultDate: today // Set default date to today
     });
 </script>
 
