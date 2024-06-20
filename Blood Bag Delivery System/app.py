@@ -1511,7 +1511,7 @@ def verify_otp():
 
             # Get patient details
             patient_fname = order.get('fname')
-            patient_mname = order.get('pmname')
+            patient_mname = order.get('mname')
             patient_lname = order.get('lname')
 
             # Get additional details
@@ -1699,13 +1699,14 @@ def otp_verification():
             if order:
                 # Fetch patient and order details
                 patient_fname = order.get('fname')
+                patient_mname = order.get('mname')
                 patient_lname = order.get('lname')
                 blood_grp = order.get('BloodGrp')
                 blood_comp = order.get('BloodComp')
                 blood_quantity = order.get('BloodQuantity')
 
                 return render_template('delivery_otp_verification.html', order_id=order_id,
-                                       patient_fname=patient_fname, patient_lname=patient_lname,
+                                       patient_fname=patient_fname, patient_mname = patient_mname, patient_lname=patient_lname,
                                        blood_grp=blood_grp, blood_comp=blood_comp, blood_quantity=blood_quantity)
             else:
                 # Order not found
