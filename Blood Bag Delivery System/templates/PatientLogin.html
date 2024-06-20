@@ -19,45 +19,59 @@
         .checkbox-container {
             display: flex;
             align-items: center;
-            margin-top: 10px; /* Adjust margin as needed */
-            margin-bottom: 15px; /* Add bottom margin for spacing */
+            margin-top: 10px;
+            margin-bottom: 15px;
         }
 
         .checkbox-container input[type="checkbox"] {
-            margin-right: 10px; /* Space between checkbox and text */
-            width: 20px; /* Adjust size of the checkbox */
-            height: 20px; /* Adjust size of the checkbox */
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
         }
 
         .checkbox-container label {
             font-size: 16px;
-            display: inline-block; /* Ensure the label takes up the necessary space */
+            display: inline-block;
         }
 
         .checkbox-container a {
-            color: #007bff; /* Link color */
+            color: #007bff;
             text-decoration: underline;
-            margin-left: 5px; /* Space between links */
+            margin-left: 5px;
         }
 
         .form-container input {
             background-color: #eee;
             border: none;
             font-size: 18px;
-            padding: 12px 15px; /* Adjusted padding for input fields */
-            margin: 8px 0; /* Adjusted margin between input fields */
+            padding: 12px 15px;
+            margin: 8px 0;
             width: 100%;
             border-radius: 4px;
             box-sizing: border-box;
         }
 
-        /* Adjusted style for smaller screens */
         @media only screen and (max-width: 768px) {
             .form-container input {
-                padding: 10px 13px; /* Adjusted padding for smaller screens */
-                margin: 6px 0; /* Adjusted margin for smaller screens */
-                font-size: 16px; /* Adjusted font size for smaller screens */
+                padding: 10px 13px;
+                margin: 6px 0;
+                font-size: 16px;
             }
+        }
+
+        .input-container {
+            position: relative;
+            width: 100%;
+            margin-bottom: 4px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 18px;
         }
 
     </style>
@@ -74,7 +88,12 @@
 
                     <input type="text" id="patientName" name="patientName" placeholder="Your Full Name" required />
                     <input type="email" id="patientEmailId" name="patientEmailId" placeholder="Email ID" required />
-                    <input type="password" id="patientPassword" name="patientPassword" placeholder="Password" required />
+
+                    <div class="input-container">
+                        <input type="password" id="patientPassword" name="patientPassword" placeholder="Password" required />
+                        <i class="fas fa-eye-slash toggle-password" onclick="togglePasswordVisibility(event, 'patientPassword')"></i>
+                    </div>
+
                     <input type="tel" id="patientContactNum" name="patientContactNum" placeholder="Contact Number" required />
                     <input type="text" id="patientAddress" name="patientAddress" placeholder="Address" required />
                     <input type="text" id="patientCity" name="patientCity" placeholder="City" required />
@@ -95,22 +114,26 @@
                     <span>or Create your account</span>
 
                     <input type="email" id="patientEmailId1" name="patientEmailId1" placeholder="Enter EmailID" required />
-                    <input type="password" id="patientPassword1" name="patientPassword1" placeholder="Enter Password" required />
+                    <div class="input-container">
+                        <input type="password" id="patientPassword1" name="patientPassword1" placeholder="Enter Password" required />
+                        <i class="fas fa-eye-slash toggle-password" onclick="togglePasswordVisibility(event, 'patientPassword1')"></i>
+                    </div>
 
                     <a href="/ForgotPassword">Forgot your password?</a>
                     <button>Sign In</button>
                 </form>
             </div>
+
             <div class="overlay-container">
                 <div class="overlay">
                     <div class="overlay-panel overlay-left">
                         <h1>Welcome Back!</h1>
-                        <p>To keep connected with us please login with your personal info</p>
+                        <p>To stay connected with us, please login with your personal info</p>
                         <button class="ghost" id="signIn">Sign In</button>
                     </div>
                     <div class="overlay-panel overlay-right">
                         <h1>Hello, Blood Receiver!</h1>
-                        <p>Enter your details and start journey with us</p>
+                        <p>Enter your details and start your journey with us</p>
                         <button class="ghost" id="signUp">Sign Up</button>
                     </div>
                 </div>
@@ -118,6 +141,21 @@
         </div>
 
         <script src="static/js/script1.js"></script>
+
+        <script>
+            function togglePasswordVisibility(event, inputId) {
+                var passwordInput = document.getElementById(inputId);
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    event.currentTarget.classList.remove("fa-eye-slash");
+                    event.currentTarget.classList.add("fa-eye");
+                } else {
+                    passwordInput.type = "password";
+                    event.currentTarget.classList.remove("fa-eye");
+                    event.currentTarget.classList.add("fa-eye-slash");
+                }
+            }
+        </script>
 
     </section>
 
