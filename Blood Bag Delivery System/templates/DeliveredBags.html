@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delivered Blood Bags</title>
-
+    <title>Order History</title>
     <!-- Font Awesome CDN link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
-    <!-- Custom CSS file link -->
+    <!-- Link to CSS files -->
     <link rel="stylesheet" href="static/style.css">
-    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
-    
+    <link rel="icon" href="static/images/LogoTT.png" type="image/png">
+    <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <style>
@@ -23,8 +21,7 @@
             margin: 10px auto;
         }
 
-        th,
-        td {
+        th, td {
             border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
@@ -35,19 +32,43 @@
 
         th {
             background-color: #f2f2f2;
-            width: 150px; /* Adjust the width as needed for larger screens */
+            width: 150px; /* Allow the width to adjust based on content */
         }
 
         /* Media query for smaller screens */
         @media (max-width: 768px) {
             /* Hide columns with data-hide="true" on smaller screens */
-            th[data-hide="true"],
-            td[data-hide="true"] {
+            th[data-hide="true"], td[data-hide="true"] {
                 display: none;
             }
         }
 
-        /* Filter and Sort Order Styles */
+        .sort-order-container {
+            text-align: left;
+            margin: 20px;
+            margin-left: 70px;
+            margin-bottom: 50px;
+        }
+
+        .sort-order-container label {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        .sort-order-container select {
+            padding: 8px 12px;
+            font-size: 16px;
+            border: 1px solid #dddddd;
+            border-radius: 4px;
+            background-color: #f2f2f2;
+            transition: background-color 0.3s ease;
+        }
+
+        .sort-order-container select:focus {
+            outline: none;
+            background-color: #e2e2e2;
+        }
+
         .filter-sort-container {
             text-align: left;
         }
@@ -78,7 +99,7 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 20px;
-            margin-top:20px;
+            margin-top: 20px;
         }
 
         .filter-sort-container {
@@ -123,7 +144,7 @@
 
         /* Custom Flatpickr styles */
         .flatpickr-calendar {
-            border: 1px solid
+            border: 1px solid;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
@@ -160,29 +181,34 @@
         }
 
         .flatpickr-day.selected {
-            background-color:  #ff4757;
+            background-color: #ff4757;
             color: #ffffff;
             border-radius: 50%;
         }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f2f2f2;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #333;
+        }
     </style>
 </head>
-
 <body>
     <div class="container">
         <header>
             <a href="/" class="logo">Transfusio<span>Track</span></a>
             <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
-         
             <nav class="navbar" id="navbar">
-              {% if 'bb_reg_no' in session %}
-                    <a href="/MyBB_Acct">Blood Bank ID: {{ session['bb_name'] }}</a>
-                    <a href="/BBDashboard">BloodBank Dashboard</a>
-              {% endif %}  
-    
-             <a href="/">Logout</a>
+                {% if 'hosp_reg_no' in session %}
+                    <a href="/MyHosp_Acct">User ID: {{ facility_name }}</a>
+                {% endif %}
+                <a href="/HospDashboard">Hospital Dashboard</a>
+                <a href="/">Logout</a>
             </nav>
-    </header>
-
+        </header>
 
         <script>
             function toggleNavbar() {
@@ -196,7 +222,7 @@
 
             function changeSortOrder() {
                 var sortOrder = document.getElementById("sortOrder").value;
-                window.location.href = "/dispatched?sort=" + sortOrder;
+                window.location.href = "/delorder1?sort=" + sortOrder;
             }
 
             function applyFilters() {
@@ -207,21 +233,46 @@
                 url.searchParams.set('dateTo', dateTo);
                 window.location.href = url.toString();
             }
+
+            // Function to get today's date in 'Y-m-d' format
+            function getTodayDate() {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const todayDate = getTodayDate();
+                document.getElementById("dateFrom").placeholder = todayDate;
+                document.getElementById("dateTo").placeholder = todayDate;
+
+                flatpickr("#dateFrom", {
+                    dateFormat: "Y-m-d",
+                    maxDate: "today",
+                    defaultDate: todayDate,
+                    onChange: function(selectedDates, dateStr, instance) {
+                        flatpickr("#dateTo", {
+                            minDate: dateStr,
+                            dateFormat: "Y-m-d",
+                            maxDate: "today",
+                            defaultDate: todayDate
+                        });
+                    }
+                });
+
+                flatpickr("#dateTo", {
+                    dateFormat: "Y-m-d",
+                    maxDate: "today",
+                    defaultDate: todayDate
+                });
+            });
         </script>
 
+        <h1 class="heading">Order History</h1>
 
-        <h1 class="heading">Delivered Blood Bags</h1>
-        <!-- Heading for order status -->
-             <div class="filter-container">
-<!--                 <div class="filter-sort-container">
-                    <label for="sortOrder">Sort By:</label>
-                    <select id="sortOrder">
-                        <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>Newest Orders First</option>
-                        <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>Oldest Orders First</option>
-                    </select>
-                </div> -->
-    
-      
+        <div class="filter-container">
             <div class="date-filter-container">
                 <label for="dateFrom">From:</label>
                 <input type="text" id="dateFrom" placeholder="Select date">
@@ -231,49 +282,31 @@
             </div>
         </div>
 
-
         <table>
             <tr>
-                <th style="width: 150px;">User Name</th>
-                <th style="width: 150px;">User Address</th>
-                <th style="width: 150px;">User Contact No.</th>
-                <th style="width: 150px;">Doctor Name</th>
-                <th style="width: 150px;">Blood Group</th>
-                <th style="width: 150px;">Component</th>
-                <th style="width: 150px;">Quantity</th>
-<!--                 <th style="width: 150px;" data-hide="true">Request Type</th> -->
-                <th style="width: 150px;">First Name</th>
-<!--                 <th style="width: 150px;" data-hide="true">Middle Name</th> -->
-                <th style="width: 150px;">Last Name</th>
-                <th style="width: 150px;">Age</th>
-<!--                 <th style="width: 150px;" data-hide="true">Ward</th>
-                <th style="width: 150px;" data-hide="true">Bed Number</th> -->
-                <th style="width: 150px;">Gender</th>
-                <th style="width: 150px;" data-hide="true">Time of Placing Order</th>
-                  <th style="width: 150px;" data-hide="true">Time of Dispatch</th>
-                 <th style="width: 150px;" data-hide="true">Time of Delivery</th>
+                <th>BloodBank Name</th>
+                <th>BloodBank Address</th>
+                <th>BloodBank City</th>
+                <th>BloodBank State</th>
+                <th>Order Number</th>
+                <th>Order Date</th>
+                <th>Order Status</th>
+                <th data-hide="true">Order Delivery Date</th>
+                <th data-hide="true">Order Total</th>
+                <th data-hide="true">Order Description</th>
             </tr>
-
-            {% for order in orders %}
+            {% for data in data %}
             <tr>
-                <td>{{ order.user_name }}</td>
-                <td>{{ order.user_address }}</td>
-                <td>{{ order.phone_number }}</td>
-                 <td>{{ order.docname }}</td>
-                <td>{{ order.BloodGrp }}</td>
-                <td>{{ order.BloodComp }}</td>
-                <td>{{ order.BloodQuantity }}</td>
-<!--                 <td data-hide="true">{{ order.req_type }}</td> -->
-                <td>{{ order.fname }}</td>
-<!--                 <td data-hide="true">{{ order.mname }}</td> -->
-                <td>{{ order.lname }}</td>
-                <td>{{ order.age }}</td>
-<!--                 <td data-hide="true">{{ order.ward }}</td>
-                <td data-hide="true">{{ order.bedno }}</td> -->
-                <td>{{ order.gender }}</td>
-                <td data-hide="true">{{ order.timestamp }}</td>
-                 <td data-hide="true">{{ order.timeofdispatch }}</td>
-                <td data-hide="true">{{ order.timeofdelivery }}</td>
+                <td>{{ data.BloodBank_name }}</td>
+                <td>{{ data.BloodBank_address }}</td>
+                <td>{{ data.BloodBank_city }}</td>
+                <td>{{ data.BloodBank_state }}</td>
+                <td>{{ data.Order_number }}</td>
+                <td>{{ data.Order_date }}</td>
+                <td>{{ data.Order_status }}</td>
+                <td data-hide="true">{{ data.Order_delivery_date }}</td>
+                <td data-hide="true">{{ data.Order_total }}</td>
+                <td data-hide="true">{{ data.Order_description }}</td>
             </tr>
             {% endfor %}
         </table>
@@ -284,27 +317,7 @@
         </section>
     </div>
 
-    <!-- Flatpickr JS -->
+    <!-- Flatpickr JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-    <script>
-        flatpickr("#dateFrom", {
-            dateFormat: "Y-m-d",
-            maxDate: "today",
-            onChange: function(selectedDates, dateStr, instance) {
-                flatpickr("#dateTo", {
-                    minDate: dateStr,
-                    dateFormat: "Y-m-d",
-                    maxDate: "today"
-                });
-            }
-        });
-
-        flatpickr("#dateTo", {
-            dateFormat: "Y-m-d",
-            maxDate: "today"
-        });
-    </script>
 </body>
-
 </html>
