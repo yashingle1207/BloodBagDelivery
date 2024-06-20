@@ -256,6 +256,41 @@
             detailsRow.classList.toggle('active');
         }
     }
+
+     // Function to get today's date in 'Y-m-d' format
+            function getTodayDate() {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const todayDate = getTodayDate();
+                document.getElementById("dateFrom").placeholder = todayDate;
+                document.getElementById("dateTo").placeholder = todayDate;
+
+                flatpickr("#dateFrom", {
+                    dateFormat: "Y-m-d",
+                    maxDate: "today",
+                    defaultDate: todayDate,
+                    onChange: function(selectedDates, dateStr, instance) {
+                        flatpickr("#dateTo", {
+                            minDate: dateStr,
+                            dateFormat: "Y-m-d",
+                            maxDate: "today",
+                            defaultDate: todayDate
+                        });
+                    }
+                });
+
+                flatpickr("#dateTo", {
+                    dateFormat: "Y-m-d",
+                    maxDate: "today",
+                    defaultDate: todayDate
+                });
+            });
 </script>
 
 <h1 class="heading">Order Status</h1>
@@ -345,7 +380,8 @@
 
 <!-- Flatpickr JS -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
+    
+<!-- 
 <script>
     flatpickr("#dateFrom", {
         dateFormat: "Y-m-d",
@@ -363,7 +399,7 @@
         dateFormat: "Y-m-d",
         maxDate: "today"
     });
-</script>
+</script> -->
 
 </body>
 </html>
