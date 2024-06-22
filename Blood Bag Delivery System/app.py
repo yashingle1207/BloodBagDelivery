@@ -2634,28 +2634,30 @@ def Hosp_Blood_bag_inProgress():
 
     filter_conditions = {'User_ID': hosp_reg_no}
 
-    # Set default date range to today if no date filters are provided
-    if not date_from or not date_to:
+    if date_from and date_to:
+        try:
+            # Convert date_from and date_to to datetime objects
+            date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
+            date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
+
+            # Filter based on the date part of the string
+            filter_conditions['$expr'] = {
+                '$and': [
+                    {'$gte': [{'$substr': ['$timestamp', 0, 10]}, date_from]},
+                    {'$lte': [{'$substr': ['$timestamp', 0, 10]}, date_to]}
+                ]
+            }
+        except ValueError:
+            # Handle invalid date format by setting the filter to current day
+            date_from = date_to = datetime.today().strftime("%Y-%m-%d")
+            filter_conditions['$expr'] = {
+                '$eq': [{'$substr': ['$timestamp', 0, 10]}, date_from]
+            }
+    else:
+        # Set the filter for the current day if no date filters are provided
         today_str = datetime.today().strftime("%Y-%m-%d")
-        date_from = date_to = today_str
-
-    try:
-        # Convert date_from and date_to to datetime objects
-        date_from_dt = datetime.strptime(date_from, "%Y-%m-%d")
-        date_to_dt = datetime.strptime(date_to, "%Y-%m-%d")
-
-        # Filter based on the date part of the string
         filter_conditions['$expr'] = {
-            '$and': [
-                {'$gte': [{'$substr': ['$timestamp', 0, 10]}, date_from]},
-                {'$lte': [{'$substr': ['$timestamp', 0, 10]}, date_to]}
-            ]
-        }
-    except ValueError:
-        # Handle invalid date format by setting the filter to current day
-        date_from = date_to = datetime.today().strftime("%Y-%m-%d")
-        filter_conditions['$expr'] = {
-            '$eq': [{'$substr': ['$timestamp', 0, 10]}, date_from]
+            '$eq': [{'$substr': ['$timestamp', 0, 10]}, today_str]
         }
 
     # Query MongoDB to get all orders and sort them by timestamp
@@ -2692,6 +2694,7 @@ def Hosp_Blood_bag_inProgress():
     session['facility_name'] = facility_name
 
     return render_template('HospitalPendingReq.html', orders=order_list, sort_order=sort_order, date_from=date_from, date_to=date_to, facility_name=facility_name)
+
 
 
 ##############################
