@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <!-- custom css file link  -->
-    <link rel="stylesheet" href="static/style.css">
+     <link rel="stylesheet" href="static/style.css">
     <link rel="icon" type="image/png" href="static/images/LogoTT.png">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -206,6 +206,7 @@
             color: #ffffff;
             border-radius: 50%;
         }
+
     </style>
 </head>
 <body>
@@ -215,13 +216,13 @@
 <header>
     <a href="/" class="logo">Transfusio<span>Track</span></a>
     <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
-    <nav class="navbar" id="navbar">
-        {% if 'hosp_reg_no' in session %}
-            <a href="/MyHosp_Acct">User ID: {{ facility_name }}</a>
-        {% endif %}
-        <a href="/HospDashboard">Hospital Dashboard</a>
-        <a href="/">Logout</a>
-    </nav>
+          <nav class="navbar" id="navbar">
+                {% if 'hosp_reg_no' in session %}
+                    <a href="/MyHosp_Acct">User ID: {{ facility_name }}</a>
+                {% endif %}
+                <a href="/HospDashboard">Hospital Dashboard</a>
+                <a href="/">Logout</a>
+            </nav>
 </header>
 
 <script>
@@ -232,6 +233,11 @@
         } else {
             navbar.classList.add("active");
         }
+    }
+
+    function changeSortOrder() {
+        var sortOrder = document.getElementById("sortOrder").value;
+        window.location.href = "/dispatched?sort=" + sortOrder;
     }
 
     function applyFilters() {
@@ -251,13 +257,6 @@
             detailsRow.classList.toggle('active');
         }
     }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById("dateFrom").value = today;
-        document.getElementById("dateTo").value = today;
-        applyFilters();
-    });
 </script>
 
 <h1 class="heading">Order Status</h1>
@@ -291,49 +290,49 @@
     </tr>
 
     {% for order in orders %}
-    <tr onclick="toggleOrderDetails(event)">
-        <td>{{ order.user_name }}</td>
-        <td>{{ order.user_address }}</td>
-        <td>{{ order.phone_number }}</td>
-        <td>{{ order.BloodGrp }}</td>
-        <td>{{ order.BloodComp }}</td>
-        <td>{{ order.BloodQuantity }}</td>
-        <td>{{ order.req_type }}</td>
-        <td>{{ order.docname }}</td>
-        <td>{{ order.fname }}</td>
-        <td data-hide="true">{{ order.mname }}</td>
-        <td>{{ order.lname }}</td>
-        <td>{{ order.age }}</td>
-        <td>{{ order.gender }}</td>
-        <td>{{ order.timestamp }}</td>
-    </tr>
-    <tr class="order-details">
-        <td colspan="14">
-            <div class="status-icons-container">
-                <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">Order Status</h2>
+        <tr onclick="toggleOrderDetails(event)">
+            <td>{{ order.user_name }}</td>
+            <td>{{ order.user_address }}</td>
+            <td>{{ order.phone_number }}</td>
+            <td>{{ order.BloodGrp }}</td>
+            <td>{{ order.BloodComp }}</td>
+            <td>{{ order.BloodQuantity }}</td>
+            <td>{{ order.req_type }}</td>
+            <td>{{ order.docname }}</td>
+            <td>{{ order.fname }}</td>
+            <td data-hide="true">{{ order.mname }}</td>
+            <td>{{ order.lname }}</td>
+            <td>{{ order.age }}</td>
+            <td>{{ order.gender }}</td>
+            <td>{{ order.timestamp }}</td>
+        </tr>
+        <tr class="order-details">
+            <td colspan="14">
+                <div class="status-icons-container">
+                    <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">Order Status</h2>
 
-                <div class="status-icons">
-                    <i class="fas fa-check{% if order.status == 'undelivered' or order.status == 'dispatched' or order.status == 'delivered' %} green{% endif %}"></i>
-                    <i class="fas fa-minus line{% if order.status == 'dispatched' or order.status == 'delivered' %} green{% endif %}"></i>
-                    <i class="fas fa-truck{% if order.status == 'dispatched' or order.status == 'delivered' %} green{% endif %}"></i>
-                    <i class="fas fa-minus line{% if order.status == 'delivered' %} green{% endif %}"></i>
-                    <i class="fas fa-check-circle{% if order.status == 'delivered' %} green{% endif %}"></i>
+                    <div class="status-icons">
+                        <i class="fas fa-check{% if order.status == 'undelivered' or order.status == 'dispatched' or order.status == 'delivered' %} green{% endif %}"></i>
+                        <i class="fas fa-minus line{% if order.status == 'dispatched' or order.status == 'delivered' %} green{% endif %}"></i>
+                        <i class="fas fa-truck{% if order.status == 'dispatched' or order.status == 'delivered' %} green{% endif %}"></i>
+                        <i class="fas fa-minus line{% if order.status == 'delivered' %} green{% endif %}"></i>
+                        <i class="fas fa-check-circle{% if order.status == 'delivered' %} green{% endif %}"></i>
+                    </div>
+                    <!-- Description for order status -->
+                    <div style="display: flex; justify-content: center;">
+                        <p style="margin: 5px; margin-right: 250px; margin-left: 20px;">
+                            <span style="font-weight: bold;">Order Placed</span>
+                        </p>
+                        <p style="margin: 5px; margin-right: 280px; margin-left: 60px;">
+                            <span style="font-weight: bold;">Order Dispatched</span>
+                        </p>
+                        <p style="margin: 5px;">
+                            <span style="font-weight: bold;">Order Delivered</span>
+                        </p>
+                    </div>
                 </div>
-                <!-- Description for order status -->
-                <div style="display: flex; justify-content: center;">
-                    <p style="margin: 5px; margin-right: 250px; margin-left: 20px;">
-                        <span style="font-weight: bold;">Order Placed</span>
-                    </p>
-                    <p style="margin: 5px; margin-right: 280px; margin-left: 60px;">
-                        <span style="font-weight: bold;">Order Dispatched</span>
-                    </p>
-                    <p style="margin: 5px;">
-                        <span style="font-weight: bold;">Order Delivered</span>
-                    </p>
-                </div>
-            </div>
-        </td>
-    </tr>
+            </td>
+        </tr>
     {% endfor %}
 </table>
 
@@ -348,16 +347,19 @@
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
+    // Get today's date
+    const today = new Date().toISOString().split('T')[0];
+
     flatpickr("#dateFrom", {
         dateFormat: "Y-m-d",
         maxDate: "today",
-        defaultDate: new Date(), // Set default date to today
+        defaultDate: today, // Set default date to today
         onChange: function(selectedDates, dateStr, instance) {
             flatpickr("#dateTo", {
                 minDate: dateStr,
                 dateFormat: "Y-m-d",
                 maxDate: "today",
-                defaultDate: new Date() // Set default date to today
+                defaultDate: today // Set default date to today
             });
         }
     });
@@ -365,7 +367,7 @@
     flatpickr("#dateTo", {
         dateFormat: "Y-m-d",
         maxDate: "today",
-        defaultDate: new Date() // Set default date to today
+        defaultDate: today // Set default date to today
     });
 </script>
 
