@@ -1035,6 +1035,7 @@ def admin_dashboard():
 
 
 
+
 # @app.route('/admin_dashboard')
 # def admin_dashboard():
 #     # Fetch blood bank names
