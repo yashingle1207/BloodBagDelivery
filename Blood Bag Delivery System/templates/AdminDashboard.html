@@ -4,80 +4,266 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
+
+    <!-- Font Awesome CDN link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- Custom CSS file link -->
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        /* General table styles */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 90%;
+            margin: 10px auto;
         }
-        h1, h2 {
-            color: #333;
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+            font-size: 16px;
+            white-space: normal;
+            word-wrap: break-word;
         }
-        form {
+
+        th {
+            background-color: #f2f2f2;
+            width: 150px;
+        }
+
+        th.commission-fee, td.commission-fee {
+            width: 100px;
+        }
+
+        /* Media query for smaller screens */
+        @media (max-width: 768px) {
+            th[data-hide="true"], td[data-hide="true"] {
+                display: none;
+            }
+        }
+
+        h1 {
+            font-size: 50px;
+            margin-top: 15px;
+            margin-bottom: 35px;
+        }
+
+        .container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 100%;
+            margin: 20px auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .btn {
+            background-color: #ff4757;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #e84347;
+        }
+
+        .filter-sort-container {
+            text-align: left;
+        }
+
+        .filter-sort-container label {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        .filter-sort-container select,
+        .filter-sort-container input {
+            padding: 8px 12px;
+            font-size: 16px;
+            border: 1px solid #dddddd;
+            border-radius: 4px;
+            background-color: #f2f2f2;
+            transition: background-color 0.3s ease;
+        }
+
+        .filter-sort-container select:focus,
+        .filter-sort-container input:focus {
+            outline: none;
+            background-color: #e2e2e2;
+        }
+
+        .filter-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin-bottom: 20px;
         }
-        label {
+
+        .filter-sort-container {
+            margin-right: 20px;
+        }
+
+        .date-filter-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .date-filter-container label {
+            font-size: 18px;
             margin-right: 10px;
         }
-        input, select, button {
-            margin-right: 10px;
-            padding: 5px;
+
+        .date-filter-container input {
+            padding: 8px 12px;
+            font-size: 16px;
+            border: 1px solid #dddddd;
+            border-radius: 4px;
+            background-color: #f2f2f2;
+            transition: background-color 0.3s ease;
+            width: 150px;
+            box-sizing: border-box;
         }
-        .transaction {
-            border: 1px solid #ccc;
-            padding: 10px;
-            margin-bottom: 10px;
+
+        .date-filter-container input:focus {
+            outline: none;
+            background-color: #e2e2e2;
+        }
+
+        .btn {
+            background-color: #ff4757;
+            color: white;
+            padding: 10px 20px;
+            border: none;
             border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-        .transaction h3 {
-            margin-top: 0;
-        }
-        .transaction p {
-            margin: 5px 0;
+            cursor: pointer;
+            margin: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>Admin Dashboard</h1>
-    <div>
-        <form method="get">
-            <label for="dateFrom">Date From:</label>
-            <input type="date" id="dateFrom" name="dateFrom">
-            <label for="dateTo">Date To:</label>
-            <input type="date" id="dateTo" name="dateTo">
-            <label for="bloodBank">Blood Bank:</label>
-            <select id="bloodBank" name="bloodBank">
-                <option value="">All</option>
-                {% for bank in blood_banks %}
-                    <option value="{{ bank.reg_num }}">{{ bank.bb_name }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit">Filter</button>
-        </form>
+
+<div class="container">
+<header>
+    <a href="/" class="logo">Transfusio<span>Track</span></a>
+    <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
+    <nav class="navbar" id="navbar">
+        <a href="/admin_dashboard">Admin Dashboard</a>
+        <a href="/settled">Settled Payments</a>
+        <a href="/AdminLogin">Logout</a>
+    </nav>
+</header>
+
+<h1 class="heading">Welcome To Admin Dashboard</h1>
+
+<!-- Filter Container -->
+<div class="filter-container">
+    <!-- Blood Bank Dropdown -->
+    <div class="filter-sort-container">
+        <label for="bloodBank">Select Blood Bank:</label>
+        <select id="bloodBank">
+            <option value="">All Blood Banks</option>
+            {% for bank in blood_banks %}
+                <option value="{{ bank.reg_num }}">{{ bank.bb_name }}</option>
+            {% endfor %}
+        </select>
     </div>
-    <div>
-        <h2>Transactions</h2>
-        {% for date, components in transactions.items() %}
-            <div>
-                <h3>Date: {{ date }}</h3>
-                {% for component, orders in components.items() %}
-                    <div class="transaction">
-                        <h4>Component: {{ component }}</h4>
-                        <p>Total Quantity Sold: {{ orders.total_quantity_sold }}</p>
-                        <p>Price Per Unit: {{ orders.price_per_unit }}</p>
-                        <p>Total Amount Per Component: {{ orders.total_amount_per_component }}</p>
-                        <p>Total Amount Payable: {{ orders.total_amount_payable }}</p>
-                        {% for order in orders.order_list %}
-                            <p>Blood Bank: {{ order.blood_bank_name }}</p>
-                            <p>Address: {{ order.address }}</p>
-                            <p>Contact: {{ order.contact_no }}</p>
-                            <p>Quantity Sold: {{ order.quantity_sold }}</p>
-                            <p>Total Amount Payable: {{ order.total_amount_payable }}</p>
-                            <p>Time of Delivery: {{ order.timeofdelivery }}</p>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-            </div>
+    <!-- Date Filters -->
+    <div class="date-filter-container">
+        <label for="dateFrom">From:</label>
+        <input type="text" id="dateFrom">
+        <label for="dateTo">To:</label>
+        <input type="text" id="dateTo">
+        <button class="btn" onclick="applyFilters()">Apply Filters</button>
+    </div>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Blood Bank</th>
+            <th>Address</th>
+            <th>Contact No.</th>
+            <th>Component</th>
+            <th>Quantity Sold</th>
+            <th>Price Per Unit</th>
+            <th>Total Amount per Component</th>
+            <th>Total Amount Payable</th>
+            <th>Time of Delivery</th>
+            <th>Date of Delivery</th>
+            <th class="commission-fee">Commission Fee</th>
+            <th>Settle Payment</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.blood_bank_name }}</td>
+                <td>{{ transaction.address }}</td>
+                <td>{{ transaction.contact_no }}</td>
+                <td>{{ transaction.component }}</td>
+                <td>{{ transaction.quantity_sold }}</td>
+                <td>{{ transaction.price_per_unit }}</td>
+                <td>{{ transaction.total_amount_per_component }}</td>
+                <td>{{ transaction.total_amount_payable }}</td>
+                <td>{{ transaction.timeofdelivery }}</td>
+                <td>{{ transaction.date_of_delivery }}</td>
+                <td class="commission-fee">
+                    {% if transaction.total_amount_payable %}
+                        {{ (transaction.total_amount_payable * 0.01) | round(2) }}
+                    {% else %}
+                        0.00
+                    {% endif %}
+                </td>
+                <td>
+                    <form action="/settle_payment/{{ transaction._id }}" method="post">
+                        <button type="submit" class="btn">Settle Payment</button>
+                    </form>
+                </td>
+            </tr>
         {% endfor %}
-    </div>
+    </tbody>
+</table>
+</div>
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<!-- Custom JS to enable Flatpickr on the date inputs -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        flatpickr("#dateFrom", { dateFormat: "Y-m-d" });
+        flatpickr("#dateTo", { dateFormat: "Y-m-d" });
+    });
+
+    function applyFilters() {
+        const bloodBank = document.getElementById("bloodBank").value;
+        const dateFrom = document.getElementById("dateFrom").value;
+        const dateTo = document.getElementById("dateTo").value;
+
+        let url = '/admin_dashboard?';
+        if (bloodBank) {
+            url += `bloodBank=${bloodBank}&`;
+        }
+        if (dateFrom && dateTo) {
+            url += `dateFrom=${dateFrom}&dateTo=${dateTo}`;
+        }
+
+        window.location.href = url;
+    }
+</script>
+
+<script src="static/script.js"></script>
 </body>
 </html>
