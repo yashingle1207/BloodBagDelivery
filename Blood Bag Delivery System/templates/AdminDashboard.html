@@ -4,315 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-
-    <!-- Font Awesome CDN link -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <!-- Flatpickr CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
-    <!-- Custom CSS file link -->
-    <link rel="stylesheet" href="static/style.css">
-    <link rel="icon" type="image/png" href="static/images/LogoTT.png">
-
-    <style>
-        /* General table styles */
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            max-width: 90%;
-            margin: 10px auto;
-        }
-
-        th, td {
-            border: 1px solid #dddddd;
-            text-align: left;
-            padding: 8px;
-            font-size: 16px;
-            white-space: normal;
-            word-wrap: break-word;
-        }
-
-        th {
-            background-color: #f2f2f2;
-            width: 150px;
-        }
-
-        th.commission-fee, td.commission-fee {
-            width: 100px;
-        }
-
-        /* Media query for smaller screens */
-        @media (max-width: 768px) {
-            th[data-hide="true"], td[data-hide="true"] {
-                display: none;
-            }
-        }
-
-        h1 {
-            font-size: 50px;
-            margin-top: 15px;
-            margin-bottom: 35px;
-        }
-
-        .container {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            width: 100%;
-            max-width: 100%;
-            margin: 20px auto;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .btn {
-            background-color: #ff4757;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            background-color: #e84347;
-        }
-
-        .filter-sort-container {
-            text-align: left;
-        }
-
-        .filter-sort-container label {
-            font-size: 18px;
-            margin-right: 10px;
-        }
-
-        .filter-sort-container select,
-        .filter-sort-container input {
-            padding: 8px 12px;
-            font-size: 16px;
-            border: 1px solid #dddddd;
-            border-radius: 4px;
-            background-color: #f2f2f2;
-            transition: background-color 0.3s ease;
-        }
-
-        .filter-sort-container select:focus,
-        .filter-sort-container input:focus {
-            outline: none;
-            background-color: #e2e2e2;
-        }
-
-        .filter-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .filter-sort-container {
-            margin-right: 20px;
-        }
-
-        .date-filter-container {
-            display: flex;
-            align-items: center;
-        }
-
-        .date-filter-container label {
-            font-size: 18px;
-            margin-right: 10px;
-        }
-
-        .date-filter-container input {
-            padding: 8px 12px;
-            font-size: 16px;
-            border: 1px solid #dddddd;
-            border-radius: 4px;
-            background-color: #f2f2f2;
-            transition: background-color 0.3s ease;
-            width: 150px;
-            box-sizing: border-box;
-        }
-
-        .date-filter-container input:focus {
-            outline: none;
-            background-color: #e2e2e2;
-        }
-
-        .btn {
-            background-color: #ff4757;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 10px;
-        }
-    </style>
 </head>
 <body>
-
-<div class="container">
-<header>
-    <a href="/" class="logo">Transfusio<span>Track</span></a>
-    <div id="menu" class="fas fa-bars" onclick="toggleNavbar()"></div>
-    <nav class="navbar" id="navbar">
-        <a href="/admin_dashboard">Admin Dashboard</a>
-        <a href="/settled">Settled Payments</a>
-        <a href="/AdminLogin">Logout</a>
-    </nav>
-</header>
-
-<h1 class="heading">Welcome To Admin Dashboard</h1>
-
-<!-- Filter Container -->
-<div class="filter-container">
-    <!-- Blood Bank Dropdown -->
-    <div class="filter-sort-container">
-        <label for="bloodBank">Select Blood Bank:</label>
-        <select id="bloodBank">
-            <option value="">All Blood Banks</option>
-            {% for bank in blood_banks %}
-                <option value="{{ bank.reg_num }}">{{ bank.bb_name }}</option>
-            {% endfor %}
-        </select>
+    <h1>Admin Dashboard</h1>
+    <div>
+        <form method="get">
+            <label for="dateFrom">Date From:</label>
+            <input type="date" id="dateFrom" name="dateFrom">
+            <label for="dateTo">Date To:</label>
+            <input type="date" id="dateTo" name="dateTo">
+            <label for="bloodBank">Blood Bank:</label>
+            <select id="bloodBank" name="bloodBank">
+                <option value="">All</option>
+                {% for bank in blood_banks %}
+                    <option value="{{ bank.reg_num }}">{{ bank.bb_name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Filter</button>
+        </form>
     </div>
-
-    <!-- Date Filter -->
-    <div class="date-filter-container">
-        <label for="dateFrom">From:</label>
-        <input type="text" id="dateFrom" placeholder="Select date">
-        <label for="dateTo">To:</label>
-        <input type="text" id="dateTo" placeholder="Select date">
-        <button class="btn" onclick="applyFilters()">Apply Filters</button>
-    </div>
-</div>
-
-<form id="settlePaymentForm" method="post" action="/settle_payment" onsubmit="return validateForm()">
-    <table>
-        <tr>
-            <th>Blood Bank Name</th>
-            <th>Address</th>
-            <th>Contact No.</th>
-            <th>Blood Component</th>
-            <th>Quantity Sold (Units)</th>
-            <th>Price per Unit</th>
-            <th>Total Amount per Component</th>
-            <th>Time of Delivery</th>
-            <th class="commission-fee">Commission fee in (%)</th>
-            <th>Select</th>
-            <th>Total Amount Payable</th>
-        </tr>
-
+    <div>
+        <h2>Transactions</h2>
         {% for transaction in transactions %}
-            <tr>
-                <td>{{ transaction.blood_bank_name }}</td>
-                <td>{{ transaction.address }}</td>
-                <td>{{ transaction.contact_no }}</td>
-                <td>{{ transaction.component }}</td>
-                <td>{{ transaction.quantity_sold }}</td>
-                <td>{{ transaction.price_per_unit }}</td>
-                <td>{{ transaction.total_amount_per_component }}</td>
-                <td>{{ transaction.timeofdelivery }}</td>
-                <td class="commission-fee">
-                    <input type="number" min="0" max="100" step="0.01"
-                        oninput="updateTotalAmountPayable(this, {{ transaction.total_amount_per_component }}, document.getElementById('total-{{ transaction._id }}'))">
-                </td>
-                <td>
-                    <input type="radio" name="selected_transaction" value="{{ transaction._id }}">
-                </td>
-                <td id="total-{{ transaction._id }}">{{ transaction.total_amount_per_component }}</td>
-            </tr>
+            <div>
+                <h3>Date: {{ transaction.date_of_delivery }}</h3>
+                <p>Blood Bank: {{ transaction.blood_bank_name }}</p>
+                <p>Address: {{ transaction.address }}</p>
+                <p>Contact: {{ transaction.contact_no }}</p>
+                <p>Component: {{ transaction.component }}</p>
+                <p>Quantity Sold: {{ transaction.quantity_sold }}</p>
+                <p>Price Per Unit: {{ transaction.price_per_unit }}</p>
+                <p>Total Amount Per Component: {{ transaction.total_amount_per_component }}</p>
+                <p>Total Amount Payable: {{ transaction.total_amount_payable }}</p>
+                <p>Time of Delivery: {{ transaction.timeofdelivery }}</p>
+            </div>
         {% endfor %}
-
-        <tr>
-            <td colspan="11" style="text-align: center;">
-                <input class='btn' type="submit" value="Settle Payment">
-            </td>
-        </tr>
-    </table>
-
-    <!-- Hidden input to store selected transaction ID -->
-    <input type="hidden" name="transaction_id" id="transactionIdInput">
-</form>
-
-</div>
-
-<!-- Flatpickr JS -->
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        console.log("Document loaded");
-
-        flatpickr("#dateFrom", {
-            dateFormat: "Y-m-d",
-            maxDate: "today",
-            onChange: function(selectedDates, dateStr, instance) {
-                flatpickr("#dateTo", {
-                    minDate: dateStr,
-                    dateFormat: "Y-m-d",
-                    maxDate: "today"
-                });
-            }
-        });
-
-        flatpickr("#dateTo", {
-            dateFormat: "Y-m-d",
-            maxDate: "today"
-        });
-
-        function validateForm() {
-            var radios = document.getElementsByName('selected_transaction');
-            var formValid = false;
-
-            for (var i = 0; i < radios.length; i++) {
-                if (radios[i].checked) {
-                    formValid = true;
-                    break;
-                }
-            }
-
-            if (!formValid) {
-                alert("Please select a transaction to settle.");
-                return false;
-            }
-
-            var confirmation = confirm("Are you sure you want to settle this payment?");
-            if (!confirmation) {
-                return false;
-            }
-
-            var selectedTransactionId = document.querySelector('input[name="selected_transaction"]:checked').value;
-            document.getElementById('transactionIdInput').value = selectedTransactionId;
-
-            return true;
-        }
-
-        document.getElementById('settlePaymentForm').addEventListener('submit', validateForm);
-    });
-
-    function applyFilters() {
-        var dateFrom = document.getElementById("dateFrom").value;
-        var dateTo = document.getElementById("dateTo").value;
-        var bloodBank = document.getElementById("bloodBank").value;
-
-        var url = new URL(window.location.href);
-        url.searchParams.set('dateFrom', dateFrom);
-        url.searchParams.set('dateTo', dateTo);
-        url.searchParams.set('bloodBank', bloodBank);
-
-        window.location.href = url.toString();
-    }
-
-    function updateTotalAmountPayable(input, totalAmount, targetElement) {
-        var commissionFee = input.value;
-        var totalAmountPayable = totalAmount * (1 - commissionFee / 100);
-        targetElement.textContent = totalAmountPayable.toFixed(2);
-    }
-</script>
-
+    </div>
 </body>
 </html>
