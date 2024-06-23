@@ -4,6 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        label {
+            margin-right: 10px;
+        }
+        input, select, button {
+            margin-right: 10px;
+            padding: 5px;
+        }
+        .transaction {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .transaction h3 {
+            margin-top: 0;
+        }
+        .transaction p {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
     <h1>Admin Dashboard</h1>
@@ -25,18 +56,26 @@
     </div>
     <div>
         <h2>Transactions</h2>
-        {% for transaction in transactions %}
+        {% for date, components in transactions.items() %}
             <div>
-                <h3>Date: {{ transaction.date_of_delivery }}</h3>
-                <p>Blood Bank: {{ transaction.blood_bank_name }}</p>
-                <p>Address: {{ transaction.address }}</p>
-                <p>Contact: {{ transaction.contact_no }}</p>
-                <p>Component: {{ transaction.component }}</p>
-                <p>Quantity Sold: {{ transaction.quantity_sold }}</p>
-                <p>Price Per Unit: {{ transaction.price_per_unit }}</p>
-                <p>Total Amount Per Component: {{ transaction.total_amount_per_component }}</p>
-                <p>Total Amount Payable: {{ transaction.total_amount_payable }}</p>
-                <p>Time of Delivery: {{ transaction.timeofdelivery }}</p>
+                <h3>Date: {{ date }}</h3>
+                {% for component, orders in components.items() %}
+                    <div class="transaction">
+                        <h4>Component: {{ component }}</h4>
+                        <p>Total Quantity Sold: {{ orders.total_quantity_sold }}</p>
+                        <p>Price Per Unit: {{ orders.price_per_unit }}</p>
+                        <p>Total Amount Per Component: {{ orders.total_amount_per_component }}</p>
+                        <p>Total Amount Payable: {{ orders.total_amount_payable }}</p>
+                        {% for order in orders.order_list %}
+                            <p>Blood Bank: {{ order.blood_bank_name }}</p>
+                            <p>Address: {{ order.address }}</p>
+                            <p>Contact: {{ order.contact_no }}</p>
+                            <p>Quantity Sold: {{ order.quantity_sold }}</p>
+                            <p>Total Amount Payable: {{ order.total_amount_payable }}</p>
+                            <p>Time of Delivery: {{ order.timeofdelivery }}</p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
             </div>
         {% endfor %}
     </div>
