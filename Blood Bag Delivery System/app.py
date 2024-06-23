@@ -994,41 +994,45 @@ def admin_dashboard():
 
     orders = Order.find(filter_conditions)
 
-    # Organize orders by blood bank and blood component
-    organized_orders = defaultdict(lambda: defaultdict(list))
+    # Organize orders by blood bank, blood component, and date
+    organized_orders = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
     for order in orders:
         blood_bank_id = order['BloodBank_Id']
         component = order['BloodComp']
-        organized_orders[blood_bank_id][component].append(order)
+        date_of_delivery = datetime.strptime(order['timeofdelivery'], "%Y-%m-%d %H:%M:%S.%f%z").strftime("%Y-%m-%d")
+        organized_orders[blood_bank_id][component][date_of_delivery].append(order)
 
     # Prepare the transactions data for the template
     transactions = []
     for blood_bank_id, components in organized_orders.items():
         blood_bank = BBUser.find_one({'reg_num': blood_bank_id})
-        for component, orders in components.items():
-            quantity_sold = sum(order['BloodQuantity'] for order in orders)
-            price_per_unit = orders[0]['total_amount'] / orders[0]['BloodQuantity']  # Assuming total_amount is for the quantity sold
-            total_amount_per_component = quantity_sold * price_per_unit
-            total_amount_payable = sum(order['total_amount'] for order in orders)
+        for component, dates in components.items():
+            for date_of_delivery, orders in dates.items():
+                quantity_sold = sum(order['BloodQuantity'] for order in orders)
+                price_per_unit = orders[0]['total_amount'] / orders[0]['BloodQuantity']  # Assuming total_amount is for the quantity sold
+                total_amount_per_component = quantity_sold * price_per_unit
+                total_amount_payable = sum(order['total_amount'] for order in orders)
 
-            for order in orders:
-                # Format the timestamp
-                timeofdelivery_formatted = datetime.strptime(order['timeofdelivery'], "%Y-%m-%d %H:%M:%S.%f%z").strftime("%Y-%m-%d %H:%M:%S")
+                for order in orders:
+                    # Format the timestamp
+                    timeofdelivery_formatted = datetime.strptime(order['timeofdelivery'], "%Y-%m-%d %H:%M:%S.%f%z").strftime("%Y-%m-%d %H:%M:%S")
 
-                transactions.append({
-                    'blood_bank_name': blood_bank['bb_name'],
-                    'address': blood_bank['address'],
-                    'contact_no': blood_bank['contact_num'],
-                    'component': component,
-                    'quantity_sold': order['BloodQuantity'],
-                    'price_per_unit': price_per_unit,
-                    'total_amount_per_component': total_amount_per_component,
-                    'total_amount_payable': order['total_amount'],
-                    '_id': str(order['_id']),  # Assuming each order has a unique '_id'
-                    'timeofdelivery': timeofdelivery_formatted  # Include time of delivery
-                })
+                    transactions.append({
+                        'blood_bank_name': blood_bank['bb_name'],
+                        'address': blood_bank['address'],
+                        'contact_no': blood_bank['contact_num'],
+                        'component': component,
+                        'quantity_sold': order['BloodQuantity'],
+                        'price_per_unit': price_per_unit,
+                        'total_amount_per_component': total_amount_per_component,
+                        'total_amount_payable': order['total_amount'],
+                        '_id': str(order['_id']),  # Assuming each order has a unique '_id'
+                        'timeofdelivery': timeofdelivery_formatted,  # Include time of delivery
+                        'date_of_delivery': date_of_delivery  # Include date of delivery
+                    })
 
     return render_template('AdminDashboard.html', transactions=transactions, blood_banks=blood_banks)
+
 
 
 # @app.route('/admin_dashboard')
