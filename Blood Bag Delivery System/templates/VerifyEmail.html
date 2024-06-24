@@ -8,7 +8,10 @@
     <link rel="stylesheet" href="/static/style.css">
     <link rel="icon" type="image/png" href="static/images/LogoTT.png">
     <style>
-        /* Your existing styles here */
+         .herflink {
+            margin-top: -40px; /* Adjust this value as needed */
+            font-size: 22px;
+        }
     </style>
 </head>
 <body>
@@ -27,7 +30,7 @@
         </nav> -->
         </header>
 
-    
+
  <script>
         function toggleNavbar() {
             var navbar = document.getElementById("navbar");
@@ -43,10 +46,15 @@
                 <h3>Verify your email</h3>
                 <p>A verification link has been sent to <strong>{{ email }}</strong>. <br> <br>Please check your email inbox and click on the verification link to verify your email address.</p>
                <p>Once verified, you can log in using the page that opens.</p>
-                <p>After verification, please close this tab to secure your login.</p>
+                <p>After verification, please click on the Home button to login.</p>
 
             </div>
         </section>
+
+         <div class="herflink">
+          <a href="/" class="btn">Home</a>
+        </div>
+
         <section class="footer">
             <div class="credit">Created by <span> Team Transfusio </span> | All rights reserved to Ingle Laboratory</div>
         </section>
