@@ -45,7 +45,7 @@ PatientUser = db['PatientUsers']
 PatientSearchBB = db['BloodStock']
 pricing_collection = db['pricing']
 admin_collection = db['Admin']
-vnkf
+
 SMTP_SERVER = 'smtp.gmail.com'
 SMTP_PORT = 587
 EMAIL_FROM = 'transfusiotrack@gmail.com'
