@@ -22,7 +22,7 @@ Objectives:
 ________________________________________
 
 Key Features
-1.	Hospital and Patient User Roles
+1.	Hospital and Patient User Roles.
 o	Patient Login: Individuals can request blood bags, track orders, and complete transactions.
 o	Hospital Login: Hospitals can place bulk orders and manage deliveries.
 
